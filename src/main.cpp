@@ -11,52 +11,74 @@
 // LMDrive              motor         6               
 // LBDrive              motor         7               
 // Inertial21           inertial      21              
+// LeftClawArm          motor         11              
+// RightClawArm         motor         12              
+// Claw                 motor         10              
+// OdomX                rotation      8               
+// OdomY                rotation      9               
 // ---- END VEXCODE CONFIGURED DEVICES ----
 #include <cmath>
-
 using namespace vex;
 vex::competition Competition;
 
-int field_control_state = 0;
+int fieldControlState = 0;
 int axis1;
 int axis2;
 int axis3;
 int axis4;
 
-double avg_drive_distance;
-double avg_drive_speed;
 double gyro1;
-int msec_clock;
-int slowest_drive;
-int fastest_drive;
+int msecClock;
 
-int left_speed = 0;
-int right_speed = 0;
-int drive_torque = 100;
-bool drive_hold = false;
+double avgDriveDistance;
+double avgDriveSpeed;
+int slowestDrive;
+int fastestDrive;
+int leftSpeed = 0;
+int rightSpeed = 0;
+int driveTorque = 100;
+bool driveHold = false;
 
-bool auton_running = false;
-int auton_number = 1;
-bool auton_happened = false;
+double wheelDiameter = 2.0; 
+double wheelCircumference = wheelDiameter * M_PI;
+double ticksPerRevolution = 360.0; // for v5 rotation sensor as they are sped
+double x = 0.0;
+double y = 0.0;
+const int numReadings = 10;
+double readingsX[numReadings];
+double readingsY[numReadings]; // for sam: this just means that this variable is an array with a size of numReadings, which is 10.0, in the format of a double(same with readingsX). it is used in the odom function to find the average encoder value over 10 steps
+int readIndex = 0;
+double totalX = 0; 
+double totalY = 0;
+double averageX = 0; 
+double averageY = 0;
+
+int clawArmSpeed;
+int clawSpeed;
+int clawState;
+
+bool autonRunning = false;
+int autonNumber = 1;
+bool autonHappened = false;
 
 
 void sleep(int sleepmsec) { task::sleep(sleepmsec); }
 
-void reset_timer() {
+void resetTimer() {
   Brain.resetTimer();
   sleep(5);
 }
 
-void reset_gyro() {
+void resetGyro() {
   Inertial21.setRotation(0, deg);
   sleep(5);
 }
-void set_gyro(int Heading) {
+void setGyro(int Heading) {
   Inertial21.setRotation(Heading, deg);
   sleep(5);
 }
 
-void reset_drive() {
+void resetDrive() {
   LFDrive.resetPosition();
   RFDrive.resetPosition();
   LMDrive.resetPosition();
@@ -66,13 +88,13 @@ void reset_drive() {
   sleep(5);
 }
 
-void stop_drive() {
-  left_speed = 0;
-  right_speed = 0;
+void stopDrive() {
+  leftSpeed = 0;
+  rightSpeed = 0;
   sleep(5);
 }
 
-void stop_all() {
+void stopAll() {
   LFDrive.stop();
   RFDrive.stop();
   LMDrive.stop();
@@ -82,18 +104,18 @@ void stop_all() {
   sleep(5);
 }
 
-void pre_auton() {
-  field_control_state = 0;
+void preAuton() {
+  fieldControlState = 0;
   Brain.Screen.clearScreen();
   Brain.Screen.printAt(320, 200, "Pre Auton");
 
-  reset_drive();
+  resetDrive();
   sleep(100);
   Controller1.Screen.clearScreen();
-  field_control_state = 1;
+  fieldControlState = 1;
 }
 
-int brain_screen_task() {
+int brainScreenTask() {
   while (1) {
     sleep(100);
     Brain.Screen.clearScreen();
@@ -101,9 +123,9 @@ int brain_screen_task() {
     Brain.Screen.printAt(188, 20, "RFMotor: %5.2f   ", gyro1);
     Brain.Screen.printAt(1, 40, "LTMotor: %5.2f   ", gyro1);
     Brain.Screen.printAt(188, 40, "RTMotor: %5.2f   ", gyro1);
-    Brain.Screen.printAt(1, 60, "Avg Motor Dist: %4.2f   ", avg_drive_distance);
+    Brain.Screen.printAt(1, 60, "Avg Motor Dist: %4.2f   ", avgDriveDistance);
     Brain.Screen.printAt(1, 100, "gyro1: %5.2f    ", gyro1);
-    Brain.Screen.printAt(1, 140, "msec_clock: %d    ", msec_clock);
+    Brain.Screen.printAt(1, 140, "msecClock: %d    ", msecClock);
     Brain.Screen.printAt(1, 170, "       ");
     Brain.Screen.printAt(370, 20, "Axis1: %d", axis1);
     Brain.Screen.printAt(370, 40, "Axis2: %d", axis2);
@@ -112,48 +134,48 @@ int brain_screen_task() {
     Brain.Screen.printAt(320, 110, "Reflect: %3.2f  ");
     Brain.Screen.printAt(320, 150, "PotR: %3.2f   ");
 
-    if (auton_number == 1) {
+    if (autonNumber == 1) {
       Brain.Screen.printAt(1, 210, "Auton: Close Side WP");
       Brain.Screen.setFillColor(red);
-    } else if (auton_number == 2) {
+    } else if (autonNumber == 2) {
       Brain.Screen.printAt(1, 210, "Auton: Close Side Elims");
       Brain.Screen.setFillColor(blue);
-    } else if (auton_number == 3) {
+    } else if (autonNumber == 3) {
       Brain.Screen.printAt(1, 210, "Auton: Far Side Safe");
       Brain.Screen.setFillColor("#008000");
-    } else if (auton_number == 4) {
+    } else if (autonNumber == 4) {
       Brain.Screen.printAt(1, 210, "Auton: Far Side WP");
       Brain.Screen.setFillColor("#403e39");
-    } else if (auton_number == 5) {
+    } else if (autonNumber == 5) {
       Brain.Screen.printAt(1, 210, "Auton: Far Side Elims");
       Brain.Screen.setFillColor(purple);
-    } else if (auton_number == 6) {
+    } else if (autonNumber == 6) {
       Brain.Screen.printAt(1, 210, "Auton: Skills");
       Brain.Screen.setFillColor("#fc9e05");
-    } else if (auton_number == 7) {
+    } else if (autonNumber == 7) {
       Brain.Screen.printAt(1, 210, "Auton: None");
       Brain.Screen.setFillColor(black);
     }
   }
 
-  if (field_control_state == 0) {
+  if (fieldControlState == 0) {
     Brain.Screen.printAt(320, 200, "Pre Auton");
   }
-  if (field_control_state == 1) {
+  if (fieldControlState == 1) {
     Brain.Screen.printAt(320, 200, "Pre Auton Done");
   }
-  if (field_control_state == 2) {
+  if (fieldControlState == 2) {
     Brain.Screen.printAt(320, 200, "Autonomous");
   }
-  if (field_control_state == 3) {
+  if (fieldControlState == 3) {
     Brain.Screen.printAt(320, 200, "Autonomous Done");
   }
-  if (field_control_state == 4) {
+  if (fieldControlState == 4) {
     Brain.Screen.printAt(320, 200, "Driver");
   }
 }
 
-int controller_screen_task() {
+int controllerScreenTask() {
   Controller1.Screen.clearScreen();
   while (1) {
     sleep(50);
@@ -162,6 +184,8 @@ int controller_screen_task() {
     Controller1.Screen.print("gyro1: %3.0f  ", Inertial21.heading());
 
     Controller1.Screen.setCursor(2, 1);
+    Controller1.Screen.print(x);
+    Controller1.Screen.print(y);
     Controller1.Screen.clearLine(2);
 
     Controller1.Screen.setCursor(3, 4);
@@ -180,15 +204,15 @@ int controller_screen_task() {
   }
 }
 
-int sensors_task() {
+int sensorsTask() {
   int x = 100;
   while (1) {
     sleep(5);
     // GET MOTOR ENCODERS AND SCALE THEM TO DISTANCE IN INCHES(450 RPM)
-    avg_drive_distance = (LFDrive.position(deg) + RMDrive.position(deg)) * 0.0120;
+    avgDriveDistance = (LFDrive.position(deg) + RMDrive.position(deg)) * 0.0120;
 
     // GET AVERAGE MOTOR SPEED PERCENTAGE
-    avg_drive_speed = (LFDrive.velocity(pct) + RMDrive.velocity(pct)) * .5;
+    avgDriveSpeed = (LFDrive.velocity(pct) + RMDrive.velocity(pct)) * .5;
 
     // GET gyro1 VALUE
     gyro1 = Inertial21.rotation(deg);
@@ -210,7 +234,7 @@ int sensors_task() {
     if (x > fabs(RMDrive.velocity(pct))) {
       x = fabs(RMDrive.velocity(pct));
     }
-    slowest_drive = abs(x);
+    slowestDrive = abs(x);
 
     x = fabs(RFDrive.velocity(pct));
     if (x < fabs(LFDrive.velocity(pct))) {
@@ -228,15 +252,15 @@ int sensors_task() {
     if (x < fabs(RMDrive.velocity(pct))) {
       x = fabs(RMDrive.velocity(pct));
     }
-    fastest_drive = abs(x);
+    fastestDrive = abs(x);
 
-    msec_clock = Brain.timer(msec);
+    msecClock = Brain.timer(msec);
   }
 }
 
-int drive_task() {
+int driveTask() {
   while (1) {
-    if (drive_hold) {
+    if (driveHold) {
       LFDrive.setStopping(hold);
       LBDrive.setStopping(hold);
       RBDrive.setStopping(hold);
@@ -252,94 +276,207 @@ int drive_task() {
       RMDrive.setStopping(coast);
     }
 
-    LFDrive.setMaxTorque(drive_torque, pct);
-    LBDrive.setMaxTorque(drive_torque, pct);
-    RFDrive.setMaxTorque(drive_torque, pct);
-    RBDrive.setMaxTorque(drive_torque, pct);
-    LMDrive.setMaxTorque(drive_torque, pct);
-    RMDrive.setMaxTorque(drive_torque, pct);
+    LFDrive.setMaxTorque(driveTorque, pct);
+    LBDrive.setMaxTorque(driveTorque, pct);
+    RFDrive.setMaxTorque(driveTorque, pct);
+    RBDrive.setMaxTorque(driveTorque, pct);
+    LMDrive.setMaxTorque(driveTorque, pct);
+    RMDrive.setMaxTorque(driveTorque, pct);
 
-    LFDrive.spin(fwd, left_speed, pct);
-    LBDrive.spin(fwd, left_speed, pct);
-    LMDrive.spin(fwd, left_speed, pct);
-    RFDrive.spin(fwd, right_speed, pct);
-    RBDrive.spin(fwd, right_speed, pct);
-    RMDrive.spin(fwd, right_speed, pct);
+    LFDrive.spin(fwd, leftSpeed, pct);
+    LBDrive.spin(fwd, leftSpeed, pct);
+    LMDrive.spin(fwd, leftSpeed, pct);
+    RFDrive.spin(fwd, rightSpeed, pct);
+    RBDrive.spin(fwd, rightSpeed, pct);
+    RMDrive.spin(fwd, rightSpeed, pct);
 
     sleep(6);
   }
 }
 
-void drive_distance(int Speed, double Distance, double Heading) {
+int clawSpeedTask() {
+  LeftClawArm.spin(forward);
+  RightClawArm.spin(forward);
+  Claw.spin(forward);
+  while (1) {
+    sleep(5);
+    LeftClawArm.setVelocity(clawArmSpeed, pct);
+    RightClawArm.setVelocity(clawArmSpeed, pct);
+    Claw.setVelocity(clawSpeed, pct);
+  }
+}
+
+int clawStatesTask() {
+  LeftClawArm.setStopping(hold);
+  RightClawArm.setStopping(hold);
+  Claw.setStopping(hold);
+  while(1){
+    if (clawState == 1) {
+      
+    } else (clawState == 2); {
+      
+    }
+      sleep(5);
+    }
+}
+
+int odometryTask() {
+    while (1) {
+        static double oldX = 0; 
+        static double oldY = 0;
+
+        totalX -= readingsX[readIndex];
+        totalY -= readingsY[readIndex];
+
+        double dX = OdomX.position(degrees) - oldX;
+        double dY = OdomY.position(degrees) - oldY;
+
+        totalX += dX;
+        totalY += dY;
+
+        readingsX[readIndex] = dX;
+        readingsY[readIndex] = dY;
+
+        readIndex = (readIndex + 1);
+
+        // if array ends, restart it
+        if (readIndex >= numReadings) {
+            readIndex = 0;
+        }
+
+        averageX = totalX / numReadings;
+        averageY = totalY / numReadings;
+
+        if (fabs(averageX) > 1000 || fabs(averageY) > 1000) {
+            oldX = OdomX.position(degrees);
+            oldY = OdomY.position(degrees);
+            continue;
+        }
+
+        oldX = OdomX.position(degrees);
+        oldY = OdomY.position(degrees);
+
+        double distX = (averageX / ticksPerRevolution) * wheelCircumference;
+        double distY = (averageY / ticksPerRevolution) * wheelCircumference;
+
+        x += distX;
+        y += distY;
+
+        // Output the current position to the terminal
+        printf("X: %.2f, Y: %.2f\n", x, y);
+
+        sleep(10);
+    }
+    return 0;
+}
+
+void driveDistance(int Speed, double Distance, double Heading) {
   double kP = 0.4;
   double kI = 0.06;
   double kD = 0.0;
   double integral = 0;
-  double previous_error = 0;
+  double previousError = 0;
 
-  reset_drive();
+  resetDrive();
   sleep(10);
-  double RightTurnDiff;
-  while ((fabs(avg_drive_distance) < Distance) && auton_running) {
+  double rightTurnDifference;
+  while ((fabs(avgDriveDistance) < Distance) && autonRunning) {
     double error = Heading - gyro1;
     integral += error;
-    double derivative = error - previous_error;
-    RightTurnDiff = kP * error + kI * integral + kD * derivative;
-    left_speed = Speed + RightTurnDiff;
-    right_speed = Speed - RightTurnDiff;
-    previous_error = error;
+    double derivative = error - previousError;
+    rightTurnDifference = kP * error + kI * integral + kD * derivative;
+    leftSpeed = Speed + rightTurnDifference;
+    rightSpeed = Speed - rightTurnDifference;
+    previousError = error;
     sleep(10);
   }
-  stop_drive();
+  stopDrive();
 }
 
-void drive_till_stop(int Speed, double Heading) {
-  reset_drive();
-  reset_timer();
+void autoTillStop(int Speed, double Heading) {
+  resetDrive();
+  resetTimer();
   sleep(10);
-  int RightTurnDiff;
-  while ((slowest_drive > 3 || msec_clock < 500) && auton_running) {
-    RightTurnDiff = (Heading - gyro1) * .65;
-    left_speed = Speed + RightTurnDiff;
-    right_speed = Speed - RightTurnDiff;
+  int rightTurnDifference;
+  while ((slowestDrive > 3 || msecClock < 500) && autonRunning) {
+    rightTurnDifference = (Heading - gyro1) * .65;
+    leftSpeed = Speed + rightTurnDifference;
+    rightSpeed = Speed - rightTurnDifference;
     sleep(10);
   }
-  stop_drive();
+  stopDrive();
 }
 
+void turnTo(int Speed, int Heading, int Accuracy) {
   int integral = 0;
-  int previous_error = 0;
+  int previousError = 0;
   double kP = 0.36;
   double kI = 0;
   double kD = 0;
-void turn(int Speed, int Heading, int Accuracy) {
   double lsp;
   double rsp;
 
-  int new_heading = Heading + Accuracy - 1;
-  while ((fabs(new_heading - gyro1) > Accuracy || (fabs(LFDrive.velocity(pct)) > 2.5)) && auton_running) {
-    double error = new_heading - gyro1;
+  int newHeading = Heading + Accuracy - 1;
+  while ((fabs(newHeading - gyro1) > Accuracy || (fabs(LFDrive.velocity(pct)) > 2.5)) && autonRunning) {
+    double error = newHeading - gyro1;
     integral += error;
-    double derivative_turn = error - previous_error;
-    double output = kP * error + kI * integral + kD * derivative_turn;
+    double derivativeTurn = error - previousError;
+    double output = kP * error + kI * integral + kD * derivativeTurn;
     lsp = +output;
     if (fabs(lsp) < 2) {
       lsp = 2 * fabs(lsp) / lsp;
     }
-    left_speed = lsp;
+    leftSpeed = lsp;
     rsp = -output;
     if (fabs(rsp) < 2) {
       rsp = 2 * fabs(rsp) / rsp;
     }
-    right_speed = rsp;
-    previous_error = error;
+    rightSpeed = rsp;
+    previousError = error;
     sleep(5);
   }
 
-  stop_drive();
+  stopDrive();
   // integral = 0;
-  // previous_error = 0;
+  // previousError = 0;
   sleep(10);
+}
+ 
+
+double Kp_turn = 10.00, Ki_turn = 0.0, Kd_turn = 0.0;
+double turn_integral = 0.0, turn_prev_error = 0.0;
+double Kp_fwd = 10.00, Ki_fwd = 0.0, Kd_fwd = 0.0;
+double fwd_integral = 0.0, fwd_prev_error = 0.0;
+
+void driveTo(int target_x, int target_y, int speed) {
+   while (1) {
+        double dx = target_x - x;
+        double dy = target_y - y;
+        double distance = sqrt(dx*dx + dy*dy);
+
+        if (distance < 0.1) break; // Check early to avoid unnecessary calculations if already at target
+
+        double target_angle = atan2(dy, dx);
+        double turn_error = target_angle - gyro1;
+
+        while (turn_error > M_PI) turn_error -= 2 * M_PI;
+        while (turn_error < -M_PI) turn_error += 2 * M_PI;
+
+        double fwd_error = distance;
+        double turn_output = Kp_turn * turn_error + Ki_turn * turn_integral - Kd_turn * (turn_error - turn_prev_error);
+        double fwd_output = Kp_fwd * fwd_error + Ki_fwd * fwd_integral - Kd_fwd * (fwd_error - fwd_prev_error);
+
+        turn_integral += turn_error;
+        turn_prev_error = turn_error;
+
+        fwd_integral += fwd_error;
+        fwd_prev_error = fwd_error;
+
+        leftSpeed = speed * fwd_output + turn_output;
+        rightSpeed =  speed * fwd_output - turn_output;
+
+        sleep(5);
+    }
 }
 
 void buttonLup_pressed() {
@@ -359,19 +496,19 @@ void buttonRup_released() {}
 
 void buttonRdown_released() {}
 
-void buttonUP_pressed() {}
+void buttonUP_pressed() {clawArmSpeed = 100;}
 
-void buttonDOWN_pressed() {}
+void buttonDOWN_pressed() {clawArmSpeed = -100;}
 
-void buttonRIGHT_pressed() {}
+void buttonLEFT_pressed() {clawSpeed = -60;}
 
-void buttonLEFT_pressed() {}
+void buttonRIGHT_pressed() {clawSpeed = 60;}
 
 void brain_pressed() {}
 
 void buttonX_pressed() {}
 
-void buttonA_pressed() {}
+
 
 void buttonY_pressed() {}
 
@@ -389,36 +526,43 @@ void buttonRdown_released2() {}
 
 void buttonRup_released2() {}
 
+void odomTest() {
+  setGyro(0);
+  driveTo(1, 1, 50);
+}
+
 void autonomous() {
-  auton_happened = true;
-  auton_running = true;
-  drive_hold = true;
-  if (auton_number == 1) {
+  autonHappened = true;
+  autonRunning = true;
+  driveHold = true;
+  if (autonNumber == 1) {
+    odomTest();
+  } else if (autonNumber == 2) {
 
-  } else if (auton_number == 2) {
+  } else if (autonNumber == 3) {
 
-  } else if (auton_number == 3) {
-
-  } else if (auton_number == 4) {
+  } else if (autonNumber == 4) {
   
-  } else if (auton_number == 5) {
+  } else if (autonNumber == 5) {
 
-  } else if (auton_number == 6) {
+  } else if (autonNumber == 6) {
 
   }
 }
 
+void buttonA_pressed() {autonomous();}
+
 void usercontrol() {
-  reset_timer();
-  auton_running = false;
-  drive_hold = false;
-  drive_torque = 100;
-  field_control_state = 4;
-  stop_all();
+  resetTimer();
+  autonRunning = false;
+  driveHold = false;
+  driveTorque = 100;
+  fieldControlState = 4;
+  stopAll();
 
   while (1) {
     sleep(10);
-    if (auton_running == false) {
+    if (autonRunning == false) {
       axis1 = Controller1.Axis1.value();
       if (abs(axis1) < 15) {
         axis1 = 0;
@@ -436,18 +580,21 @@ void usercontrol() {
         axis4 = 0;
       }
 
-      left_speed = axis3 + axis1;
-      right_speed = axis3 - axis1;
+      leftSpeed = axis3 + axis1;
+      rightSpeed = axis3 - axis1;
     }
   }
 }
 
 int main() {
-  pre_auton();
-  task taskBrainScreen(brain_screen_task);
-  task taskCntrlrScreen(controller_screen_task);
-  task taskSensors(sensors_task);
-  task taskDrive(drive_task);
+  preAuton();
+  task taskBrainScreen(brainScreenTask);
+  task taskCntrlrScreen(controllerScreenTask);
+  task taskSensors(sensorsTask);
+  task taskDrive(driveTask);
+  task taskClawSpeed(clawSpeedTask);
+  task taskClawState(clawStatesTask);
+  task taskOdometry(odometryTask);
   Brain.Screen.pressed(brain_pressed);
   Controller1.ButtonL1.pressed(buttonLup_pressed);
   Controller1.ButtonL2.pressed(buttonLdown_pressed);
