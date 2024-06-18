@@ -334,6 +334,7 @@ int odometryTask() {
         totalX += dX;
         totalY += dY;
 
+        // store the new deltas in the arrays
         readingsX[readIndex] = dX;
         readingsY[readIndex] = dY;
 
@@ -344,9 +345,11 @@ int odometryTask() {
             readIndex = 0;
         }
 
+        // calculate the average change in position
         averageX = totalX / numReadings;
         averageY = totalY / numReadings;
 
+       // reset the old positions if the average change is too large
         if (fabs(averageX) > 1000 || fabs(averageY) > 1000) {
             oldX = OdomX.position(degrees);
             oldY = OdomY.position(degrees);
@@ -356,6 +359,7 @@ int odometryTask() {
         oldX = OdomX.position(degrees);
         oldY = OdomY.position(degrees);
 
+        // Convert the average change in position to distances using the wheel circumference and ticks per revolution
         double distX = (averageX / ticksPerRevolution) * wheelCircumference;
         double distY = (averageY / ticksPerRevolution) * wheelCircumference;
 
@@ -452,16 +456,21 @@ void driveTo(int target_x, int target_y, int speed) {
    while (1) {
         double dx = target_x - x;
         double dy = target_y - y;
+
+        // calculate the straight-line distance to the target
         double distance = sqrt(dx*dx + dy*dy);
 
         if (distance < 0.1) break; // Check early to avoid unnecessary calculations if already at target
 
+        // find target angle for the robot to face the target position
         double target_angle = atan2(dy, dx);
         double turn_error = target_angle - gyro1;
 
+        // force the turn error to be between neg. pi and pi
         while (turn_error > M_PI) turn_error -= 2 * M_PI;
         while (turn_error < -M_PI) turn_error += 2 * M_PI;
 
+        // set the forward error to equal the distance and move the robot
         double fwd_error = distance;
         double turn_output = Kp_turn * turn_error + Ki_turn * turn_integral - Kd_turn * (turn_error - turn_prev_error);
         double fwd_output = Kp_fwd * fwd_error + Ki_fwd * fwd_integral - Kd_fwd * (fwd_error - fwd_prev_error);
@@ -472,6 +481,7 @@ void driveTo(int target_x, int target_y, int speed) {
         fwd_integral += fwd_error;
         fwd_prev_error = fwd_error;
 
+        // speed calculation
         leftSpeed = speed * fwd_output + turn_output;
         rightSpeed =  speed * fwd_output - turn_output;
 
