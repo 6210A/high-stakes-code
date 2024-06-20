@@ -15,12 +15,16 @@ motor RBDrive = motor(PORT3, ratio6_1, false);
 motor LFDrive = motor(PORT5, ratio6_1, true);
 motor LMDrive = motor(PORT6, ratio6_1, false);
 motor LBDrive = motor(PORT7, ratio6_1, true);
-inertial Inertial21 = inertial(PORT21);
-motor LeftClawArm = motor(PORT11, ratio18_1, false);
-motor RightClawArm = motor(PORT12, ratio18_1, true);
+inertial Inertial20 = inertial(PORT20);
 motor Claw = motor(PORT10, ratio18_1, false);
 rotation OdomX = rotation(PORT8, false);
 rotation OdomY = rotation(PORT9, false);
+motor ArmMotorA = motor(PORT11, ratio18_1, false);
+motor ArmMotorB = motor(PORT12, ratio18_1, true);
+motor_group Arm = motor_group(ArmMotorA, ArmMotorB);
+digital_out ClawFlip = digital_out(Brain.ThreeWirePort.A);
+digital_out ClawA = digital_out(Brain.ThreeWirePort.B);
+digital_out ClawB = digital_out(Brain.ThreeWirePort.C);
 
 // VEXcode generated functions
 // define variable for remote controller enable/disable

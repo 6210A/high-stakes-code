@@ -10,12 +10,14 @@ extern motor RBDrive;
 extern motor LFDrive;
 extern motor LMDrive;
 extern motor LBDrive;
-extern inertial Inertial21;
-extern motor LeftClawArm;
-extern motor RightClawArm;
+extern inertial Inertial20;
 extern motor Claw;
 extern rotation OdomX;
 extern rotation OdomY;
+extern motor_group Arm;
+extern digital_out ClawFlip;
+extern digital_out ClawA;
+extern digital_out ClawB;
 
 /**
  * Used to initialize code/tasks/devices added using tools in VEXcode Pro.

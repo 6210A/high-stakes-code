@@ -10,14 +10,17 @@
 // LFDrive              motor         5               
 // LMDrive              motor         6               
 // LBDrive              motor         7               
-// Inertial21           inertial      21              
-// LeftClawArm          motor         11              
-// RightClawArm         motor         12              
+// Inertial20           inertial      20              
 // Claw                 motor         10              
 // OdomX                rotation      8               
 // OdomY                rotation      9               
+// Arm                  motor_group   11, 12          
+// ClawFlip             digital_out   A               
+// ClawA                digital_out   B               
+// ClawB                digital_out   C               
 // ---- END VEXCODE CONFIGURED DEVICES ----
-#include <cmath>
+#include <math.h>
+#include <iostream> 
 using namespace vex;
 vex::competition Competition;
 
@@ -53,9 +56,9 @@ double totalY = 0;
 double averageX = 0; 
 double averageY = 0;
 
-int clawArmSpeed;
+int armSpeed;
 int clawSpeed;
-int clawState;
+float clawState = 1;
 
 bool autonRunning = false;
 int autonNumber = 1;
@@ -70,11 +73,11 @@ void resetTimer() {
 }
 
 void resetGyro() {
-  Inertial21.setRotation(0, deg);
+  Inertial20.setRotation(0, deg);
   sleep(5);
 }
 void setGyro(int Heading) {
-  Inertial21.setRotation(Heading, deg);
+  Inertial20.setRotation(Heading, deg);
   sleep(5);
 }
 
@@ -181,12 +184,10 @@ int controllerScreenTask() {
     sleep(50);
 
     Controller1.Screen.setCursor(1, 1);
-    Controller1.Screen.print("gyro1: %3.0f  ", Inertial21.heading());
+    Controller1.Screen.print("gyro1: %3.0f  ", Inertial20.heading());
 
     Controller1.Screen.setCursor(2, 1);
-    Controller1.Screen.print(x);
-    Controller1.Screen.print(y);
-    Controller1.Screen.clearLine(2);
+    Controller1.Screen.print("Claw State: %1.0f", clawState);
 
     Controller1.Screen.setCursor(3, 4);
     Controller1.Screen.print("%2.0f ", LFDrive.temperature(fahrenheit) / 10);
@@ -209,13 +210,13 @@ int sensorsTask() {
   while (1) {
     sleep(5);
     // GET MOTOR ENCODERS AND SCALE THEM TO DISTANCE IN INCHES(450 RPM)
-    avgDriveDistance = (LFDrive.position(deg) + RMDrive.position(deg)) * 0.0120;
+    avgDriveDistance = (LFDrive.position(deg) + RMDrive.position(deg)) * 0.012;
 
     // GET AVERAGE MOTOR SPEED PERCENTAGE
     avgDriveSpeed = (LFDrive.velocity(pct) + RMDrive.velocity(pct)) * .5;
 
     // GET gyro1 VALUE
-    gyro1 = Inertial21.rotation(deg);
+    gyro1 = Inertial20.rotation(deg);
 
     // GET SLOWEST DRIVE MOTOR SPEED
     x = fabs(RFDrive.velocity(pct));
@@ -295,26 +296,32 @@ int driveTask() {
 }
 
 int clawSpeedTask() {
-  LeftClawArm.spin(forward);
-  RightClawArm.spin(forward);
+  Arm.spin(forward);
   Claw.spin(forward);
   while (1) {
     sleep(5);
-    LeftClawArm.setVelocity(clawArmSpeed, pct);
-    RightClawArm.setVelocity(clawArmSpeed, pct);
+    Arm.setVelocity(armSpeed, pct);
     Claw.setVelocity(clawSpeed, pct);
   }
 }
 
 int clawStatesTask() {
-  LeftClawArm.setStopping(hold);
-  RightClawArm.setStopping(hold);
-  Claw.setStopping(hold);
   while(1){
     if (clawState == 1) {
-      
-    } else (clawState == 2); {
-      
+      Arm.setVelocity(70, pct);
+      Claw.setVelocity(70, pct);
+      Arm.spinToPosition(30, deg);
+      Claw.spinToPosition(0, deg);
+    } else if (clawState == 2) {
+      Arm.setVelocity(70, pct);
+      Claw.setVelocity(70, pct);
+      Arm.spinToPosition((45 * 7), deg);
+      Claw.spinToPosition(0, deg);
+    } else if (clawState == 3) {
+      Arm.setVelocity(70, pct);
+      Claw.setVelocity(70, pct);
+      Arm.spinToPosition((90 * 7), deg);
+      Claw.spinToPosition(0, deg);
     }
       sleep(5);
     }
@@ -334,7 +341,6 @@ int odometryTask() {
         totalX += dX;
         totalY += dY;
 
-        // store the new deltas in the arrays
         readingsX[readIndex] = dX;
         readingsY[readIndex] = dY;
 
@@ -345,11 +351,9 @@ int odometryTask() {
             readIndex = 0;
         }
 
-        // calculate the average change in position
         averageX = totalX / numReadings;
         averageY = totalY / numReadings;
 
-       // reset the old positions if the average change is too large
         if (fabs(averageX) > 1000 || fabs(averageY) > 1000) {
             oldX = OdomX.position(degrees);
             oldY = OdomY.position(degrees);
@@ -359,7 +363,6 @@ int odometryTask() {
         oldX = OdomX.position(degrees);
         oldY = OdomY.position(degrees);
 
-        // Convert the average change in position to distances using the wheel circumference and ticks per revolution
         double distX = (averageX / ticksPerRevolution) * wheelCircumference;
         double distY = (averageY / ticksPerRevolution) * wheelCircumference;
 
@@ -375,9 +378,9 @@ int odometryTask() {
 }
 
 void driveDistance(int Speed, double Distance, double Heading) {
-  double kP = 0.4;
-  double kI = 0.06;
-  double kD = 0.0;
+  double kP = 0.2;
+  double kI = 0.00;
+  double kD = 0.01;
   double integral = 0;
   double previousError = 0;
 
@@ -414,9 +417,9 @@ void autoTillStop(int Speed, double Heading) {
 void turnTo(int Speed, int Heading, int Accuracy) {
   int integral = 0;
   int previousError = 0;
-  double kP = 0.36;
+  double kP = 0.359;
   double kI = 0;
-  double kD = 0;
+  double kD = 0.01;
   double lsp;
   double rsp;
 
@@ -425,7 +428,7 @@ void turnTo(int Speed, int Heading, int Accuracy) {
     double error = newHeading - gyro1;
     integral += error;
     double derivativeTurn = error - previousError;
-    double output = kP * error + kI * integral + kD * derivativeTurn;
+    double output = (kP * error) + (kI * integral) + (kD * derivativeTurn);
     lsp = +output;
     if (fabs(lsp) < 2) {
       lsp = 2 * fabs(lsp) / lsp;
@@ -446,7 +449,6 @@ void turnTo(int Speed, int Heading, int Accuracy) {
   sleep(10);
 }
  
-
 double Kp_turn = 10.00, Ki_turn = 0.0, Kd_turn = 0.0;
 double turn_integral = 0.0, turn_prev_error = 0.0;
 double Kp_fwd = 10.00, Ki_fwd = 0.0, Kd_fwd = 0.0;
@@ -456,21 +458,17 @@ void driveTo(int target_x, int target_y, int speed) {
    while (1) {
         double dx = target_x - x;
         double dy = target_y - y;
-
-        // calculate the straight-line distance to the target
         double distance = sqrt(dx*dx + dy*dy);
 
         if (distance < 0.1) break; // Check early to avoid unnecessary calculations if already at target
 
-        // find target angle for the robot to face the target position
+
         double target_angle = atan2(dy, dx);
         double turn_error = target_angle - gyro1;
 
-        // force the turn error to be between neg. pi and pi
         while (turn_error > M_PI) turn_error -= 2 * M_PI;
         while (turn_error < -M_PI) turn_error += 2 * M_PI;
 
-        // set the forward error to equal the distance and move the robot
         double fwd_error = distance;
         double turn_output = Kp_turn * turn_error + Ki_turn * turn_integral - Kd_turn * (turn_error - turn_prev_error);
         double fwd_output = Kp_fwd * fwd_error + Ki_fwd * fwd_integral - Kd_fwd * (fwd_error - fwd_prev_error);
@@ -481,7 +479,6 @@ void driveTo(int target_x, int target_y, int speed) {
         fwd_integral += fwd_error;
         fwd_prev_error = fwd_error;
 
-        // speed calculation
         leftSpeed = speed * fwd_output + turn_output;
         rightSpeed =  speed * fwd_output - turn_output;
 
@@ -489,30 +486,41 @@ void driveTo(int target_x, int target_y, int speed) {
     }
 }
 
-void buttonLup_pressed() {
+void buttonLup_pressed() {armSpeed = 100;}
+
+void buttonLdown_pressed() {armSpeed = -100;}
+
+void buttonLup_released() {armSpeed = 0;}
+
+void buttonLdown_released() {armSpeed = 0;}
+
+void buttonRup_pressed() {clawSpeed = -100;}
+
+void buttonRdown_pressed() {clawSpeed = 100;}
+
+void buttonRup_released() {clawSpeed = 0;}
+
+void buttonRdown_released() {clawSpeed = 0;}
+
+void buttonUP_pressed() {
+  if (clawState < 3) {
+  clawState += 1;
+  } else {
+    clawState = 3;
+  }
 }
 
-void buttonLdown_pressed() {}
+void buttonDOWN_pressed() {
+  if (clawState > 1) {
+    clawState -= 1;
+  } else {
+    clawState = 1;
+  }
+}
 
-void buttonLup_released() {}
+void buttonLEFT_pressed() {ClawFlip = !ClawFlip;}
 
-void buttonLdown_released() {}
-
-void buttonRup_pressed() {}
-
-void buttonRdown_pressed() {}
-
-void buttonRup_released() {}
-
-void buttonRdown_released() {}
-
-void buttonUP_pressed() {clawArmSpeed = 100;}
-
-void buttonDOWN_pressed() {clawArmSpeed = -100;}
-
-void buttonLEFT_pressed() {clawSpeed = -60;}
-
-void buttonRIGHT_pressed() {clawSpeed = 60;}
+void buttonRIGHT_pressed() {}
 
 void brain_pressed() {}
 
@@ -520,9 +528,9 @@ void buttonX_pressed() {}
 
 
 
-void buttonY_pressed() {}
+void buttonY_pressed() {ClawA = !ClawA;}
 
-void buttonB_pressed() {}
+void buttonB_pressed() {ClawB = !ClawB;}
 
 void buttonLup_pressed2() {}
 
@@ -536,17 +544,16 @@ void buttonRdown_released2() {}
 
 void buttonRup_released2() {}
 
-void odomTest() {
-  setGyro(0);
-  driveTo(1, 1, 50);
-}
+void PIDTest() {
+
+  }
 
 void autonomous() {
   autonHappened = true;
   autonRunning = true;
   driveHold = true;
   if (autonNumber == 1) {
-    odomTest();
+    PIDTest();
   } else if (autonNumber == 2) {
 
   } else if (autonNumber == 3) {
