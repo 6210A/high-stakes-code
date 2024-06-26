@@ -1,26 +1,26 @@
 #include "vex.h"
-
 // ---- START VEXCODE CONFIGURED DEVICES ----
 // Robot Configuration:
 // [Name]               [Type]        [Port(s)]
-// Controller1          controller                    
-// RFDrive              motor         1               
-// RMDrive              motor         2               
-// RBDrive              motor         3               
-// LFDrive              motor         5               
-// LMDrive              motor         6               
-// LBDrive              motor         7               
-// Inertial20           inertial      20              
-// Claw                 motor         10              
-// OdomX                rotation      8               
-// OdomY                rotation      9               
-// Arm                  motor_group   11, 12          
-// ClawFlip             digital_out   A               
-// ClawA                digital_out   B               
-// ClawB                digital_out   C               
+// Controller1          controller
+// RFDrive              motor         1
+// RMDrive              motor         2
+// RBDrive              motor         3
+// LFDrive              motor         5
+// LMDrive              motor         6
+// LBDrive              motor         7
+// Inertial20           inertial      20
+// Claw                 motor         10
+// OdomX                rotation      8
+// OdomY                rotation      9
+// Arm                  motor_group   11, 12
+// ClawFlip             digital_out   A
+// ClawA                digital_out   B
+// ClawB                digital_out   C
 // ---- END VEXCODE CONFIGURED DEVICES ----
+#include <iostream>
 #include <math.h>
-#include <iostream> 
+
 using namespace vex;
 vex::competition Competition;
 
@@ -42,28 +42,32 @@ int rightSpeed = 0;
 int driveTorque = 100;
 bool driveHold = false;
 
-double wheelDiameter = 2.0; 
+double wheelDiameter = 2.0;
 double wheelCircumference = wheelDiameter * M_PI;
 double ticksPerRevolution = 360.0; // for v5 rotation sensor as they are sped
 double x = 0.0;
 double y = 0.0;
 const int numReadings = 10;
 double readingsX[numReadings];
-double readingsY[numReadings]; // for sam: this just means that this variable is an array with a size of numReadings, which is 10.0, in the format of a double(same with readingsX). it is used in the odom function to find the average encoder value over 10 steps
+double readingsY[numReadings]; // for sam: this just means that this variable is
+                               // an array with a size of numReadings, which
+                               // is 10.0, in the format of a double(same with
+                               // readingsX). it is used in the odom function to
+                               // find the average encoder value over 10 steps
 int readIndex = 0;
-double totalX = 0; 
+double totalX = 0;
 double totalY = 0;
-double averageX = 0; 
+double averageX = 0;
 double averageY = 0;
 
-int armSpeed;
-int clawSpeed;
+int armSpeed = 0;
+int clawSpeed = 0;
 float clawState = 1;
+bool clawStatesActive = true;
 
 bool autonRunning = false;
 int autonNumber = 1;
 bool autonHappened = false;
-
 
 void sleep(int sleepmsec) { task::sleep(sleepmsec); }
 
@@ -184,7 +188,9 @@ int controllerScreenTask() {
     sleep(50);
 
     Controller1.Screen.setCursor(1, 1);
-    Controller1.Screen.print("gyro1: %3.0f  ", Inertial20.heading());
+    Controller1.Screen.print("gyro1: %3.0f", Inertial20.heading());
+    Controller1.Screen.setCursor(1, 15);
+    Controller1.Screen.print("CSA: %d", clawStatesActive);
 
     Controller1.Screen.setCursor(2, 1);
     Controller1.Screen.print("Claw State: %1.0f", clawState);
@@ -296,85 +302,86 @@ int driveTask() {
 }
 
 int clawSpeedTask() {
+  Arm.setVelocity(0, pct);
+  Claw.setVelocity(0, pct);
   Arm.spin(forward);
   Claw.spin(forward);
   while (1) {
     sleep(5);
-    Arm.setVelocity(armSpeed, pct);
-    Claw.setVelocity(clawSpeed, pct);
   }
 }
 
 int clawStatesTask() {
-  while(1){
+  while (clawStatesActive) {
+    sleep(5);
     if (clawState == 1) {
       Arm.setVelocity(70, pct);
       Claw.setVelocity(70, pct);
       Arm.spinToPosition(30, deg);
-      Claw.spinToPosition(0, deg);
+      Claw.spinToPosition(100, deg);
     } else if (clawState == 2) {
       Arm.setVelocity(70, pct);
       Claw.setVelocity(70, pct);
       Arm.spinToPosition((45 * 7), deg);
-      Claw.spinToPosition(0, deg);
+      Claw.spinToPosition(45 * 5, deg);
     } else if (clawState == 3) {
       Arm.setVelocity(70, pct);
       Claw.setVelocity(70, pct);
       Arm.spinToPosition((90 * 7), deg);
-      Claw.spinToPosition(0, deg);
+      Claw.spinToPosition(90 * 5, deg);
     }
-      sleep(5);
-    }
+  }
+  return (0);
 }
 
 int odometryTask() {
-    while (1) {
-        static double oldX = 0; 
-        static double oldY = 0;
+  while (1) {
+    static double oldX = 0;
+    static double oldY = 0;
 
-        totalX -= readingsX[readIndex];
-        totalY -= readingsY[readIndex];
+    totalX -= readingsX[readIndex];
+    totalY -= readingsY[readIndex];
 
-        double dX = OdomX.position(degrees) - oldX;
-        double dY = OdomY.position(degrees) - oldY;
+    double dX = OdomX.position(degrees) - oldX;
+    double dY = OdomY.position(degrees) - oldY;
 
-        totalX += dX;
-        totalY += dY;
+    totalX += dX;
+    totalY += dY;
 
-        readingsX[readIndex] = dX;
-        readingsY[readIndex] = dY;
+    readingsX[readIndex] = dX;
+    readingsY[readIndex] = dY;
 
-        readIndex = (readIndex + 1);
+    readIndex = (readIndex + 1);
 
-        // if array ends, restart it
-        if (readIndex >= numReadings) {
-            readIndex = 0;
-        }
-
-        averageX = totalX / numReadings;
-        averageY = totalY / numReadings;
-
-        if (fabs(averageX) > 1000 || fabs(averageY) > 1000) {
-            oldX = OdomX.position(degrees);
-            oldY = OdomY.position(degrees);
-            continue;
-        }
-
-        oldX = OdomX.position(degrees);
-        oldY = OdomY.position(degrees);
-
-        double distX = (averageX / ticksPerRevolution) * wheelCircumference;
-        double distY = (averageY / ticksPerRevolution) * wheelCircumference;
-
-        x += distX;
-        y += distY;
-
-        // Output the current position to the terminal
-        printf("X: %.2f, Y: %.2f\n", x, y);
-
-        sleep(10);
+    // if array ends, restart it
+    if (readIndex >= numReadings) {
+      readIndex = 0;
     }
-    return 0;
+
+    averageX = totalX / numReadings;
+    averageY = totalY / numReadings;
+
+    if (fabs(averageX) > 1000 || fabs(averageY) > 1000) {
+      oldX = OdomX.position(degrees);
+      oldY = OdomY.position(degrees);
+      continue;
+    }
+
+    oldX = OdomX.position(degrees);
+    oldY = OdomY.position(degrees);
+
+    double distX = (averageX / ticksPerRevolution) * wheelCircumference;
+    double distY = (averageY / ticksPerRevolution) * wheelCircumference;
+
+    x += distX;
+    y += distY;
+
+    // Output the current position to the terminal
+    printf("X: %.2f, Y: %.2f\n", x, y);
+
+    sleep(10);
+  }
+  return 0;
 }
 
 void driveDistance(int Speed, double Distance, double Heading) {
@@ -424,7 +431,9 @@ void turnTo(int Speed, int Heading, int Accuracy) {
   double rsp;
 
   int newHeading = Heading + Accuracy - 1;
-  while ((fabs(newHeading - gyro1) > Accuracy || (fabs(LFDrive.velocity(pct)) > 2.5)) && autonRunning) {
+  while ((fabs(newHeading - gyro1) > Accuracy ||
+          (fabs(LFDrive.velocity(pct)) > 2.5)) &&
+         autonRunning) {
     double error = newHeading - gyro1;
     integral += error;
     double derivativeTurn = error - previousError;
@@ -448,77 +457,150 @@ void turnTo(int Speed, int Heading, int Accuracy) {
   // previousError = 0;
   sleep(10);
 }
- 
+
 double Kp_turn = 10.00, Ki_turn = 0.0, Kd_turn = 0.0;
 double turn_integral = 0.0, turn_prev_error = 0.0;
 double Kp_fwd = 10.00, Ki_fwd = 0.0, Kd_fwd = 0.0;
 double fwd_integral = 0.0, fwd_prev_error = 0.0;
 
 void driveTo(int target_x, int target_y, int speed) {
-   while (1) {
-        double dx = target_x - x;
-        double dy = target_y - y;
-        double distance = sqrt(dx*dx + dy*dy);
+  while (1) {
+    double dx = target_x - x;
+    double dy = target_y - y;
+    double distance = sqrt(dx * dx + dy * dy);
 
-        if (distance < 0.1) break; // Check early to avoid unnecessary calculations if already at target
+    if (distance < 0.1)
+      break; // Check early to avoid unnecessary calculations if already at
+             // target
 
+    double target_angle = atan2(dy, dx);
+    double turn_error = target_angle - gyro1;
 
-        double target_angle = atan2(dy, dx);
-        double turn_error = target_angle - gyro1;
+    while (turn_error > M_PI)
+      turn_error -= 2 * M_PI;
+    while (turn_error < -M_PI)
+      turn_error += 2 * M_PI;
 
-        while (turn_error > M_PI) turn_error -= 2 * M_PI;
-        while (turn_error < -M_PI) turn_error += 2 * M_PI;
+    double fwd_error = distance;
+    double turn_output = Kp_turn * turn_error + Ki_turn * turn_integral -
+                         Kd_turn * (turn_error - turn_prev_error);
+    double fwd_output = Kp_fwd * fwd_error + Ki_fwd * fwd_integral -
+                        Kd_fwd * (fwd_error - fwd_prev_error);
 
-        double fwd_error = distance;
-        double turn_output = Kp_turn * turn_error + Ki_turn * turn_integral - Kd_turn * (turn_error - turn_prev_error);
-        double fwd_output = Kp_fwd * fwd_error + Ki_fwd * fwd_integral - Kd_fwd * (fwd_error - fwd_prev_error);
+    turn_integral += turn_error;
+    turn_prev_error = turn_error;
 
-        turn_integral += turn_error;
-        turn_prev_error = turn_error;
+    fwd_integral += fwd_error;
+    fwd_prev_error = fwd_error;
 
-        fwd_integral += fwd_error;
-        fwd_prev_error = fwd_error;
+    leftSpeed = speed * fwd_output + turn_output;
+    rightSpeed = speed * fwd_output - turn_output;
 
-        leftSpeed = speed * fwd_output + turn_output;
-        rightSpeed =  speed * fwd_output - turn_output;
-
-        sleep(5);
-    }
+    sleep(5);
+  }
 }
 
-void buttonLup_pressed() {armSpeed = 100;}
+void buttonLup_pressed() {
+  clawStatesActive = false;
+  Arm.spin(fwd);
+  Arm.setVelocity(70, pct);
+}
 
-void buttonLdown_pressed() {armSpeed = -100;}
+void buttonLdown_pressed() {
+  clawStatesActive = false;
+  Arm.spin(fwd);
+  Arm.setVelocity(-70, pct);
+}
 
-void buttonLup_released() {armSpeed = 0;}
+void buttonLup_released() {
+  Arm.setVelocity(0, pct);
+  Arm.stop();
+}
 
-void buttonLdown_released() {armSpeed = 0;}
+void buttonLdown_released() {
+  Arm.setVelocity(0, pct);
+  Arm.stop();
+}
 
-void buttonRup_pressed() {clawSpeed = -100;}
+void buttonRup_pressed() {
+  clawStatesActive = false;
+  Claw.setVelocity(-70, pct);
+  Claw.spin(fwd);
+}
 
-void buttonRdown_pressed() {clawSpeed = 100;}
+void buttonRdown_pressed() {
+  clawStatesActive = false;
+  Claw.setVelocity(70, pct);
+  Claw.spin(fwd);
+}
 
-void buttonRup_released() {clawSpeed = 0;}
+void buttonRup_released() {
+  Claw.setVelocity(0, pct);
+  Claw.stop();
+}
 
-void buttonRdown_released() {clawSpeed = 0;}
+void buttonRdown_released() {
+  Claw.setVelocity(0, pct);
+  Claw.stop();
+}
 
 void buttonUP_pressed() {
+  clawStatesActive = true;
   if (clawState < 3) {
-  clawState += 1;
+    clawState += 1;
   } else {
     clawState = 3;
+  }
+  if (clawStatesActive) {
+    if (clawState == 1) {
+      Arm.setVelocity(70, pct);
+      Claw.setVelocity(70, pct);
+      Arm.spinToPosition(30, deg);
+      Claw.spinToPosition(100, deg);
+    } else if (clawState == 2) {
+      Arm.setVelocity(70, pct);
+      Claw.setVelocity(70, pct);
+      Arm.spinToPosition((45 * 7), deg);
+      Claw.spinToPosition(45 * 5, deg);
+    } else if (clawState == 3) {
+      Arm.setVelocity(70, pct);
+      Claw.setVelocity(70, pct);
+      Arm.spinToPosition((90 * 7), deg);
+      Claw.spinToPosition(90 * 5, deg);
+    }
+    sleep(5);
   }
 }
 
 void buttonDOWN_pressed() {
-  if (clawState > 1) {
+  clawStatesActive = true;
+  if (clawState > 0) {
     clawState -= 1;
   } else {
     clawState = 1;
   }
+  if (clawStatesActive) {
+    if (clawState == 1) {
+      Arm.setVelocity(70, pct);
+      Claw.setVelocity(70, pct);
+      Arm.spinToPosition(30, deg);
+      Claw.spinToPosition(100, deg);
+    } else if (clawState == 2) {
+      Arm.setVelocity(70, pct);
+      Claw.setVelocity(70, pct);
+      Arm.spinToPosition((45 * 7), deg);
+      Claw.spinToPosition(45 * 5, deg);
+    } else if (clawState == 3) {
+      Arm.setVelocity(70, pct);
+      Claw.setVelocity(70, pct);
+      Arm.spinToPosition((90 * 7), deg);
+      Claw.spinToPosition(90 * 5, deg);
+    }
+    sleep(5);
+  }
 }
 
-void buttonLEFT_pressed() {ClawFlip = !ClawFlip;}
+void buttonLEFT_pressed() { ClawFlip = !ClawFlip; }
 
 void buttonRIGHT_pressed() {}
 
@@ -526,11 +608,9 @@ void brain_pressed() {}
 
 void buttonX_pressed() {}
 
+void buttonY_pressed() { ClawA = !ClawA; }
 
-
-void buttonY_pressed() {ClawA = !ClawA;}
-
-void buttonB_pressed() {ClawB = !ClawB;}
+void buttonB_pressed() { ClawB = !ClawB; }
 
 void buttonLup_pressed2() {}
 
@@ -544,9 +624,7 @@ void buttonRdown_released2() {}
 
 void buttonRup_released2() {}
 
-void PIDTest() {
-
-  }
+void PIDTest() {}
 
 void autonomous() {
   autonHappened = true;
@@ -559,15 +637,14 @@ void autonomous() {
   } else if (autonNumber == 3) {
 
   } else if (autonNumber == 4) {
-  
+
   } else if (autonNumber == 5) {
 
   } else if (autonNumber == 6) {
-
   }
 }
 
-void buttonA_pressed() {autonomous();}
+void buttonA_pressed() { autonomous(); }
 
 void usercontrol() {
   resetTimer();
@@ -576,6 +653,10 @@ void usercontrol() {
   driveTorque = 100;
   fieldControlState = 4;
   stopAll();
+  Claw.spin(fwd);
+  Arm.spin(fwd);
+  Claw.setStopping(hold);
+  Arm.setStopping(hold);
 
   while (1) {
     sleep(10);
