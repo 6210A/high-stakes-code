@@ -25,6 +25,7 @@ motor_group Arm = motor_group(ArmMotorA, ArmMotorB);
 digital_out ClawFlip = digital_out(Brain.ThreeWirePort.A);
 digital_out ClawA = digital_out(Brain.ThreeWirePort.B);
 digital_out ClawB = digital_out(Brain.ThreeWirePort.C);
+digital_out MogoMech = digital_out(Brain.ThreeWirePort.D);
 
 // VEXcode generated functions
 // define variable for remote controller enable/disable

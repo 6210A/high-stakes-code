@@ -18,6 +18,7 @@ extern motor_group Arm;
 extern digital_out ClawFlip;
 extern digital_out ClawA;
 extern digital_out ClawB;
+extern digital_out MogoMech;
 
 /**
  * Used to initialize code/tasks/devices added using tools in VEXcode Pro.

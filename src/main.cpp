@@ -1,3 +1,23 @@
+// ---- START VEXCODE CONFIGURED DEVICES ----
+// Robot Configuration:
+// [Name]               [Type]        [Port(s)]
+// Controller1          controller
+// RFDrive              motor         1
+// RMDrive              motor         2
+// RBDrive              motor         3
+// LFDrive              motor         5
+// LMDrive              motor         6
+// LBDrive              motor         7
+// Inertial20           inertial      20
+// Claw                 motor         10
+// OdomX                rotation      8
+// OdomY                rotation      9
+// Arm                  motor_group   11, 12
+// ClawFlip             digital_out   A
+// ClawA                digital_out   B
+// ClawB                digital_out   C
+// MogoMech             digital_out   D
+// ---- END VEXCODE CONFIGURED DEVICES ----
 #include "vex.h"
 // ---- START VEXCODE CONFIGURED DEVICES ----
 // Robot Configuration:
@@ -606,11 +626,23 @@ void buttonRIGHT_pressed() {}
 
 void brain_pressed() {}
 
-void buttonX_pressed() {}
+void buttonX_pressed() {
+  if (!ClawFlip) {
+    ClawA = !ClawA;
+  } else {
+    ClawB = !ClawB;
+  }
+}
 
-void buttonY_pressed() { ClawA = !ClawA; }
+void buttonY_pressed() { MogoMech = !MogoMech; }
 
-void buttonB_pressed() { ClawB = !ClawB; }
+void buttonB_pressed() {
+  if (!ClawFlip) {
+    ClawB = !ClawB;
+  } else {
+    ClawA = !ClawA;
+  }
+}
 
 void buttonLup_pressed2() {}
 
