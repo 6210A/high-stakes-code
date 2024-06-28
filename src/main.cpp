@@ -338,17 +338,17 @@ int clawStatesTask() {
       Arm.setVelocity(70, pct);
       Claw.setVelocity(70, pct);
       Arm.spinToPosition(30, deg);
-      Claw.spinToPosition(100, deg);
+      Claw.spinToPosition(5, deg);
     } else if (clawState == 2) {
       Arm.setVelocity(70, pct);
       Claw.setVelocity(70, pct);
       Arm.spinToPosition((45 * 7), deg);
-      Claw.spinToPosition(45 * 5, deg);
+      Claw.spinToPosition((30 * 5), deg);
     } else if (clawState == 3) {
       Arm.setVelocity(70, pct);
       Claw.setVelocity(70, pct);
       Arm.spinToPosition((90 * 7), deg);
-      Claw.spinToPosition(90 * 5, deg);
+      Claw.spinToPosition(80 * 5, deg);
     }
   }
   return (0);
@@ -576,17 +576,17 @@ void buttonUP_pressed() {
       Arm.setVelocity(70, pct);
       Claw.setVelocity(70, pct);
       Arm.spinToPosition(30, deg);
-      Claw.spinToPosition(100, deg);
+      Claw.spinToPosition(10, deg);
     } else if (clawState == 2) {
       Arm.setVelocity(70, pct);
       Claw.setVelocity(70, pct);
       Arm.spinToPosition((45 * 7), deg);
-      Claw.spinToPosition(45 * 5, deg);
+      Claw.spinToPosition((30 * 5), deg);
     } else if (clawState == 3) {
       Arm.setVelocity(70, pct);
       Claw.setVelocity(70, pct);
       Arm.spinToPosition((90 * 7), deg);
-      Claw.spinToPosition(90 * 5, deg);
+      Claw.spinToPosition((80 * 5), deg);
     }
     sleep(5);
   }
@@ -603,18 +603,18 @@ void buttonDOWN_pressed() {
     if (clawState == 1) {
       Arm.setVelocity(70, pct);
       Claw.setVelocity(70, pct);
+      Claw.spinToPosition(5, deg);
       Arm.spinToPosition(30, deg);
-      Claw.spinToPosition(100, deg);
     } else if (clawState == 2) {
       Arm.setVelocity(70, pct);
       Claw.setVelocity(70, pct);
       Arm.spinToPosition((45 * 7), deg);
-      Claw.spinToPosition(45 * 5, deg);
+      Claw.spinToPosition((30 * 5), deg);
     } else if (clawState == 3) {
       Arm.setVelocity(70, pct);
       Claw.setVelocity(70, pct);
       Arm.spinToPosition((90 * 7), deg);
-      Claw.spinToPosition(90 * 5, deg);
+      Claw.spinToPosition((80 * 5), deg);
     }
     sleep(5);
   }
