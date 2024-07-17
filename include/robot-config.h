@@ -20,6 +20,7 @@ extern digital_out TopClaw;
 extern digital_out MogoMech;
 extern motor Arm1;
 extern motor Arm2;
+extern digital_out HangLock;
 
 /**
  * Used to initialize code/tasks/devices added using tools in VEXcode Pro.

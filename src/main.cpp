@@ -18,6 +18,28 @@
 // MogoMech             digital_out   D
 // Arm1                 motor         11
 // Arm2                 motor         12
+// HangLock             digital_out   F
+// ---- END VEXCODE CONFIGURED DEVICES ----
+// ---- START VEXCODE CONFIGURED DEVICES ----
+// Robot Configuration:
+// [Name]               [Type]        [Port(s)]
+// Controller1          controller
+// RFDrive              motor         1
+// RMDrive              motor         2
+// RBDrive              motor         3
+// LFDrive              motor         5
+// LMDrive              motor         6
+// LBDrive              motor         7
+// Inertial14           inertial      14
+// Claw                 motor         10
+// OdomX                rotation      8
+// OdomY                rotation      9
+// ClawFlip             digital_out   E
+// BottomClaw           digital_out   B
+// TopClaw              digital_out   C
+// MogoMech             digital_out   D
+// Arm1                 motor         11
+// Arm2                 motor         12
 // ---- END VEXCODE CONFIGURED DEVICES ----
 // ---- START VEXCODE CONFIGURED DEVICES ----
 // Robot Configuration:
@@ -194,14 +216,14 @@ int brainScreenTask() {
       Brain.Screen.printAt(1, 210, "Auton: Red Right");
       Brain.Screen.setFillColor(red);
     } else if (autonNumber == 2) {
-      Brain.Screen.printAt(1, 210, "Auton: Blue");
-      Brain.Screen.setFillColor(blue);
+      Brain.Screen.printAt(1, 210, "Auton: Red Left");
+      Brain.Screen.setFillColor("ff8e51");
     } else if (autonNumber == 3) {
-      Brain.Screen.printAt(1, 210, "Auton: Far Side Safe");
-      Brain.Screen.setFillColor("#008000");
+      Brain.Screen.printAt(1, 210, "Auton: Blue Right");
+      Brain.Screen.setFillColor(blue);
     } else if (autonNumber == 4) {
-      Brain.Screen.printAt(1, 210, "Auton: Far Side WP");
-      Brain.Screen.setFillColor("#403e39");
+      Brain.Screen.printAt(1, 210, "Auton: Blue Left");
+      Brain.Screen.setFillColor("#00c9ff");
     } else if (autonNumber == 5) {
       Brain.Screen.printAt(1, 210, "Auton: Far Side Elims");
       Brain.Screen.setFillColor(purple);
@@ -434,8 +456,13 @@ int clawStatesTask() {
       if (clawState == 21) {
         TopClaw = true;
         BottomClaw = true;
-        armGoal = 30;
+        armGoal = 40;
         clawGoal = -155;
+      }
+      if (clawState == 101) {
+        armGoal = 30;
+        TopClaw = false;
+        BottomClaw = false;
       }
     } else {
       if (Controller1.ButtonUp.pressing()) {
@@ -635,8 +662,11 @@ void buttonLdown_pressed() {
   clawStatesActive = true;
   if (Controller1.ButtonL1.pressing()) {
     ignoreRelease = true;
-    if (clawState < 3) {
+    if (clawState == 2) {
       clawState = 21;
+    }
+    if (clawState == 1) {
+      clawState = 12;
     }
   } else {
     ignoreRelease = false;
@@ -646,14 +676,17 @@ void buttonLdown_pressed() {
 void buttonLup_released() {
   if (!ignoreRelease) {
     if (clawState == 21) {
-      TopClaw = false;
-      BottomClaw = false;
+      clawState = 101;
+      sleep(250);
       clawState = 0;
-    }
-    if (clawState < 4) {
-      clawState += 1;
+    } else if (clawState == 12) {
+      clawState = 1;
     } else {
-      clawState = 4;
+      if (clawState < 4) {
+        clawState += 1;
+      } else {
+        clawState = 4;
+      }
     }
   }
 }
@@ -661,8 +694,10 @@ void buttonLup_released() {
 void buttonLdown_released() {
   if (!ignoreRelease) {
     if (clawState == 21) {
-      TopClaw = false;
-      BottomClaw = false;
+      clawState = 101;
+      sleep(250);
+      clawState = 1;
+    } else if (clawState == 12) {
       clawState = 1;
     } else {
       if (clawState > 1) {
@@ -677,7 +712,12 @@ void buttonLdown_released() {
 void buttonRup_pressed() {
   if (Controller1.ButtonR2.pressing()) {
     ignoreRelease = true;
-    ClawFlip = !ClawFlip;
+    if (clawState == 1) {
+      clawState = 2;
+      ClawFlip = !ClawFlip;
+    } else {
+      ClawFlip = !ClawFlip;
+    }
   } else {
     ignoreRelease = false;
   }
@@ -686,7 +726,12 @@ void buttonRup_pressed() {
 void buttonRdown_pressed() {
   if (Controller1.ButtonR1.pressing()) {
     ignoreRelease = true;
-    ClawFlip = !ClawFlip;
+    if (clawState == 1) {
+      clawState = 2;
+      ClawFlip = !ClawFlip;
+    } else {
+      ClawFlip = !ClawFlip;
+    }
   } else {
     ignoreRelease = false;
   }
@@ -716,7 +761,7 @@ void buttonUP_pressed() { clawStatesActive = false; }
 
 void buttonDOWN_pressed() { clawStatesActive = false; }
 
-void buttonLEFT_pressed() {}
+void buttonLEFT_pressed() { HangLock = !HangLock; }
 
 void buttonRIGHT_pressed() {}
 
@@ -748,33 +793,52 @@ void buttonRup_released2() {}
 
 void redRight() {
   Inertial14.setRotation(-135, deg);
-  sleep(1000);
   clawState = 3;
   sleep(250);
-  driveDistance(25, 5, -135);
+  driveDistance(25, 6, -135);
   clawState = 2;
-  sleep(750);
+  sleep(250);
   BottomClaw = false;
-  driveDistance(-25, 5, -110);
-  driveTurn(40, -70, 10);
-  clawState = 11;
-  sleep(500);
+  driveDistance(-50, 10, -135);
+  clawState = 3;
+  driveTurn(40, 10, 8);
+  driveDistance(25, 28, 8);
+  MogoMech = true;
+  driveDistance(30, 5, 8);
+  clawState = 1;
+  driveDistance(-40, 5, 45);
+  driveTurn(40, 90, 10);
+  driveDistance(50, 14, 90);
   BottomClaw = true;
-
-  // driveTurn(45, 125, 5);
-  // driveDistance(45, 10, 125);
-  // driveTorque = 20;
-  // driveTillStop(45, 125);
-  // TopClaw = true;
-  // BottomClaw = true;
-  // sleep(250);
-  // clawState = 12;
-  // driveTorque = 100;
-  // driveDistance(-50, 10, 125);
-  // driveTurn(50, -25, 5);
-  // clawState = 3;
-  // driveDistance(40, 45, -25);
-  // MogoMech = true;
+  sleep(200);
+  clawState = 12;
+  clawState = 21;
+  driveTurn(50, 145, 10);
+  driveDistance(40, 5, 145);
+  sleep(100);
+  clawState = 101;
+  sleep(200);
+  clawState = 11;
+  driveTorque = 50;
+  driveTillStop(40, 150);
+  driveTorque = 100;
+  TopClaw = true;
+  BottomClaw = true;
+  sleep(200);
+  clawState = 12;
+  driveDistance(-35, 10, 130);
+  clawState = 2;
+  sleep(200);
+  clawState = 21;
+  driveDistance(-20, 35, 135);
+  clawState = 101;
+  sleep(200);
+  clawState = 1;
+  MogoMech = false;
+  sleep(500);
+  clawState = 3;
+  sleep(1000);
+  driveDistance(-25, 18, 135);
 }
 
 void redLeft() {}

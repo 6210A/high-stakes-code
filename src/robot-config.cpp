@@ -25,6 +25,7 @@ digital_out TopClaw = digital_out(Brain.ThreeWirePort.C);
 digital_out MogoMech = digital_out(Brain.ThreeWirePort.D);
 motor Arm1 = motor(PORT11, ratio18_1, false);
 motor Arm2 = motor(PORT12, ratio18_1, true);
+digital_out HangLock = digital_out(Brain.ThreeWirePort.F);
 
 // VEXcode generated functions
 // define variable for remote controller enable/disable
