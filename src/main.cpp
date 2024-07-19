@@ -13,70 +13,6 @@
 // OdomX                rotation      8
 // OdomY                rotation      9
 // ClawFlip             digital_out   E
-// BottomClaw           digital_out   B
-// TopClaw              digital_out   C
-// MogoMech             digital_out   D
-// Arm1                 motor         11
-// Arm2                 motor         12
-// HangLock             digital_out   F
-// ---- END VEXCODE CONFIGURED DEVICES ----
-// ---- START VEXCODE CONFIGURED DEVICES ----
-// Robot Configuration:
-// [Name]               [Type]        [Port(s)]
-// Controller1          controller
-// RFDrive              motor         1
-// RMDrive              motor         2
-// RBDrive              motor         3
-// LFDrive              motor         5
-// LMDrive              motor         6
-// LBDrive              motor         7
-// Inertial14           inertial      14
-// Claw                 motor         10
-// OdomX                rotation      8
-// OdomY                rotation      9
-// ClawFlip             digital_out   E
-// BottomClaw           digital_out   B
-// TopClaw              digital_out   C
-// MogoMech             digital_out   D
-// Arm1                 motor         11
-// Arm2                 motor         12
-// ---- END VEXCODE CONFIGURED DEVICES ----
-// ---- START VEXCODE CONFIGURED DEVICES ----
-// Robot Configuration:
-// [Name]               [Type]        [Port(s)]
-// Controller1          controller
-// RFDrive              motor         1
-// RMDrive              motor         2
-// RBDrive              motor         3
-// LFDrive              motor         5
-// LMDrive              motor         6
-// LBDrive              motor         7
-// Inertial14           inertial      14
-// Claw                 motor         10
-// OdomX                rotation      8
-// OdomY                rotation      9
-// ClawFlip             digital_out   E
-// BottomClaw           digital_out   B
-// TopClaw                digital_out   C
-// MogoMech             digital_out   D
-// Arm1                 motor         11
-// Arm2                 motor         12
-// ---- END VEXCODE CONFIGURED DEVICES ----
-// ---- START VEXCODE CONFIGURED DEVICES ----
-// Robot Configuration:
-// [Name]               [Type]        [Port(s)]
-// Controller1          controller
-// RFDrive              motor         1
-// RMDrive              motor         2
-// RBDrive              motor         3
-// LFDrive              motor         5
-// LMDrive              motor         6
-// LBDrive              motor         7
-// Inertial14           inertial      14
-// Claw                 motor         10
-// OdomX                rotation      8
-// OdomY                rotation      9
-// ClawFlip             digital_out   E
 // BottomClaw                digital_out   B
 // TopClaw                digital_out   C
 // MogoMech             digital_out   D
@@ -99,6 +35,7 @@ int axis4;
 
 double gyro1;
 int msecClock;
+int headingMultiplier = 1;
 
 double avgDriveDistance;
 double avgDriveSpeed;
@@ -184,6 +121,7 @@ void stopAll() {
 
 void preAuton() {
   BottomClaw = true;
+  HangLock = true;
   fieldControlState = 0;
   Brain.Screen.clearScreen();
   Brain.Screen.printAt(320, 200, "Pre Auton");
@@ -191,6 +129,18 @@ void preAuton() {
   sleep(100);
   Controller1.Screen.clearScreen();
   fieldControlState = 1;
+  Arm1.spin(fwd);
+  Arm2.spin(fwd);
+  Claw.spin(fwd);
+  sleep(200);
+  while (Arm1.velocity(pct) > 0.1 || Arm2.velocity(pct) > 0.1 ||
+         Claw.velocity(pct) > 0.1) {
+    sleep(25);
+  }
+  sleep(50);
+  Arm1.setPosition(700, deg);
+  Arm2.setPosition(700, deg);
+  Claw.setPosition(501, deg);
 }
 
 int brainScreenTask() {
@@ -213,43 +163,40 @@ int brainScreenTask() {
     Brain.Screen.printAt(320, 150, "PotR: %3.2f   ");
 
     if (autonNumber == 1) {
-      Brain.Screen.printAt(1, 210, "Auton: Red Right");
-      Brain.Screen.setFillColor(red);
+      Brain.Screen.printAt(1, 210, "Auton: Qual. Right");
+      Brain.Screen.setFillColor("#ff4200");
     } else if (autonNumber == 2) {
-      Brain.Screen.printAt(1, 210, "Auton: Red Left");
-      Brain.Screen.setFillColor("ff8e51");
+      Brain.Screen.printAt(1, 210, "Auton: Qual. Left");
+      Brain.Screen.setFillColor("#00ecff");
     } else if (autonNumber == 3) {
-      Brain.Screen.printAt(1, 210, "Auton: Blue Right");
-      Brain.Screen.setFillColor(blue);
+      Brain.Screen.printAt(1, 210, "Auton: Red Elims");
+      Brain.Screen.setFillColor(red);
     } else if (autonNumber == 4) {
-      Brain.Screen.printAt(1, 210, "Auton: Blue Left");
-      Brain.Screen.setFillColor("#00c9ff");
+      Brain.Screen.printAt(1, 210, "Auton: Blue Elims");
+      Brain.Screen.setFillColor(blue);
     } else if (autonNumber == 5) {
-      Brain.Screen.printAt(1, 210, "Auton: Far Side Elims");
+      Brain.Screen.printAt(1, 210, "Auton: Test");
       Brain.Screen.setFillColor(purple);
     } else if (autonNumber == 6) {
-      Brain.Screen.printAt(1, 210, "Auton: PID Test");
-      Brain.Screen.setFillColor(green);
-    } else if (autonNumber == 7) {
-      Brain.Screen.printAt(1, 210, "Auton: None");
+      Brain.Screen.printAt(1, 210, "Auton: Nothing");
       Brain.Screen.setFillColor(black);
     }
-  }
 
-  if (fieldControlState == 0) {
-    Brain.Screen.printAt(320, 200, "Pre Auton");
-  }
-  if (fieldControlState == 1) {
-    Brain.Screen.printAt(320, 200, "Pre Auton Done");
-  }
-  if (fieldControlState == 2) {
-    Brain.Screen.printAt(320, 200, "Autonomous");
-  }
-  if (fieldControlState == 3) {
-    Brain.Screen.printAt(320, 200, "Autonomous Done");
-  }
-  if (fieldControlState == 4) {
-    Brain.Screen.printAt(320, 200, "Driver");
+    if (fieldControlState == 0) {
+      Brain.Screen.printAt(320, 200, "Pre Auton");
+    }
+    if (fieldControlState == 1) {
+      Brain.Screen.printAt(320, 200, "Pre Auton Done");
+    }
+    if (fieldControlState == 2) {
+      Brain.Screen.printAt(320, 200, "Autonomous");
+    }
+    if (fieldControlState == 3) {
+      Brain.Screen.printAt(320, 200, "Autonomous Done");
+    }
+    if (fieldControlState == 4) {
+      Brain.Screen.printAt(320, 200, "Driver");
+    }
   }
 }
 
@@ -259,12 +206,14 @@ int controllerScreenTask() {
     sleep(50);
 
     Controller1.Screen.setCursor(1, 1);
-    Controller1.Screen.print("Gyro: %3.0f    ", Inertial14.rotation());
+    Controller1.Screen.print("Gyro: %3.2f  ", Inertial14.rotation());
+    Controller1.Screen.setCursor(1, 15);
+    Controller1.Screen.print("HM: %d ", headingMultiplier);
 
     Controller1.Screen.setCursor(2, 1);
     Controller1.Screen.print("Claw State: %1.0f", clawState);
     Controller1.Screen.setCursor(2, 16);
-    Controller1.Screen.print("%3.2f", clawGoal);
+    Controller1.Screen.print("%3.0f", clawGoal);
 
     Controller1.Screen.setCursor(3, 1);
     Controller1.Screen.print("%1.0f ",
@@ -398,9 +347,11 @@ int clawSpeedTask() {
 int clawStatesTask() {
   while (1) {
     sleep(5);
+
     if (armGoal > 100) {
       armGoal = 100;
     }
+
     if (armGoal < 3) {
       armGoal = 3;
     }
@@ -412,6 +363,7 @@ int clawStatesTask() {
         clawGoal = (armGoal * .8);
       }
     }
+
     Arm1.spin(fwd, (((armGoal * 7) - Arm1.position(deg)) * .35), pct);
     Arm2.spin(fwd, (((armGoal * 7) - Arm2.position(deg)) * .35), pct);
     Claw.spin(fwd, (((clawGoal * 5) - Claw.position(deg)) * .5), pct);
@@ -439,7 +391,7 @@ int clawStatesTask() {
       }
       if (clawState == 4) {
         armGoal = 90;
-        clawGoal = 40;
+        clawGoal = 50;
       }
       if (clawState == 11) {
         armGoal = 12;
@@ -522,7 +474,7 @@ int odometryTask() {
     y += distY;
 
     // Output the current position to the terminal
-    // printf("X: %.2f, Y: %.2f\n", x, y);
+    printf("X: %.2f, Y: %.2f\n", x, y);
 
     sleep(10);
   }
@@ -567,10 +519,12 @@ void driveTillStop(int Speed, double Heading) {
 }
 
 void driveTurn(int Speed, int Heading, int Accuracy) {
-  printf("Heading: %3.0f", Inertial14.heading());
   int integral = 0;
   int previousError = 0;
-  double kP = 0.415;
+  double kP = .415;
+  if (clawState == 3 || clawState == 4) {
+    kP = 0.5;
+  }
   double kI = 0;
   double kD = 0.005;
   double lsp;
@@ -763,7 +717,7 @@ void buttonDOWN_pressed() { clawStatesActive = false; }
 
 void buttonLEFT_pressed() { HangLock = !HangLock; }
 
-void buttonRIGHT_pressed() {}
+void buttonRIGHT_pressed() { HangLock = !HangLock; }
 
 void brain_pressed() {
   if (autonNumber > 6) {
@@ -791,57 +745,60 @@ void buttonRdown_released2() {}
 
 void buttonRup_released2() {}
 
-void redRight() {
-  Inertial14.setRotation(-135, deg);
+void quals() {
   clawState = 3;
   sleep(250);
-  driveDistance(25, 6, -135);
+  driveDistance(25, 6, -138 * headingMultiplier);
   clawState = 2;
   sleep(250);
   BottomClaw = false;
-  driveDistance(-50, 10, -135);
+  driveDistance(-50, 10, -138 * headingMultiplier);
   clawState = 3;
-  driveTurn(40, 10, 8);
-  driveDistance(25, 28, 8);
+  driveTurn(40, 7 * headingMultiplier, 4);
+  driveDistance(25, 28, 7 * headingMultiplier);
   MogoMech = true;
-  driveDistance(30, 5, 8);
+  driveDistance(30, 5, 7 * headingMultiplier);
   clawState = 1;
-  driveDistance(-40, 5, 45);
-  driveTurn(40, 90, 10);
-  driveDistance(50, 14, 90);
+  driveDistance(-40, 5, 42 * headingMultiplier);
+  driveTurn(40, 87 * headingMultiplier, 5);
+  driveDistance(50, 26, 90 * headingMultiplier);
   BottomClaw = true;
-  sleep(200);
+  sleep(100);
   clawState = 12;
   clawState = 21;
-  driveTurn(50, 145, 10);
-  driveDistance(40, 5, 145);
+  driveTurn(50, 155 * headingMultiplier, 10);
+  driveDistance(40, 9, 155 * headingMultiplier);
   sleep(100);
   clawState = 101;
   sleep(200);
-  clawState = 11;
+  if (headingMultiplier == 1) {
+    clawState = 11;
+  } else {
+    clawState = 1;
+  }
   driveTorque = 50;
-  driveTillStop(40, 150);
+  driveTillStop(40, 147 * headingMultiplier);
   driveTorque = 100;
   TopClaw = true;
   BottomClaw = true;
   sleep(200);
   clawState = 12;
-  driveDistance(-35, 10, 130);
+  driveDistance(-35, 10, 127 * headingMultiplier);
   clawState = 2;
   sleep(200);
   clawState = 21;
-  driveDistance(-20, 35, 135);
+  driveDistance(-20, 35, 132 * headingMultiplier);
   clawState = 101;
   sleep(200);
   clawState = 1;
   MogoMech = false;
-  sleep(500);
-  clawState = 3;
-  sleep(1000);
-  driveDistance(-25, 18, 135);
+  sleep(750);
+  clawState = 4;
+  sleep(750);
+  driveDistance(-50, 18, 132 * headingMultiplier);
 }
 
-void redLeft() {}
+void elims() { Inertial14.setRotation(0 * headingMultiplier, deg); }
 
 void PIDTest() {
   driveTurn(40, 45, 10);
@@ -859,17 +816,23 @@ void autonomous() {
   autonRunning = true;
   driveHold = true;
   if (autonNumber == 1) {
-    redRight();
+    headingMultiplier = 1;
+    Inertial14.setRotation(-138, deg);
+    quals();
   } else if (autonNumber == 2) {
-    redLeft();
+    headingMultiplier = -1;
+    Inertial14.setRotation(138, deg);
+    quals();
   } else if (autonNumber == 3) {
-
+    headingMultiplier = 1;
+    elims();
   } else if (autonNumber == 4) {
-
+    headingMultiplier = -1;
+    elims();
   } else if (autonNumber == 5) {
-
-  } else if (autonNumber == 6) {
     PIDTest();
+  } else if (autonNumber == 6) {
+    sleep(10);
   }
 }
 
@@ -923,6 +886,15 @@ void usercontrol() {
 
       leftSpeed = axis3 + axis1;
       rightSpeed = axis3 - axis1;
+
+      if (clawState == 3 || clawState == 4) {
+        if (leftSpeed > 60) {
+          leftSpeed = 60;
+        }
+        if (rightSpeed > 60) {
+          rightSpeed = 60;
+        }
+      }
     }
   }
 }
