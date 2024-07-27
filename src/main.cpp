@@ -146,7 +146,7 @@ double clawGoal = 0;
 bool ignoreRelease = false;
 
 bool autonRunning = false;
-int autonNumber = 5;
+int autonNumber = 3;
 bool autonHappened = false;
 
 void sleep(int sleepmsec) { task::sleep(sleepmsec); }
@@ -284,12 +284,12 @@ int controllerScreenTask() {
     Controller1.Screen.setCursor(1, 1);
     Controller1.Screen.print("Gyro: %3.2f  ", tilt); // Inertial14.rotation());
     Controller1.Screen.setCursor(1, 15);
-    Controller1.Screen.print("A: %3.0f", armGoal);
+    Controller1.Screen.print("A: %3.0f   ", armGoal);
 
     Controller1.Screen.setCursor(2, 1);
-    Controller1.Screen.print("State: %1.0f", clawState);
+    Controller1.Screen.print("State: %d    ", clawState);
     Controller1.Screen.setCursor(2, 15);
-    Controller1.Screen.print("C: %3.0f", clawGoal);
+    Controller1.Screen.print("C: %3.0f   ", clawGoal);
 
     Controller1.Screen.setCursor(3, 1);
     Controller1.Screen.print("%1.0f ",
@@ -479,7 +479,7 @@ int clawStatesTask() {
       }
       if (clawState == 12) { // Dump out 3rd ring
         armGoal = 45;
-        clawGoal = 80;
+        clawGoal = 150;
       }
       if (clawState == 13) { // Claw flip
         armGoal = 30;
@@ -496,7 +496,7 @@ int clawStatesTask() {
       if (clawState == 21) { // Score internally
         TopClaw = true;
         BottomClaw = true;
-        armGoal = 53;
+        armGoal = 46;
         clawGoal = -155;
       }
       if (clawState == 22) { // Above mobile goal (for goal rush)
@@ -511,6 +511,9 @@ int clawStatesTask() {
         armGoal = 30;
         TopClaw = false;
         BottomClaw = false;
+      }
+      if (clawState == 102) {
+        armGoal = 30;
       }
     } else {
       if (Controller1.ButtonUp.pressing()) {
@@ -696,16 +699,24 @@ void driveTo(int target_x, int target_y, int speed) {
   }
 }
 
+void leftDoublePress() {
+  ignoreRelease = true;
+  if (clawState == 1) {
+    clawState = 11;
+  } else if (clawState == 21) {
+    TopClaw = false;
+    clawState = 102;
+    sleep(250);
+    clawState = 1;
+  } else if (clawState == 2 || clawState == 11) {
+    clawState = 21;
+  }
+}
+
 void buttonLup_pressed() {
   clawStatesActive = true;
   if (Controller1.ButtonL2.pressing()) {
-    ignoreRelease = true;
-    if (clawState == 1) {
-      clawState = 11;
-    }
-    if (clawState == 2) {
-      clawState = 21;
-    }
+      leftDoublePress();
   } else {
     ignoreRelease = false;
   }
@@ -714,14 +725,7 @@ void buttonLup_pressed() {
 void buttonLdown_pressed() {
   clawStatesActive = true;
   if (Controller1.ButtonL1.pressing()) {
-    ignoreRelease = true;
-    if (clawState == 1) {
-      clawState = 11;
-    }
-    if (clawState == 2) {
-      clawState = 21;
-    }
-
+      leftDoublePress();
   } else {
     ignoreRelease = false;
   }
@@ -732,8 +736,8 @@ void buttonLup_released() {
     if (clawState == 21) {
       clawState = 101;
       sleep(250);
-      clawState = 0;
-    } else if (clawState == 12) {
+      clawState = 1;
+    } else if (clawState == 11 || clawState == 12) {
       clawState = 1;
     } else {
       if (clawState < 4) {
@@ -751,7 +755,7 @@ void buttonLdown_released() {
       clawState = 101;
       sleep(250);
       clawState = 1;
-    } else if (clawState == 12) {
+    } else if (clawState == 11 || clawState == 12) {
       clawState = 1;
     } else {
       if (clawState > 1) {
@@ -856,6 +860,7 @@ void buttonRdown_released2() {}
 void buttonRup_released2() {}
 
 void quals() {
+  Inertial14.setRotation(-138 * headingMultiplier, deg);
   clawState = 3;
   sleep(300);
   driveDistance(25, 6, -138 * headingMultiplier);
@@ -865,15 +870,15 @@ void quals() {
   driveDistance(-50, 10, -138 * headingMultiplier);
   clawState = 3;
   driveTurn(40, 7 * headingMultiplier, 2);
-  driveDistance(30, 25, 7 * headingMultiplier);
+  driveDistance(30, 21, 7 * headingMultiplier);
   driveDistance(30, 35, 100 * headingMultiplier);
+  driveDistance(30, 15, 210 * headingMultiplier);
+  MogoMech = true;
   if (headingMultiplier > 0) {
     clawState = 11;
   } else if (headingMultiplier < 0) {
     clawState = 1;
   }
-  driveDistance(30, 15, 210 * headingMultiplier);
-  MogoMech = true;
   driveTorque = 70;
   driveTillStop(30, 165 * headingMultiplier);
   driveTorque = 100;
@@ -900,9 +905,9 @@ void elims() {
   Inertial14.setRotation(20 * headingMultiplier, deg);
   clawState = 22;
   sleep(50);
-  driveDistance(55, 48, 20 * headingMultiplier);
-  clawState = 23;
-  sleep(200);
+  driveDistance(70, 50, 20 * headingMultiplier);
+  clawState = 11;
+  sleep(1000);
   driveDistance(-30, 13, 20 * headingMultiplier);
   BottomClaw = false;
   driveDistance(-30, 2, 20 * headingMultiplier);
@@ -930,7 +935,7 @@ void elims() {
   clawState = 12;
   driveDistance(-40, 15, -225 * headingMultiplier);
   clawState = 21;
-  sleep(1250);
+  sleep(1500);
   TopClaw = false;
   BottomClaw = false;
   clawState = 1;
@@ -1003,11 +1008,9 @@ void autonomous() {
   driveHold = true;
   if (autonNumber == 1) {
     headingMultiplier = 1;
-    Inertial14.setRotation(-138, deg);
     quals();
   } else if (autonNumber == 2) {
     headingMultiplier = -1;
-    Inertial14.setRotation(138, deg);
     quals();
   } else if (autonNumber == 3) {
     headingMultiplier = 1;
