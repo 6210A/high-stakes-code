@@ -146,7 +146,7 @@ double clawGoal = 0;
 bool ignoreRelease = false;
 
 bool autonRunning = false;
-int autonNumber = 3;
+int autonNumber = 5;
 bool autonHappened = false;
 
 void sleep(int sleepmsec) { task::sleep(sleepmsec); }
@@ -282,7 +282,7 @@ int controllerScreenTask() {
     sleep(50);
 
     Controller1.Screen.setCursor(1, 1);
-    Controller1.Screen.print("Gyro: %3.2f  ", tilt); // Inertial14.rotation());
+    Controller1.Screen.print("Gyro: %3.2f  ", Inertial14.rotation());
     Controller1.Screen.setCursor(1, 15);
     Controller1.Screen.print("A: %3.0f   ", armGoal);
 
@@ -714,18 +714,32 @@ void leftDoublePress() {
 }
 
 void buttonLup_pressed() {
-  clawStatesActive = true;
+   clawStatesActive = true;
   if (Controller1.ButtonL2.pressing()) {
-      leftDoublePress();
+    ignoreRelease = true;
+    if (clawState == 1) {
+      clawState = 11;
+    }
+    if (clawState == 2) {
+      clawState = 21;
+    }
+
   } else {
     ignoreRelease = false;
   }
 }
 
 void buttonLdown_pressed() {
-  clawStatesActive = true;
+    clawStatesActive = true;
   if (Controller1.ButtonL1.pressing()) {
-      leftDoublePress();
+    ignoreRelease = true;
+    if (clawState == 1) {
+      clawState = 11;
+    }
+    if (clawState == 2) {
+      clawState = 21;
+    }
+
   } else {
     ignoreRelease = false;
   }
@@ -819,13 +833,19 @@ void buttonRdown_released() {
   }
 }
 
-void buttonUP_pressed() { clawStatesActive = false; }
+void buttonUP_pressed() { 
+  clawStatesActive = false; 
+}
+void buttonDOWN_pressed() { 
+  clawStatesActive = false; 
+}
 
-void buttonDOWN_pressed() { clawStatesActive = false; }
-
-void buttonLEFT_pressed() { HangLock = !HangLock; }
-
-void buttonRIGHT_pressed() { HangLock = !HangLock; }
+void buttonLEFT_pressed() { 
+  HangLock = !HangLock; 
+}
+void buttonRIGHT_pressed() { 
+  HangLock = !HangLock; 
+}
 
 void brain_pressed() {
   if (autonNumber > 6) {
@@ -835,16 +855,15 @@ void brain_pressed() {
   }
 }
 
-void buttonX_pressed() { clawStatesActive = false; }
-
-void buttonY_pressed() { MogoMech = !MogoMech; }
-
+void buttonX_pressed() { 
+  clawStatesActive = false; 
+}
 void buttonB_pressed() {
-  if (autonNumber > 6) {
-    autonNumber = 1;
-  } else {
-    autonNumber += 1;
-  }
+  clawStatesActive = false;
+}
+
+void buttonY_pressed() { 
+  MogoMech = !MogoMech;
 }
 
 void buttonLup_pressed2() {}
@@ -948,6 +967,7 @@ void elims() {
 
 void skills() {
   Inertial14.setRotation(-180, deg);
+  MogoMech = true;
   clawState = 3;
   sleep(250);
   driveDistance(25, 4, -180);
@@ -961,19 +981,34 @@ void skills() {
   BottomClaw = true;
   sleep(300);
   clawState = 3;
-  driveTurn(60, -165, 3);
-  driveDistance(25, 6, -180);
+  driveTurn(60, -175, 3);
+  driveDistance(25, 12, -180);
   clawState = 2;
+  sleep(100);
   driveDistance(25, 2, -180);
   sleep(250);
   BottomClaw = false;
   clawState = 3;
-  driveDistance(40, 25, -90);
+  driveDistance(40, 25, -100);
   driveTorque = 50;
-  driveTillStop(40, -100);
+  driveTillStop(40, -110);
   driveTorque = 100;
-  driveDistance(-40, 10, -45);
-  // driveDistance(45, 15, -45);
+  driveDistance(-40, 15, -45);
+  driveTurn(40, 10, 3);
+  clawState = 1;
+  driveDistance(30, 10, 5);
+  driveDistance(30, 25, -70);
+  sleep(100);
+  BottomClaw = true;
+  sleep(250);
+  clawState = 2;
+  sleep(150);
+  ClawFlip = !ClawFlip;
+  sleep(250);
+  clawState = 1;
+  driveTurn(40, -23, 3);
+  driveDistance(30, 22, -23);
+  TopClaw = true;
   // clawState = 2;
   // driveDistance(30, 15, -100);
   // MogoMech = true;
@@ -991,7 +1026,7 @@ void skills() {
   // driveDistance(-40, 15, -100);
 }
 
-void PIDTest() {
+/*void PIDTest() {
   driveTurn(40, 45, 10);
   sleep(1000);
   driveTurn(40, 135, 10);
@@ -1000,7 +1035,7 @@ void PIDTest() {
   sleep(1000);
   driveTurn(40, 450, 10);
   sleep(5);
-}
+}*/
 
 void autonomous() {
   autonHappened = true;
@@ -1021,7 +1056,7 @@ void autonomous() {
   } else if (autonNumber == 5) {
     skills();
   } else if (autonNumber == 6) {
-    PIDTest();
+    //PIDTest();
   }
 }
 
