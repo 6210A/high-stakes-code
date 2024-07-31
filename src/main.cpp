@@ -848,15 +848,16 @@ void buttonUP_pressed() { clawStatesActive = false; }
 void buttonDOWN_pressed() { clawStatesActive = false; }
 
 void buttonLEFT_pressed() { HangLock = !HangLock; }
-void buttonRIGHT_pressed() { HangLock = !HangLock; }
 
-void brain_pressed() {
+void buttonRIGHT_pressed() {
   if (autonNumber > 6) {
     autonNumber = 1;
   } else {
     autonNumber += 1;
   }
 }
+
+void brain_pressed() {}
 
 void buttonX_pressed() { clawStatesActive = false; }
 void buttonB_pressed() { clawStatesActive = false; }
@@ -973,7 +974,8 @@ void skillsAuton() {
   BottomClaw = false;
   driveDistance(-30, 3, -180);
   clawState = 15;
-  driveTurn(40, -46, 4);
+  driveTurn(40, -60, 8);
+  driveTurn(40, -46, 3);
   driveDistance(30, 32, -46);
   BottomClaw = true;
   sleep(300);
@@ -991,22 +993,29 @@ void skillsAuton() {
   driveTorque = 50;
   driveTillStop(40, -100);
   driveTorque = 100;
-  driveDistance(-40, 20, -95);
-  driveTurn(40, 0, 7);
+  driveDistance(-40, 16, -95);
+  driveTurn(40, 0, 5);
   clawState = 1;
-  driveTillStop(-60, 0);
-  driveDistance(40, 68, -3);
+  driveTillStop(-30, 0);
+  driveDistance(40, 69, 0);
   driveTurn(40, -90, 3);
-  driveTorque = 50;
-  driveTillStop(30, -90);
-  driveTorque = 100;
+  driveDistance(30, 12, -90);
   BottomClaw = true;
   driveDistance(-20, 3, -90);
   clawState = 4;
   sleep(600);
   driveTorque = 50;
-  driveTillStop(25, -90);
+  driveTillStop(20, -90);
+  driveTorque = 100;
   clawState = 3;
+  sleep(200);
+  BottomClaw = false;
+  driveDistance(-30, 13, -90);
+  clawState = 1;
+  sleep(300);
+  driveTurn(30, 0, 3);
+  driveDistance(30, 20, 0);
+  BottomClaw = true;
 }
 
 void skillsDriver() {
