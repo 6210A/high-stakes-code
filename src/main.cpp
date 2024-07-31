@@ -217,6 +217,9 @@ void preAuton() {
   Arm1.setPosition(700, deg);
   Arm2.setPosition(700, deg);
   Claw.setPosition(501, deg);
+  sleep(50);
+  Claw.spin(reverse);
+  sleep(650);
 }
 
 int brainScreenTask() {
@@ -251,11 +254,11 @@ int brainScreenTask() {
       Brain.Screen.printAt(1, 210, "Auton: Blue Elims");
       Brain.Screen.setFillColor("#00ecff");
     } else if (autonNumber == 5) {
-      Brain.Screen.printAt(1, 210, "Auton: Skills");
-      Brain.Screen.setFillColor(yellow);
+      Brain.Screen.printAt(1, 210, "Auton: Auton Skills");
+      Brain.Screen.setFillColor(orange);
     } else if (autonNumber == 6) {
-      Brain.Screen.printAt(1, 210, "Auton: Test");
-      Brain.Screen.setFillColor(black);
+      Brain.Screen.printAt(1, 210, "Auton: Driver Skills");
+      Brain.Screen.setFillColor("#ff5ac6");
     }
 
     if (fieldControlState == 0) {
@@ -507,6 +510,10 @@ int clawStatesTask() {
         armGoal = 40;
         clawGoal = 25;
       }
+      if (clawState == 24) { // Above mobile goal (for driver)
+        armGoal = 43;
+        clawGoal = -23;
+      }
       if (clawState == 101) { // Use after state 21
         armGoal = 30;
         TopClaw = false;
@@ -714,7 +721,7 @@ void leftDoublePress() {
 }
 
 void buttonLup_pressed() {
-   clawStatesActive = true;
+  clawStatesActive = true;
   if (Controller1.ButtonL2.pressing()) {
     ignoreRelease = true;
     if (clawState == 1) {
@@ -723,14 +730,16 @@ void buttonLup_pressed() {
     if (clawState == 2) {
       clawState = 21;
     }
-
+    if (clawState == 3) {
+      clawState = 22;
+    }
   } else {
     ignoreRelease = false;
   }
 }
 
 void buttonLdown_pressed() {
-    clawStatesActive = true;
+  clawStatesActive = true;
   if (Controller1.ButtonL1.pressing()) {
     ignoreRelease = true;
     if (clawState == 1) {
@@ -739,7 +748,9 @@ void buttonLdown_pressed() {
     if (clawState == 2) {
       clawState = 21;
     }
-
+    if (clawState == 3) {
+      clawState = 22;
+    }
   } else {
     ignoreRelease = false;
   }
@@ -751,7 +762,7 @@ void buttonLup_released() {
       clawState = 101;
       sleep(250);
       clawState = 1;
-    } else if (clawState == 11 || clawState == 12) {
+    } else if (clawState == 11 || clawState == 12 || clawState == 22) {
       clawState = 1;
     } else {
       if (clawState < 4) {
@@ -769,7 +780,7 @@ void buttonLdown_released() {
       clawState = 101;
       sleep(250);
       clawState = 1;
-    } else if (clawState == 11 || clawState == 12) {
+    } else if (clawState == 11 || clawState == 12 || clawState == 22) {
       clawState = 1;
     } else {
       if (clawState > 1) {
@@ -833,19 +844,11 @@ void buttonRdown_released() {
   }
 }
 
-void buttonUP_pressed() { 
-  clawStatesActive = false; 
-}
-void buttonDOWN_pressed() { 
-  clawStatesActive = false; 
-}
+void buttonUP_pressed() { clawStatesActive = false; }
+void buttonDOWN_pressed() { clawStatesActive = false; }
 
-void buttonLEFT_pressed() { 
-  HangLock = !HangLock; 
-}
-void buttonRIGHT_pressed() { 
-  HangLock = !HangLock; 
-}
+void buttonLEFT_pressed() { HangLock = !HangLock; }
+void buttonRIGHT_pressed() { HangLock = !HangLock; }
 
 void brain_pressed() {
   if (autonNumber > 6) {
@@ -855,16 +858,10 @@ void brain_pressed() {
   }
 }
 
-void buttonX_pressed() { 
-  clawStatesActive = false; 
-}
-void buttonB_pressed() {
-  clawStatesActive = false;
-}
+void buttonX_pressed() { clawStatesActive = false; }
+void buttonB_pressed() { clawStatesActive = false; }
 
-void buttonY_pressed() { 
-  MogoMech = !MogoMech;
-}
+void buttonY_pressed() { MogoMech = !MogoMech; }
 
 void buttonLup_pressed2() {}
 
@@ -965,7 +962,54 @@ void elims() {
   driveDistance(-40, 5, -225 * headingMultiplier);
 }
 
-void skills() {
+void skillsAuton() {
+  Inertial14.setRotation(-180, deg);
+  MogoMech = true;
+  clawState = 3;
+  sleep(250);
+  driveDistance(25, 4, -180);
+  clawState = 2;
+  sleep(450);
+  BottomClaw = false;
+  driveDistance(-30, 3, -180);
+  clawState = 15;
+  driveTurn(40, -46, 4);
+  driveDistance(30, 32, -46);
+  BottomClaw = true;
+  sleep(300);
+  clawState = 3;
+  driveTurn(40, -175, 3);
+  driveDistance(25, 12, -180);
+  clawState = 2;
+  sleep(100);
+  driveDistance(25, 2, -180);
+  sleep(250);
+  BottomClaw = false;
+  clawState = 3;
+  driveDistance(40, 25, -45);
+  driveDistance(40, 10, -100);
+  driveTorque = 50;
+  driveTillStop(40, -100);
+  driveTorque = 100;
+  driveDistance(-40, 20, -95);
+  driveTurn(40, 0, 7);
+  clawState = 1;
+  driveTillStop(-60, 0);
+  driveDistance(40, 68, -3);
+  driveTurn(40, -90, 3);
+  driveTorque = 50;
+  driveTillStop(30, -90);
+  driveTorque = 100;
+  BottomClaw = true;
+  driveDistance(-20, 3, -90);
+  clawState = 4;
+  sleep(600);
+  driveTorque = 50;
+  driveTillStop(25, -90);
+  clawState = 3;
+}
+
+void skillsDriver() {
   Inertial14.setRotation(-180, deg);
   MogoMech = true;
   clawState = 3;
@@ -977,53 +1021,6 @@ void skills() {
   driveDistance(-30, 3, -180);
   clawState = 15;
   driveTurn(60, -43, 10);
-  driveDistance(30, 32, -43);
-  BottomClaw = true;
-  sleep(300);
-  clawState = 3;
-  driveTurn(60, -175, 3);
-  driveDistance(25, 12, -180);
-  clawState = 2;
-  sleep(100);
-  driveDistance(25, 2, -180);
-  sleep(250);
-  BottomClaw = false;
-  clawState = 3;
-  driveDistance(40, 25, -100);
-  driveTorque = 50;
-  driveTillStop(40, -110);
-  driveTorque = 100;
-  driveDistance(-40, 15, -45);
-  driveTurn(40, 10, 3);
-  clawState = 1;
-  driveDistance(30, 10, 5);
-  driveDistance(30, 25, -70);
-  sleep(100);
-  BottomClaw = true;
-  sleep(250);
-  clawState = 2;
-  sleep(150);
-  ClawFlip = !ClawFlip;
-  sleep(250);
-  clawState = 1;
-  driveTurn(40, -23, 3);
-  driveDistance(30, 22, -23);
-  TopClaw = true;
-  // clawState = 2;
-  // driveDistance(30, 15, -100);
-  // MogoMech = true;
-  // clawState = 21;
-  // sleep(1000);
-  // clawState = 101;
-  // sleep(500);
-  // clawState = 3;
-  // sleep(500);
-  // clawState = 0;
-  // driveTorque = 50;
-  // driveTillStop(40, -135);
-  // driveTorque = 100;
-  // MogoMech = false;
-  // driveDistance(-40, 15, -100);
 }
 
 /*void PIDTest() {
@@ -1054,9 +1051,9 @@ void autonomous() {
     headingMultiplier = -1;
     elims();
   } else if (autonNumber == 5) {
-    skills();
+    skillsAuton();
   } else if (autonNumber == 6) {
-    //PIDTest();
+    skillsDriver();
   }
 }
 
