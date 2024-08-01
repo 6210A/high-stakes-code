@@ -255,7 +255,7 @@ int brainScreenTask() {
       Brain.Screen.setFillColor("#00ecff");
     } else if (autonNumber == 5) {
       Brain.Screen.printAt(1, 210, "Auton: Auton Skills");
-      Brain.Screen.setFillColor(orange);
+      Brain.Screen.setFillColor(yellow);
     } else if (autonNumber == 6) {
       Brain.Screen.printAt(1, 210, "Auton: Driver Skills");
       Brain.Screen.setFillColor("#ff5ac6");
@@ -457,8 +457,8 @@ int clawStatesTask() {
       }
       if (clawState == 1) {
         if (!MogoMech) {
-          armGoal = 1;
-          clawGoal = -5;
+          armGoal = 4;
+          clawGoal = 4;
         } else {
           armGoal = 10;
           clawGoal = 10;
@@ -495,6 +495,10 @@ int clawStatesTask() {
       if (clawState == 15) { // Flat against the ground
         armGoal = 10;
         clawGoal = 15;
+      }
+      if (clawState == 16) { // 4 but claw higher (for skills)
+        armGoal = 97;
+        clawGoal = 10;
       }
       if (clawState == 21) { // Score internally
         TopClaw = true;
@@ -965,7 +969,7 @@ void elims() {
 
 void skillsAuton() {
   Inertial14.setRotation(-180, deg);
-  MogoMech = true;
+  MogoMech = false;
   clawState = 3;
   sleep(250);
   driveDistance(25, 4, -180);
@@ -974,48 +978,78 @@ void skillsAuton() {
   BottomClaw = false;
   driveDistance(-30, 3, -180);
   clawState = 15;
-  driveTurn(40, -60, 8);
   driveTurn(40, -46, 3);
-  driveDistance(30, 32, -46);
+  driveDistance(30, 30, -46);
   BottomClaw = true;
   sleep(300);
   clawState = 3;
-  driveTurn(40, -175, 3);
-  driveDistance(25, 12, -180);
+  driveDistance(-40, 28, -46);
+  driveTurn(40, -97, 1);
+  driveDistance(-15, 3, -97);
+  driveDistance(25, 13, -97);
   clawState = 2;
   sleep(100);
-  driveDistance(25, 2, -180);
+  driveDistance(25, 2, -97);
   sleep(250);
   BottomClaw = false;
   clawState = 3;
-  driveDistance(40, 25, -45);
-  driveDistance(40, 10, -100);
+  driveDistance(40, 25, -135);
+  driveDistance(40, 10, -120);
   driveTorque = 50;
-  driveTillStop(40, -100);
+  driveTillStop(55, -125);
   driveTorque = 100;
-  driveDistance(-40, 16, -95);
-  driveTurn(40, 0, 5);
+  driveDistance(-40, 21, -75);
+  driveTurn(40, 0, 2);
+  clawState = 2;
+  driveTillStop(-40, 0);
+  driveDistance(40, 41, 0);
+  driveDistance(40, 31, -45);
+  driveTurn(30, -92, 1);
   clawState = 1;
-  driveTillStop(-30, 0);
-  driveDistance(40, 69, 0);
-  driveTurn(40, -90, 3);
+  sleep(500);
   driveDistance(30, 12, -90);
   BottomClaw = true;
-  driveDistance(-20, 3, -90);
-  clawState = 4;
-  sleep(600);
-  driveTorque = 50;
+  driveDistance(-30, 4, -90);
+  clawState = 16;
+  sleep(700);
+  driveTorque = 25;
   driveTillStop(20, -90);
   driveTorque = 100;
   clawState = 3;
   sleep(200);
   BottomClaw = false;
   driveDistance(-30, 13, -90);
-  clawState = 1;
-  sleep(300);
+  sleep(100);
+  clawState = 15;
   driveTurn(30, 0, 3);
-  driveDistance(30, 20, 0);
+  driveDistance(30, 23, 0);
   BottomClaw = true;
+  clawState = 2;
+  sleep(250);
+  ClawFlip = true;
+  driveTurn(30, 90, 1);
+  clawState = 15;
+  sleep(250);
+  driveDistance(20, 15, 90);
+  TopClaw = true;
+  sleep(250);
+  driveTurn(30, 55, 3);
+  clawState = 22;
+  sleep(250);
+  driveDistance(35, 30, 55);
+  clawState = 23;
+  sleep(100);
+  TopClaw = false;
+  driveDistance(55, 20, 135);
+  clawState = 3;
+  sleep(500);
+  driveTorque = 50;
+  driveTillStop(50, 85);
+  driveTorque = 100;
+  driveDistance(-30, 30, 80);
+  driveTurn(40, -70, 5);
+  driveTorque = 50;
+  driveDistance(-40, 15, -70);
 }
 
 void skillsDriver() {
@@ -1032,7 +1066,7 @@ void skillsDriver() {
   driveTurn(60, -43, 10);
 }
 
-/*void PIDTest() {
+void PIDTest() {
   driveTurn(40, 45, 10);
   sleep(1000);
   driveTurn(40, 135, 10);
@@ -1041,7 +1075,7 @@ void skillsDriver() {
   sleep(1000);
   driveTurn(40, 450, 10);
   sleep(5);
-}*/
+}
 
 void autonomous() {
   autonHappened = true;
