@@ -149,21 +149,25 @@ bool autonRunning = false;
 int autonNumber = 5;
 bool autonHappened = false;
 
-void sleep(int sleepmsec) { task::sleep(sleepmsec); }
+void sleep(int sleepmsec) {
+  if (autonRunning) {
+    task::sleep(sleepmsec);
+  }
+}
 
 void resetTimer() {
   Brain.resetTimer();
-  sleep(5);
+  task::sleep(5);
 }
 
 void resetGyro() {
   Inertial14.setRotation(0, deg);
-  sleep(5);
+  task::sleep(5);
 }
 
 void setGyro(int Heading) {
   Inertial14.setRotation(Heading, deg);
-  sleep(5);
+  task::sleep(5);
 }
 
 void resetDrive() {
@@ -173,13 +177,13 @@ void resetDrive() {
   RMDrive.resetPosition();
   LBDrive.resetPosition();
   RBDrive.resetPosition();
-  sleep(5);
+  task::sleep(5);
 }
 
 void stopDrive() {
   leftSpeed = 0;
   rightSpeed = 0;
-  sleep(5);
+  task::sleep(5);
 }
 
 void stopAll() {
@@ -189,7 +193,7 @@ void stopAll() {
   RMDrive.stop();
   LBDrive.stop();
   RBDrive.stop();
-  sleep(5);
+  task::sleep(5);
 }
 
 void preAuton() {
@@ -199,7 +203,7 @@ void preAuton() {
   Brain.Screen.clearScreen();
   Brain.Screen.printAt(320, 200, "Pre Auton");
   resetDrive();
-  sleep(100);
+  task::sleep(100);
   Controller1.Screen.clearScreen();
   fieldControlState = 1;
   Arm1.setVelocity(65, pct);
@@ -208,23 +212,23 @@ void preAuton() {
   Arm1.spin(fwd);
   Arm2.spin(fwd);
   Claw.spin(fwd);
-  sleep(200);
+  task::sleep(200);
   while (Arm1.velocity(pct) > 0.1 || Arm2.velocity(pct) > 0.1 ||
          Claw.velocity(pct) > 0.1) {
-    sleep(25);
+    task::sleep(25);
   }
-  sleep(50);
+  task::sleep(50);
   Arm1.setPosition(700, deg);
   Arm2.setPosition(700, deg);
-  Claw.setPosition(501, deg);
-  sleep(50);
+  Claw.setPosition(585, deg);
+  task::sleep(50);
   Claw.spin(reverse);
-  sleep(650);
+  task::sleep(650);
 }
 
 int brainScreenTask() {
   while (1) {
-    sleep(100);
+    task::sleep(100);
     Brain.Screen.clearScreen();
     Brain.Screen.printAt(1, 20, "LFMotor: %5.2f   ", gyro1);
     Brain.Screen.printAt(188, 20, "RFMotor: %5.2f   ", gyro1);
@@ -282,17 +286,21 @@ int brainScreenTask() {
 int controllerScreenTask() {
   Controller1.Screen.clearScreen();
   while (1) {
-    sleep(50);
+    task::sleep(50);
 
     Controller1.Screen.setCursor(1, 1);
     Controller1.Screen.print("Gyro: %3.2f  ", Inertial14.rotation());
     Controller1.Screen.setCursor(1, 15);
-    Controller1.Screen.print("A: %3.0f   ", armGoal);
+    // Controller1.Screen.print("A: %3.0f   ", armGoal);
+    // Controller1.Screen.print("%d   ", leftDriveTorque);
+    Controller1.Screen.print("%d ", autonRunning);
 
     Controller1.Screen.setCursor(2, 1);
     Controller1.Screen.print("State: %d    ", clawState);
     Controller1.Screen.setCursor(2, 15);
-    Controller1.Screen.print("C: %3.0f   ", clawGoal);
+    // Controller1.Screen.print("C: %3.0f   ", clawGoal);
+    // Controller1.Screen.print("%d   ", rightDriveTorque);
+    Controller1.Screen.print("%3.0f", Claw.position(deg) / 5);
 
     Controller1.Screen.setCursor(3, 1);
     Controller1.Screen.print("%1.0f ",
@@ -324,7 +332,7 @@ int controllerScreenTask() {
 int sensorsTask() {
   int x = 100;
   while (1) {
-    sleep(5);
+    task::sleep(5);
     // GET MOTOR ENCODERS AND SCALE THEM TO DISTANCE IN INCHES(450 RPM)
     avgDriveDistance = (LFDrive.position(deg) + RMDrive.position(deg)) * 0.012;
 
@@ -411,7 +419,7 @@ int driveTask() {
     RBDrive.spin(fwd, rightSpeed, pct);
     RMDrive.spin(fwd, rightSpeed, pct);
 
-    sleep(6);
+    task::sleep(6);
   }
 }
 
@@ -423,13 +431,13 @@ int clawSpeedTask() {
   Arm2.spin(forward);
   Claw.spin(forward);
   while (1) {
-    sleep(5);
+    task::sleep(5);
   }
 }
 
 int clawStatesTask() {
   while (1) {
-    sleep(5);
+    task::sleep(5);
 
     if (armGoal > 97) {
       armGoal = 97;
@@ -457,8 +465,8 @@ int clawStatesTask() {
       }
       if (clawState == 1) {
         if (!MogoMech) {
-          armGoal = 4;
-          clawGoal = 4;
+          armGoal = 5;
+          clawGoal = -2;
         } else {
           armGoal = 10;
           clawGoal = 10;
@@ -586,7 +594,7 @@ int odometryTask() {
     // Output the current position to the terminal
     printf("X: %.2f, Y: %.2f\n", x, y);
 
-    sleep(10);
+    task::sleep(10);
   }
   return 0;
 }
@@ -599,7 +607,7 @@ void driveDistance(int Speed, double Distance, double Heading) {
   double previousError = 0;
 
   resetDrive();
-  sleep(10);
+  task::sleep(10);
   double rightTurnDifference;
   while ((fabs(avgDriveDistance) < Distance) && autonRunning) {
     double error = Heading - gyro1;
@@ -609,7 +617,7 @@ void driveDistance(int Speed, double Distance, double Heading) {
     leftSpeed = Speed + rightTurnDifference;
     rightSpeed = Speed - rightTurnDifference;
     previousError = error;
-    sleep(10);
+    task::sleep(10);
   }
   stopDrive();
 }
@@ -617,13 +625,13 @@ void driveDistance(int Speed, double Distance, double Heading) {
 void driveTillStop(int Speed, double Heading) {
   resetDrive();
   resetTimer();
-  sleep(10);
+  task::sleep(10);
   int rightTurnDifference;
   while ((slowestDrive > 3 || msecClock < 500) && autonRunning) {
     rightTurnDifference = (Heading - gyro1) * .65;
     leftSpeed = Speed + rightTurnDifference;
     rightSpeed = Speed - rightTurnDifference;
-    sleep(10);
+    task::sleep(10);
   }
   stopDrive();
 }
@@ -659,13 +667,13 @@ void driveTurn(int Speed, int Heading, int Accuracy) {
     }
     rightSpeed = rsp;
     previousError = error;
-    sleep(5);
+    task::sleep(5);
   }
 
   stopDrive();
   // integral = 0;
   // previousError = 0;
-  sleep(10);
+  task::sleep(10);
 }
 
 double Kp_turn = 10.00, Ki_turn = 0.0, Kd_turn = 0.0;
@@ -706,23 +714,23 @@ void driveTo(int target_x, int target_y, int speed) {
     leftSpeed = speed * fwd_output + turn_output;
     rightSpeed = speed * fwd_output - turn_output;
 
-    sleep(5);
+    task::sleep(5);
   }
 }
 
-void leftDoublePress() {
-  ignoreRelease = true;
-  if (clawState == 1) {
-    clawState = 11;
-  } else if (clawState == 21) {
-    TopClaw = false;
-    clawState = 102;
-    sleep(250);
-    clawState = 1;
-  } else if (clawState == 2 || clawState == 11) {
-    clawState = 21;
-  }
-}
+// void leftDoublePress() {
+//   ignoreRelease = true;
+//   if (clawState == 1) {
+//     clawState = 11;
+//   } else if (clawState == 21) {
+//     TopClaw = false;
+//     clawState = 102;
+//     sleep(250);
+//     clawState = 1;
+//   } else if (clawState == 2 || clawState == 11) {
+//     clawState = 21;
+//   }
+// }
 
 void buttonLup_pressed() {
   clawStatesActive = true;
@@ -734,7 +742,7 @@ void buttonLup_pressed() {
     if (clawState == 2) {
       clawState = 21;
     }
-    if (clawState == 3) {
+    if (clawState == 3 || clawState == 4) {
       clawState = 22;
     }
   } else {
@@ -752,7 +760,7 @@ void buttonLdown_pressed() {
     if (clawState == 2) {
       clawState = 21;
     }
-    if (clawState == 3) {
+    if (clawState == 3 || clawState == 4) {
       clawState = 22;
     }
   } else {
@@ -764,10 +772,18 @@ void buttonLup_released() {
   if (!ignoreRelease) {
     if (clawState == 21) {
       clawState = 101;
-      sleep(250);
+      task::sleep(250);
       clawState = 1;
-    } else if (clawState == 11 || clawState == 12 || clawState == 22) {
+    } else if (clawState == 11 || clawState == 12) {
       clawState = 1;
+    } else if (clawState == 22) {
+      clawState = 1;
+      task::sleep(750);
+      if (!ClawFlip) {
+        BottomClaw = false;
+      } else {
+        TopClaw = false;
+      }
     } else {
       if (clawState < 4) {
         clawState += 1;
@@ -782,10 +798,18 @@ void buttonLdown_released() {
   if (!ignoreRelease) {
     if (clawState == 21) {
       clawState = 101;
-      sleep(250);
+      task::sleep(250);
       clawState = 1;
-    } else if (clawState == 11 || clawState == 12 || clawState == 22) {
+    } else if (clawState == 11 || clawState == 12) {
       clawState = 1;
+    } else if (clawState == 22) {
+      clawState = 1;
+      task::sleep(750);
+      if (!ClawFlip) {
+        BottomClaw = false;
+      } else {
+        TopClaw = false;
+      }
     } else {
       if (clawState > 1) {
         clawState -= 1;
@@ -802,7 +826,7 @@ void buttonRup_pressed() {
     if (clawState == 1) {
       clawState = 13;
       ClawFlip = !ClawFlip;
-      sleep(500);
+      task::sleep(500);
       clawState = 1;
     } else {
       ClawFlip = !ClawFlip;
@@ -818,7 +842,7 @@ void buttonRdown_pressed() {
     if (clawState == 1) {
       clawState = 13;
       ClawFlip = !ClawFlip;
-      sleep(500);
+      task::sleep(500);
       clawState = 1;
     } else {
       ClawFlip = !ClawFlip;
@@ -851,14 +875,21 @@ void buttonRdown_released() {
 void buttonUP_pressed() { clawStatesActive = false; }
 void buttonDOWN_pressed() { clawStatesActive = false; }
 
-void buttonLEFT_pressed() { HangLock = !HangLock; }
+void buttonRIGHT_pressed() { HangLock = !HangLock; }
 
-void buttonRIGHT_pressed() {
+void buttonLEFT_pressed() {
   if (autonNumber > 6) {
     autonNumber = 1;
   } else {
     autonNumber += 1;
   }
+  if (autonRunning) {
+    autonRunning = false;
+  }
+  task::sleep(50);
+  clawState = 2;
+  BottomClaw = true;
+  TopClaw = true;
 }
 
 void brain_pressed() {}
@@ -893,12 +924,14 @@ void quals() {
   driveTurn(40, 7 * headingMultiplier, 2);
   driveDistance(30, 21, 7 * headingMultiplier);
   driveDistance(30, 35, 100 * headingMultiplier);
-  driveDistance(30, 15, 210 * headingMultiplier);
+  driveDistance(30, 15,
+                210 * headingMultiplier); // CHANGE TO 220 PLEASE IT DOESNT PICK
+                                          // UP RINGS THIS IS IMPORTANT
   MogoMech = true;
   if (headingMultiplier > 0) {
     clawState = 11;
   } else if (headingMultiplier < 0) {
-    clawState = 1;
+    clawState = 15;
   }
   driveTorque = 70;
   driveTillStop(30, 165 * headingMultiplier);
@@ -919,7 +952,7 @@ void quals() {
   sleep(750);
   clawState = 4;
   sleep(800);
-  driveDistance(-40, 18, 120 * headingMultiplier);
+  driveDistance(-45, 20, 120 * headingMultiplier);
 }
 
 void elims() {
@@ -983,10 +1016,10 @@ void skillsAuton() {
   BottomClaw = true;
   sleep(300);
   clawState = 3;
-  driveDistance(-40, 28, -46);
+  driveDistance(-40, 26, -46);
   driveTurn(40, -97, 1);
   driveDistance(-15, 3, -97);
-  driveDistance(25, 13, -97);
+  driveDistance(25, 11, -97);
   clawState = 2;
   sleep(100);
   driveDistance(25, 2, -97);
@@ -1009,7 +1042,7 @@ void skillsAuton() {
   sleep(500);
   driveDistance(30, 12, -90);
   BottomClaw = true;
-  driveDistance(-30, 4, -90);
+  driveDistance(-30, 5, -90);
   clawState = 16;
   sleep(700);
   driveTorque = 25;
@@ -1018,25 +1051,26 @@ void skillsAuton() {
   clawState = 3;
   sleep(200);
   BottomClaw = false;
-  driveDistance(-30, 13, -90);
+  driveDistance(-30, 13, -85);
   sleep(100);
   clawState = 15;
   driveTurn(30, 0, 3);
   driveDistance(30, 23, 0);
   BottomClaw = true;
-  clawState = 2;
-  sleep(250);
+  clawState = 13;
   ClawFlip = true;
+  sleep(500);
+  clawState = 1;
   driveTurn(30, 90, 1);
   clawState = 15;
   sleep(250);
-  driveDistance(20, 15, 90);
+  driveDistance(20, 30, 90);
   TopClaw = true;
   sleep(250);
-  driveTurn(30, 55, 3);
+  driveTurn(30, 41, 3);
   clawState = 22;
   sleep(250);
-  driveDistance(35, 30, 55);
+  driveDistance(35, 23, 41);
   clawState = 23;
   sleep(100);
   TopClaw = false;
@@ -1044,12 +1078,64 @@ void skillsAuton() {
   clawState = 3;
   sleep(500);
   driveTorque = 50;
-  driveTillStop(50, 85);
+  driveTillStop(50, 78);
   driveTorque = 100;
   driveDistance(-30, 30, 80);
-  driveTurn(40, -70, 5);
+  driveTurn(40, -95, 5);
+  driveDistance(50, 40, -95);
   driveTorque = 50;
-  driveDistance(-40, 15, -70);
+  ClawFlip = false;
+  driveTillStop(50, -88);
+  driveTorque = 100;
+  driveDistance(-35, 59.5, -70);
+  driveTurn(35, 5, 1);
+  Inertial14.setRotation(0, deg);
+  driveDistance(30, 3, 0);
+  driveTorque = 50;
+  driveTillStop(20, 0);
+  driveTorque = 100;
+  driveDistance(-20, 8, 0);
+  clawState = 2;
+  sleep(250);
+  BottomClaw = false;
+  clawState = 1;
+  driveDistance(-35, 10, 0);
+  driveTurn(40, 125, 3);
+  driveDistance(30, 30, 130);
+  BottomClaw = true;
+  clawState = 13;
+  ClawFlip = true;
+  sleep(500);
+  clawState = 1;
+  driveDistance(40, 28, 125);
+  driveDistance(30, 15, 60);
+  TopClaw = true;
+  sleep(500);
+  clawState = 16;
+  driveDistance(-30, 5, 110);
+  sleep(200);
+  driveDistance(30, 5, 110);
+  driveTorque = 50;
+  driveTillStop(20, 90);
+  driveTorque = 100;
+  clawState = 3;
+  sleep(250);
+  TopClaw = false;
+  BottomClaw = false;
+  driveDistance(-30, 4, 90);
+  driveTurn(35, 220, 3);
+  driveDistance(50, 60, 225);
+  driveTurn(35, 130, 3);
+  driveDistance(40, 20, 110);
+  driveTorque = 50;
+  driveTillStop(50, 90);
+  driveTorque = 100;
+  driveDistance(-40, 20, 150);
+  clawState = 4;
+  driveTurn(-40, -32, 3);
+  driveDistance(50, 70, -35);
+  clawState = 2;
+  HangLock = false;
 }
 
 void skillsDriver() {
@@ -1103,13 +1189,11 @@ void autonomous() {
 void buttonA_pressed() {
   if (autonRunning) {
     autonRunning = false;
-  } else {
-    if (!autonHappened) {
-      autonomous();
-    }
-    driveTorque = 100;
-    driveHold = false;
+  } else if (!autonHappened) {
+    autonomous();
   }
+  driveTorque = 100;
+  driveHold = false;
 }
 
 void usercontrol() {
@@ -1126,7 +1210,7 @@ void usercontrol() {
   Arm1.setStopping(hold);
   Arm2.setStopping(hold);
   while (1) {
-    sleep(10);
+    task::sleep(10);
     if (autonRunning == false) {
       axis1 = Controller1.Axis1.value();
       if (abs(axis1) < 5) {
@@ -1145,8 +1229,8 @@ void usercontrol() {
         axis4 = 0;
       }
 
-      axis1 = axis1 * axis1 / 100 * axis1 / abs(axis1);
-      axis3 = axis3 * axis3 / 100 * axis3 / 100;
+      // axis1 = axis1 * axis1 / 100 * axis1 / abs(axis1);
+      // axis3 = axis3 * axis3 / 100 * axis3 / 100;
 
       leftSpeed = axis3 + axis1;
       // leftSpeedIncrement = (leftSpeed -
@@ -1158,12 +1242,12 @@ void usercontrol() {
       // RFDrive.velocity(pct))/(10*fabs(tilt)); rightSpeed =
       // RFDrive.velocity(pct) + rightSpeedIncrement;
 
-      driveTorque = 120 - 15 * tilt;
+      // driveTorque = 120 - 15 * tilt;
 
       if (LFDrive.velocity(pct) >= -20) {
         resetDrive();
       } else if ((clawState == 3 || clawState == 4) &&
-                 (LFDrive.velocity(pct) < -20)) {
+                 (LFDrive.velocity(pct) < -20) && !HangLock) {
         if (fabs(avgDriveDistance) >= 6) {
           if (clawState == 3) {
             clawStateThree = true;
