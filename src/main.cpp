@@ -146,7 +146,7 @@ double clawGoal = 0;
 bool ignoreRelease = false;
 
 bool autonRunning = false;
-int autonNumber = 5;
+int autonNumber = 1;
 bool autonHappened = false;
 
 void sleep(int sleepmsec) {
@@ -885,11 +885,11 @@ void buttonLEFT_pressed() {
   }
   if (autonRunning) {
     autonRunning = false;
+    task::sleep(50);
+    clawState = 2;
+    BottomClaw = true;
+    TopClaw = true;
   }
-  task::sleep(50);
-  clawState = 2;
-  BottomClaw = true;
-  TopClaw = true;
 }
 
 void brain_pressed() {}
@@ -912,6 +912,7 @@ void buttonRdown_released2() {}
 void buttonRup_released2() {}
 
 void quals() {
+  sleep(500);
   Inertial14.setRotation(-138 * headingMultiplier, deg);
   clawState = 3;
   sleep(300);
@@ -956,6 +957,7 @@ void quals() {
 }
 
 void elims() {
+  sleep(500);
   Inertial14.setRotation(20 * headingMultiplier, deg);
   clawState = 22;
   sleep(50);
@@ -1016,7 +1018,7 @@ void skillsAuton() {
   BottomClaw = true;
   sleep(300);
   clawState = 3;
-  driveDistance(-40, 26, -46);
+  driveDistance(-40, 25, -46);
   driveTurn(40, -97, 1);
   driveDistance(-15, 3, -97);
   driveDistance(25, 11, -97);
@@ -1085,7 +1087,7 @@ void skillsAuton() {
   driveDistance(50, 40, -95);
   driveTorque = 50;
   ClawFlip = false;
-  driveTillStop(50, -88);
+  driveTillStop(50, -83);
   driveTorque = 100;
   driveDistance(-35, 59.5, -70);
   driveTurn(35, 5, 1);
