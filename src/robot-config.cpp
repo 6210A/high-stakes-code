@@ -10,22 +10,21 @@ brain  Brain;
 // VEXcode device constructors
 controller Controller1 = controller(primary);
 motor RFDrive = motor(PORT1, ratio6_1, false);
-motor RMDrive = motor(PORT2, ratio6_1, true);
+motor RHalfW = motor(PORT2, ratio6_1, true);
 motor RBDrive = motor(PORT3, ratio6_1, false);
 motor LFDrive = motor(PORT5, ratio6_1, true);
-motor LMDrive = motor(PORT6, ratio6_1, false);
+motor LHalfW = motor(PORT6, ratio6_1, false);
 motor LBDrive = motor(PORT7, ratio6_1, true);
 inertial Inertial14 = inertial(PORT14);
-motor Claw = motor(PORT15, ratio18_1, false);
 rotation OdomX = rotation(PORT8, false);
 rotation OdomY = rotation(PORT9, false);
-digital_out ClawFlip = digital_out(Brain.ThreeWirePort.E);
-digital_out BottomClaw = digital_out(Brain.ThreeWirePort.B);
-digital_out TopClaw = digital_out(Brain.ThreeWirePort.C);
-digital_out MogoMech = digital_out(Brain.ThreeWirePort.D);
-motor Arm1 = motor(PORT11, ratio18_1, false);
-motor Arm2 = motor(PORT12, ratio18_1, true);
-digital_out HangLock = digital_out(Brain.ThreeWirePort.F);
+digital_out MogoMech = digital_out(Brain.ThreeWirePort.A);
+optical Optical18 = optical(PORT18);
+digital_out SortingMech = digital_out(Brain.ThreeWirePort.B);
+motor RightPTOMotor = motor(PORT12, ratio18_1, false);
+motor LeftPTOMotor = motor(PORT13, ratio18_1, true);
+digital_out PTO1 = digital_out(Brain.ThreeWirePort.C);
+digital_out PTO2 = digital_out(Brain.ThreeWirePort.D);
 
 // VEXcode generated functions
 // define variable for remote controller enable/disable
