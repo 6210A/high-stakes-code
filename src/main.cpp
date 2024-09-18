@@ -2,65 +2,108 @@
 // Robot Configuration:
 // [Name]               [Type]        [Port(s)]
 // Controller1          controller
-// RFDrive              motor         1
-// RHalfW               motor         2
-// RBDrive              motor         3
-// LFDrive              motor         5
-// LHalfW               motor         6
-// LBDrive              motor         7
-// Inertial14           inertial      14
-// OdomX                rotation      8
-// OdomY                rotation      9
+// RFDrive              motor         18
+// RHalfW               motor         16
+// RBDrive              motor         17
+// LFDrive              motor         12
+// LHalfW               motor         14
+// LBDrive              motor         13
+// Inertial15           inertial      15
 // MogoMech             digital_out   A
-// Optical18            optical       18
+// Optical6             optical       6
 // SortingMech          digital_out   B
-// RightPTOMotor        motor         12
-// LeftPTOMotor         motor         13
-// PTO1                 digital_out   C
-// PTO2                 digital_out   D
+// RightPTOMotor        motor         20
+// LeftPTOMotor         motor         11
+// LeftPTO              digital_out   C
+// RightPTO             digital_out   D
+// LeftArm              motor         1
+// RightArm             motor         2
 // ---- END VEXCODE CONFIGURED DEVICES ----
 // ---- START VEXCODE CONFIGURED DEVICES ----
 // Robot Configuration:
 // [Name]               [Type]        [Port(s)]
 // Controller1          controller
-// RFDrive              motor         1
-// RHalfW               motor         2
-// RBDrive              motor         3
-// LFDrive              motor         5
-// LHalfW               motor         6
-// LBDrive              motor         7
-// Inertial14           inertial      14
-// OdomX                rotation      8
-// OdomY                rotation      9
+// RFDrive              motor         18
+// RHalfW               motor         16
+// RBDrive              motor         17
+// LFDrive              motor         12
+// LHalfW               motor         14
+// LBDrive              motor         13
+// Inertial15           inertial      15
 // MogoMech             digital_out   A
-// Optical18            optical       18
+// Optical6             optical       6
 // SortingMech          digital_out   B
-// RightPTOMotor        motor         12
-// LeftPTO              motor         13
-// PTO1                 digital_out   C
-// PTO2                 digital_out   D
+// RightPTOMotor        motor         20
+// LeftPTOMotor         motor         11
+// LeftPTO              digital_out   C
+// RightPTO             digital_out   D
+// LeftArm              motor         1
+// RightArm             motor         2
 // ---- END VEXCODE CONFIGURED DEVICES ----
 // ---- START VEXCODE CONFIGURED DEVICES ----
 // Robot Configuration:
 // [Name]               [Type]        [Port(s)]
 // Controller1          controller
-// RFDrive              motor         1
-// RHalfW               motor         2
-// RBDrive              motor         3
-// LFDrive              motor         5
-// LHalfW               motor         6
-// LBDrive              motor         7
-// Inertial14           inertial      14
-// OdomX                rotation      8
-// OdomY                rotation      9
+// RFDrive              motor         18
+// RHalfW               motor         16
+// RBDrive              motor         17
+// LFDrive              motor         12
+// LHalfW               motor         14
+// LBDrive              motor         13
+// Inertial15           inertial      15
 // MogoMech             digital_out   A
-// Optical18            optical       18
+// Optical6             optical       6
 // SortingMech          digital_out   B
-// RightPTO             motor         12
-// LeftPTO              motor         13
-// PTO1                 digital_out   C
-// PTO2                 digital_out   D
+// RightPTOMotor        motor         20
+// LeftPTOMotor         motor         11
+// LeftPTO              digital_out   C
+// RightPTO             digital_out   D
+// LeftArm              motor         1
+// RightArm             motor         2
 // ---- END VEXCODE CONFIGURED DEVICES ----
+// ---- START VEXCODE CONFIGURED DEVICES ----
+// Robot Configuration:
+// [Name]               [Type]        [Port(s)]
+// Controller1          controller
+// RFDrive              motor         18
+// RHalfW               motor         16
+// RBDrive              motor         17
+// LFDrive              motor         12
+// LHalfW               motor         14
+// LBDrive              motor         13
+// Inertial15           inertial      15
+// MogoMech             digital_out   A
+// Optical6             optical       6
+// SortingMech          digital_out   B
+// RightPTOMotor        motor         20
+// LeftPTOMotor         motor         11
+// LeftPTO              digital_out   C
+// RightPTO             digital_out   D
+// LeftArm              motor         1
+// RightArm             motor         2
+// ---- END VEXCODE CONFIGURED DEVICES ----
+// ---- START VEXCODE CONFIGURED DEVICES ----
+// Robot Configuration:
+// [Name]               [Type]        [Port(s)]
+// Controller1          controller
+// RFDrive              motor         18
+// RHalfW               motor         16
+// RBDrive              motor         17
+// LFDrive              motor         12
+// LHalfW               motor         14
+// LBDrive              motor         13
+// Inertial15           inertial      15
+// MogoMech             digital_out   A
+// Optical6             optical       6
+// SortingMech          digital_out   B
+// RightPTOMotor        motor         20
+// LeftPTOMotor         motor         11
+// LeftPTO              digital_out   C
+// RightPTO             digital_out   D
+// LeftArm              motor         1
+// RightArm             motor         2
+// ---- END VEXCODE CONFIGURED DEVICES ----
+
 #include "vex.h"
 #include <iostream>
 #include <math.h>
@@ -128,12 +171,12 @@ void resetTimer() {
 }
 
 void resetGyro() {
-  Inertial14.setRotation(0, deg);
+  Inertial15.setRotation(0, deg);
   task::sleep(5);
 }
 
 void setGyro(int Heading) {
-  Inertial14.setRotation(Heading, deg);
+  Inertial15.setRotation(Heading, deg);
   task::sleep(5);
 }
 
@@ -242,7 +285,7 @@ int controllerScreenTask() {
     task::sleep(50);
 
     Controller1.Screen.setCursor(1, 1);
-    Controller1.Screen.print("Gyro: %3.2f  ", Inertial14.rotation());
+    Controller1.Screen.print("Gyro: %3.2f  ", Inertial15.rotation());
     Controller1.Screen.setCursor(1, 15);
     if (sorting == false) {
       Controller1.Screen.print("B in");
@@ -250,7 +293,7 @@ int controllerScreenTask() {
       Controller1.Screen.print("R in");
     }
     Controller1.Screen.setCursor(2, 1);
-    Controller1.Screen.print("%3.0f", Optical18.hue());
+    Controller1.Screen.print("%3.0f", Optical6.hue());
 
     Controller1.Screen.setCursor(3, 1);
     Controller1.Screen.print("%1.0f ",
@@ -287,13 +330,13 @@ int controllerScreenTask() {
 int sortingTask() {
   while (1) {
     if (sorting == false) { // eject red
-      if ((Optical18.hue() > 330) && (Optical18.hue() < 30)) {
+      if ((Optical6.hue() > 330) && (Optical6.hue() < 30)) {
         SortingMech = true;
         task::sleep(50);
         SortingMech = false;
       }
     } else { // eject blue
-      if ((Optical18.hue() < 270) && (Optical18.hue() > 140)) {
+      if ((Optical6.hue() < 270) && (Optical6.hue() > 140)) {
         SortingMech = true;
         task::sleep(50);
         SortingMech = false;
@@ -313,7 +356,7 @@ int sensorsTask() {
     avgDriveSpeed = (LFDrive.velocity(pct) + RBDrive.velocity(pct)) * .5;
 
     // GET gyro1 VALUE
-    gyro1 = Inertial14.rotation(deg);
+    gyro1 = Inertial15.rotation(deg);
 
     // GET SLOWEST DRIVE MOTOR SPEED
     x = fabs(RFDrive.velocity(pct));
@@ -332,7 +375,7 @@ int sensorsTask() {
     if (x > fabs(RHalfW.velocity(pct))) {
       x = fabs(RHalfW.velocity(pct));
     }
-    if (!PTO1 && !PTO2) {
+    if (LeftPTO && RightPTO) {
       if (x > fabs(LeftPTOMotor.velocity(pct))) {
         x = fabs(LeftPTOMotor.velocity(pct));
       }
@@ -358,7 +401,7 @@ int sensorsTask() {
     if (x < fabs(RHalfW.velocity(pct))) {
       x = fabs(RHalfW.velocity(pct));
     }
-    if (!PTO1 && !PTO2) {
+    if (LeftPTO && RightPTO) {
       if (x < fabs(LeftPTOMotor.velocity(pct))) {
         x = fabs(LeftPTOMotor.velocity(pct));
       }
@@ -403,7 +446,7 @@ int driveTask() {
     RFDrive.setMaxTorque(rightDriveTorque, pct);
     RHalfW.setMaxTorque(rightDriveTorque, pct);
     RBDrive.setMaxTorque(rightDriveTorque, pct);
-    if (!PTO1 && !PTO2) {
+    if (LeftPTO && RightPTO) {
       LeftPTOMotor.setMaxTorque(leftDriveTorque, pct);
       RightPTOMotor.setMaxTorque(rightDriveTorque, pct);
     }
@@ -414,62 +457,12 @@ int driveTask() {
     RFDrive.spin(fwd, rightSpeed, pct);
     RBDrive.spin(fwd, rightSpeed, pct);
     RHalfW.spin(fwd, rightSpeed, pct);
-    if (!PTO1 && !PTO2) {
+    if (LeftPTO && RightPTO) {
       LeftPTOMotor.spin(fwd, leftSpeed, pct);
       RightPTOMotor.spin(fwd, rightSpeed, pct);
     }
     task::sleep(6);
   }
-}
-
-int odometryTask() {
-  while (1) {
-    static double oldX = 0;
-    static double oldY = 0;
-
-    totalX -= readingsX[readIndex];
-    totalY -= readingsY[readIndex];
-
-    double dX = OdomX.position(degrees) - oldX;
-    double dY = OdomY.position(degrees) - oldY;
-
-    totalX += dX;
-    totalY += dY;
-
-    readingsX[readIndex] = dX;
-    readingsY[readIndex] = dY;
-
-    readIndex = (readIndex + 1);
-
-    // if array ends, restart it
-    if (readIndex >= numReadings) {
-      readIndex = 0;
-    }
-
-    averageX = totalX / numReadings;
-    averageY = totalY / numReadings;
-
-    if (fabs(averageX) > 1000 || fabs(averageY) > 1000) {
-      oldX = OdomX.position(degrees);
-      oldY = OdomY.position(degrees);
-      continue;
-    }
-
-    oldX = OdomX.position(degrees);
-    oldY = OdomY.position(degrees);
-
-    double distX = (averageX / ticksPerRevolution) * wheelCircumference;
-    double distY = (averageY / ticksPerRevolution) * wheelCircumference;
-
-    x += distX;
-    y += distY;
-
-    // Output the current position to the terminal
-    printf("X: %.2f, Y: %.2f\n", x, y);
-
-    task::sleep(10);
-  }
-  return 0;
 }
 
 void driveDistance(int Speed, double Distance, double Heading) {
@@ -546,48 +539,6 @@ void driveTurn(int Speed, int Heading, int Accuracy) {
   task::sleep(10);
 }
 
-double Kp_turn = 10.00, Ki_turn = 0.0, Kd_turn = 0.0;
-double turn_integral = 0.0, turn_prev_error = 0.0;
-double Kp_fwd = 10.00, Ki_fwd = 0.0, Kd_fwd = 0.0;
-double fwd_integral = 0.0, fwd_prev_error = 0.0;
-
-void driveTo(int target_x, int target_y, int speed) {
-  while (1) {
-    double dx = target_x - x;
-    double dy = target_y - y;
-    double distance = sqrt(dx * dx + dy * dy);
-
-    if (distance < 0.1)
-      break; // Check early to avoid unnecessary calculations if already
-             // at target
-
-    double target_angle = atan2(dy, dx);
-    double turn_error = target_angle - gyro1;
-
-    while (turn_error > M_PI)
-      turn_error -= 2 * M_PI;
-    while (turn_error < -M_PI)
-      turn_error += 2 * M_PI;
-
-    double fwd_error = distance;
-    double turn_output = Kp_turn * turn_error + Ki_turn * turn_integral -
-                         Kd_turn * (turn_error - turn_prev_error);
-    double fwd_output = Kp_fwd * fwd_error + Ki_fwd * fwd_integral -
-                        Kd_fwd * (fwd_error - fwd_prev_error);
-
-    turn_integral += turn_error;
-    turn_prev_error = turn_error;
-
-    fwd_integral += fwd_error;
-    fwd_prev_error = fwd_error;
-
-    leftSpeed = speed * fwd_output + turn_output;
-    rightSpeed = speed * fwd_output - turn_output;
-
-    task::sleep(5);
-  }
-}
-
 void buttonLup_pressed() {}
 
 void buttonLdown_pressed() {}
@@ -597,36 +548,46 @@ void buttonLup_released() {}
 void buttonLdown_released() {}
 
 void buttonRup_pressed() {
-  if (!PTO1 && !PTO2) {
-    PTO1 = true;
-    PTO2 = true;
+  if (LeftPTO && RightPTO) {
+    LeftPTO = true;
+    RightPTO = true;
   } else {
-    LeftPTOMotor.setVelocity(100, pct);
-    RightPTOMotor.setVelocity(100, pct);
-  }
-  if (LeftPTOMotor.velocity(pct) <= 5 || RightPTOMotor.velocity(pct) <= 5) {
     LeftPTOMotor.setVelocity(-100, pct);
-    RightPTOMotor.setVelocity(-100, pct);
-    task::sleep(250);
-    LeftPTOMotor.setVelocity(0, pct);
-    RightPTOMotor.setVelocity(0, pct);
+    RightPTOMotor.setVelocity(100, pct);
+    task::sleep(1000);
+    if (LeftPTOMotor.velocity(pct) <= 5 || RightPTOMotor.velocity(pct) <= 5) {
+      task::sleep(1000);
+      if (Controller1.ButtonR1.pressing()) {
+        LeftPTOMotor.setVelocity(100, pct);
+        RightPTOMotor.setVelocity(-100, pct);
+        task::sleep(250);
+        LeftPTOMotor.setVelocity(0, pct);
+        RightPTOMotor.setVelocity(0, pct);
+      }
+    }
   }
 }
 
+
+
 void buttonRdown_pressed() {
-  if (!PTO1 && !PTO2) {
-    PTO1 = true;
-    PTO2 = true;
+  if (LeftPTO && RightPTO) {
+    LeftPTO = true;
+    RightPTO = true;
   } else {
-    LeftPTOMotor.setVelocity(-100, pct);
-    RightPTOMotor.setVelocity(-100, pct);
-  }
-  if (LeftPTOMotor.velocity(pct) >= -5 || RightPTOMotor.velocity(pct) >= -5) {
     LeftPTOMotor.setVelocity(100, pct);
-    RightPTOMotor.setVelocity(100, pct);
-    task::sleep(250);
-    LeftPTOMotor.setVelocity(0, pct);
-    RightPTOMotor.setVelocity(0, pct);
+    RightPTOMotor.setVelocity(-100, pct);
+    task::sleep(1000);
+    if (LeftPTOMotor.velocity(pct) >= -5 || RightPTOMotor.velocity(pct) >= -5) {
+      task::sleep(1000);
+      if (Controller1.ButtonR2.pressing()) {
+        LeftPTOMotor.setVelocity(-100, pct);
+        RightPTOMotor.setVelocity(100, pct);
+        task::sleep(250);
+        LeftPTOMotor.setVelocity(0, pct);
+        RightPTOMotor.setVelocity(0, pct);
+      }
+    }
   }
 }
 
@@ -660,8 +621,8 @@ void buttonLEFT_pressed() {
 void brain_pressed() {}
 
 void buttonX_pressed() {
-  PTO1 = !PTO1;
-  PTO2 = !PTO2;
+  LeftPTO = !LeftPTO;
+  RightPTO = !RightPTO;
 }
 
 void buttonB_pressed() {}
@@ -776,7 +737,6 @@ int main() {
   task taskCntrlrScreen(controllerScreenTask);
   task taskSensors(sensorsTask);
   task taskDrive(driveTask);
-  task taskOdometry(odometryTask);
   task taskSorting(sortingTask);
   Brain.Screen.pressed(brain_pressed);
   Controller1.ButtonL1.pressed(buttonLup_pressed);

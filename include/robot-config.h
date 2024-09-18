@@ -10,16 +10,16 @@ extern motor RBDrive;
 extern motor LFDrive;
 extern motor LHalfW;
 extern motor LBDrive;
-extern inertial Inertial14;
-extern rotation OdomX;
-extern rotation OdomY;
+extern inertial Inertial15;
 extern digital_out MogoMech;
-extern optical Optical18;
+extern optical Optical6;
 extern digital_out SortingMech;
 extern motor RightPTOMotor;
 extern motor LeftPTOMotor;
-extern digital_out PTO1;
-extern digital_out PTO2;
+extern digital_out LeftPTO;
+extern digital_out RightPTO;
+extern motor LeftArm;
+extern motor RightArm;
 
 /**
  * Used to initialize code/tasks/devices added using tools in VEXcode Pro.
