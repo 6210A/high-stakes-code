@@ -9,13 +9,52 @@
 // LHalfW               motor         14
 // LBDrive              motor         13
 // Inertial15           inertial      15
-// MogoMech             digital_out   A
+// MogoMech             digital_out   F
 // Optical6             optical       6
-// SortingMech          digital_out   B
+// SortingMech          digital_out   G
 // RightPTOMotor        motor         20
 // LeftPTOMotor         motor         11
-// LeftPTO              digital_out   C
-// RightPTO             digital_out   D
+// PTO                  digital_out   H
+// LeftArm              motor         1
+// RightArm             motor         2
+// ---- END VEXCODE CONFIGURED DEVICES ----
+// ---- START VEXCODE CONFIGURED DEVICES ----
+// Robot Configuration:
+// [Name]               [Type]        [Port(s)]
+// Controller1          controller
+// RFDrive              motor         18
+// RHalfW               motor         16
+// RBDrive              motor         17
+// LFDrive              motor         12
+// LHalfW               motor         14
+// LBDrive              motor         13
+// Inertial15           inertial      15
+// MogoMech             digital_out   A
+// Optical6             optical       6
+// SortingMech          digital_out   G
+// RightPTOMotor        motor         20
+// LeftPTOMotor         motor         11
+// PTO                  digital_out   H
+// LeftArm              motor         1
+// RightArm             motor         2
+// ---- END VEXCODE CONFIGURED DEVICES ----
+// ---- START VEXCODE CONFIGURED DEVICES ----
+// Robot Configuration:
+// [Name]               [Type]        [Port(s)]
+// Controller1          controller
+// RFDrive              motor         18
+// RHalfW               motor         16
+// RBDrive              motor         17
+// LFDrive              motor         12
+// LHalfW               motor         14
+// LBDrive              motor         13
+// Inertial15           inertial      15
+// MogoMech             digital_out   A
+// Optical6             optical       6
+// SortingMech          digital_out   G
+// RightPTOMotor        motor         20
+// LeftPTOMotor         motor         11
+// PTO                  digital_out   H
 // LeftArm              motor         1
 // RightArm             motor         2
 // ---- END VEXCODE CONFIGURED DEVICES ----
@@ -35,71 +74,7 @@
 // SortingMech          digital_out   B
 // RightPTOMotor        motor         20
 // LeftPTOMotor         motor         11
-// LeftPTO              digital_out   C
-// RightPTO             digital_out   D
-// LeftArm              motor         1
-// RightArm             motor         2
-// ---- END VEXCODE CONFIGURED DEVICES ----
-// ---- START VEXCODE CONFIGURED DEVICES ----
-// Robot Configuration:
-// [Name]               [Type]        [Port(s)]
-// Controller1          controller
-// RFDrive              motor         18
-// RHalfW               motor         16
-// RBDrive              motor         17
-// LFDrive              motor         12
-// LHalfW               motor         14
-// LBDrive              motor         13
-// Inertial15           inertial      15
-// MogoMech             digital_out   A
-// Optical6             optical       6
-// SortingMech          digital_out   B
-// RightPTOMotor        motor         20
-// LeftPTOMotor         motor         11
-// LeftPTO              digital_out   C
-// RightPTO             digital_out   D
-// LeftArm              motor         1
-// RightArm             motor         2
-// ---- END VEXCODE CONFIGURED DEVICES ----
-// ---- START VEXCODE CONFIGURED DEVICES ----
-// Robot Configuration:
-// [Name]               [Type]        [Port(s)]
-// Controller1          controller
-// RFDrive              motor         18
-// RHalfW               motor         16
-// RBDrive              motor         17
-// LFDrive              motor         12
-// LHalfW               motor         14
-// LBDrive              motor         13
-// Inertial15           inertial      15
-// MogoMech             digital_out   A
-// Optical6             optical       6
-// SortingMech          digital_out   B
-// RightPTOMotor        motor         20
-// LeftPTOMotor         motor         11
-// LeftPTO              digital_out   C
-// RightPTO             digital_out   D
-// LeftArm              motor         1
-// RightArm             motor         2
-// ---- END VEXCODE CONFIGURED DEVICES ----
-// ---- START VEXCODE CONFIGURED DEVICES ----
-// Robot Configuration:
-// [Name]               [Type]        [Port(s)]
-// Controller1          controller
-// RFDrive              motor         18
-// RHalfW               motor         16
-// RBDrive              motor         17
-// LFDrive              motor         12
-// LHalfW               motor         14
-// LBDrive              motor         13
-// Inertial15           inertial      15
-// MogoMech             digital_out   A
-// Optical6             optical       6
-// SortingMech          digital_out   B
-// RightPTOMotor        motor         20
-// LeftPTOMotor         motor         11
-// LeftPTO              digital_out   C
-// RightPTO             digital_out   D
+// PTO                  digital_out   H
 // LeftArm              motor         1
 // RightArm             motor         2
 // ---- END VEXCODE CONFIGURED DEVICES ----
@@ -154,6 +129,8 @@ double averageY = 0;
 
 bool ignoreRelease = false;
 bool sorting = true;
+float armState = 0;
+float armGoal = 0;
 
 bool autonRunning = false;
 int autonNumber = 1;
@@ -220,6 +197,23 @@ void preAuton() {
   fieldControlState = 1;
   LeftPTOMotor.spin(fwd);
   RightPTOMotor.spin(fwd);
+  LeftPTOMotor.setVelocity(0, pct);
+  RightPTOMotor.setVelocity(0, pct);
+
+  // Zero Arm Motors
+  RightArm.spin(fwd);
+  LeftArm.spin(fwd);
+  RightArm.setVelocity(50, pct);
+  LeftArm.setVelocity(50, pct);
+  task::sleep(250);    
+  while (RightArm.velocity(pct) > 1) {
+    task::sleep(5);
+  }
+  RightArm.setVelocity(0, pct);
+  LeftArm.setVelocity(0, pct);
+  task::sleep(100);
+  RightArm.setPosition(0, deg);
+  LeftArm.setPosition(0, deg);
 }
 
 int brainScreenTask() {
@@ -345,12 +339,57 @@ int sortingTask() {
   }
 }
 
+int armStatesTask() {
+  while (1) {
+    //task::sleep(5);
+    LeftArm.spin(fwd, ((armGoal * 5) - LeftArm.position(deg) * .5), pct);
+    RightArm.spin(fwd, ((armGoal * 5) - RightArm.position(deg) * .5), pct);
+    if (armState == 0) {
+      armGoal = 0;
+    }
+    if (armState == 1) {
+      armGoal = -20;
+    }
+    if (armState == 2) {
+      armGoal = -50;
+    }
+    if (armState == 3)
+      armGoal = -100;
+  }
+}
+
+int conveyorStuckTask() {
+  while (1) {
+    if (Controller1.ButtonR1.pressing() || Controller1.ButtonR2.pressing()) {
+      task::sleep(1000);
+      if (LeftPTOMotor.velocity(pct) < 5) {
+        task::sleep(1000);
+        if (LeftPTOMotor.velocity(pct) < 5) {
+          if (Controller1.ButtonR1.pressing()) {
+            LeftPTOMotor.setVelocity(100, pct);
+            LeftPTOMotor.setVelocity(-100, pct);
+            task::sleep(250);
+            LeftPTOMotor.setVelocity(0, pct);
+            LeftPTOMotor.setVelocity(0, pct);
+          } else if (Controller1.ButtonR2.pressing()) {
+            LeftPTOMotor.setVelocity(-100, pct);
+            LeftPTOMotor.setVelocity(100, pct);
+            task::sleep(250);
+            LeftPTOMotor.setVelocity(0, pct);
+            LeftPTOMotor.setVelocity(0, pct);
+          }
+        }
+      }
+    }
+  }
+}
+
 int sensorsTask() {
   int x = 100;
   while (1) {
     task::sleep(5);
-    // GET MOTOR ENCODERS AND SCALE THEM TO DISTANCE IN INCHES(450 RPM)
-    avgDriveDistance = (LFDrive.position(deg) + RBDrive.position(deg)) * 0.012;
+    // GET MOTOR ENCODERS AND SCALE THEM TO DISTANCE IN INCHES (450 RPM)
+    avgDriveDistance = (LFDrive.position(deg) + RBDrive.position(deg)) * 0.0128;
 
     // GET AVERAGE MOTOR SPEED PERCENTAGE
     avgDriveSpeed = (LFDrive.velocity(pct) + RBDrive.velocity(pct)) * .5;
@@ -375,7 +414,7 @@ int sensorsTask() {
     if (x > fabs(RHalfW.velocity(pct))) {
       x = fabs(RHalfW.velocity(pct));
     }
-    if (LeftPTO && RightPTO) {
+    if (PTO) {
       if (x > fabs(LeftPTOMotor.velocity(pct))) {
         x = fabs(LeftPTOMotor.velocity(pct));
       }
@@ -401,7 +440,7 @@ int sensorsTask() {
     if (x < fabs(RHalfW.velocity(pct))) {
       x = fabs(RHalfW.velocity(pct));
     }
-    if (LeftPTO && RightPTO) {
+    if (PTO) {
       if (x < fabs(LeftPTOMotor.velocity(pct))) {
         x = fabs(LeftPTOMotor.velocity(pct));
       }
@@ -424,7 +463,6 @@ int driveTask() {
       RFDrive.setStopping(hold);
       LHalfW.setStopping(hold);
       RHalfW.setStopping(hold);
-
     } else {
       LFDrive.setStopping(coast);
       LBDrive.setStopping(coast);
@@ -446,7 +484,7 @@ int driveTask() {
     RFDrive.setMaxTorque(rightDriveTorque, pct);
     RHalfW.setMaxTorque(rightDriveTorque, pct);
     RBDrive.setMaxTorque(rightDriveTorque, pct);
-    if (LeftPTO && RightPTO) {
+    if (PTO) {
       LeftPTOMotor.setMaxTorque(leftDriveTorque, pct);
       RightPTOMotor.setMaxTorque(rightDriveTorque, pct);
     }
@@ -457,7 +495,7 @@ int driveTask() {
     RFDrive.spin(fwd, rightSpeed, pct);
     RBDrive.spin(fwd, rightSpeed, pct);
     RHalfW.spin(fwd, rightSpeed, pct);
-    if (LeftPTO && RightPTO) {
+    if (PTO) {
       LeftPTOMotor.spin(fwd, leftSpeed, pct);
       RightPTOMotor.spin(fwd, rightSpeed, pct);
     }
@@ -519,12 +557,12 @@ void driveTurn(int Speed, int Heading, int Accuracy) {
     integral += error;
     double derivativeTurn = error - previousError;
     double output = (kP * error) + (kI * integral) + (kD * derivativeTurn);
-    lsp = +output;
+    lsp = Speed * output;
     if (fabs(lsp) < 2) {
       lsp = 2 * fabs(lsp) / lsp;
     }
     leftSpeed = lsp;
-    rsp = -output;
+    rsp = -Speed * output;
     if (fabs(rsp) < 2) {
       rsp = 2 * fabs(rsp) / rsp;
     }
@@ -539,55 +577,97 @@ void driveTurn(int Speed, int Heading, int Accuracy) {
   task::sleep(10);
 }
 
-void buttonLup_pressed() {}
+int driveArc(int Speed, int Distance, int Heading, int Radius) {
+  int integral = 0;
+  int previousError = 0;
+  double kP = 0.415; // scales it to inches
+  double kI = 0;
+  double kD = 0.005;
+  double lsp;
+  double rsp;
 
-void buttonLdown_pressed() {}
+  // define the target variables
+  double targetDistance = Distance;
+  double targetHeading = Heading;
+  int currentDistance = 0;
+
+  // safeguard to prevent invalid inputs
+  if (Radius == 0 || Speed == 0 || Distance == 0) {
+    return -1;
+  }
+
+  // calculate error
+  while (currentDistance < targetDistance && autonRunning) {
+    double error = targetHeading - gyro1;
+    integral += error;
+    double derivativeTurn = error - previousError;
+    double output = (kP * error) + (kI * integral) + (kD * derivativeTurn);
+
+    // calculate the actual left and right speeds based on the inputted radius
+    // and velocity and the calculated output
+    lsp = Speed * (1 - output / Radius);
+    rsp = Speed * (1 + output / Radius);
+
+    // safeguard to prevent stalling
+    if (fabs(lsp) < 2) {
+      lsp = 2 * fabs(lsp) / lsp;
+    }
+    if (fabs(rsp) < 2) {
+      rsp = 2 * fabs(rsp) / rsp;
+    }
+
+    // set the motor speeds
+    leftSpeed = lsp;
+    rightSpeed = rsp;
+
+    // update error and distance
+    previousError = error;
+    currentDistance =
+        (LFDrive.position(deg) + RBDrive.position(deg)) / 2 * 0.0128;
+
+    task::sleep(5);
+  }
+  stopDrive();
+  task::sleep(10);
+
+  return 0;
+}
+
+void buttonLup_pressed() {
+  if (armState < 5) {
+    armState += 1;
+  } else {
+    armState = 4;
+  }
+}
+
+void buttonLdown_pressed() {
+  if (armState > -1) {
+    armState -= 1;
+  } else {
+    armState = 0;
+  }
+}
 
 void buttonLup_released() {}
 
 void buttonLdown_released() {}
 
 void buttonRup_pressed() {
-  if (LeftPTO && RightPTO) {
-    LeftPTO = true;
-    RightPTO = true;
+  if (PTO) {
+    PTO = false;
   } else {
     LeftPTOMotor.setVelocity(-100, pct);
     RightPTOMotor.setVelocity(100, pct);
-    task::sleep(1000);
-    if (LeftPTOMotor.velocity(pct) <= 5 || RightPTOMotor.velocity(pct) <= 5) {
-      task::sleep(1000);
-      if (Controller1.ButtonR1.pressing()) {
-        LeftPTOMotor.setVelocity(100, pct);
-        RightPTOMotor.setVelocity(-100, pct);
-        task::sleep(250);
-        LeftPTOMotor.setVelocity(0, pct);
-        RightPTOMotor.setVelocity(0, pct);
-      }
-    }
   }
 }
 
-
-
 void buttonRdown_pressed() {
-  if (LeftPTO && RightPTO) {
-    LeftPTO = true;
-    RightPTO = true;
+  if (PTO) {
+    PTO = false;
   } else {
-    LeftPTOMotor.setVelocity(100, pct);
-    RightPTOMotor.setVelocity(-100, pct);
-    task::sleep(1000);
-    if (LeftPTOMotor.velocity(pct) >= -5 || RightPTOMotor.velocity(pct) >= -5) {
-      task::sleep(1000);
-      if (Controller1.ButtonR2.pressing()) {
-        LeftPTOMotor.setVelocity(-100, pct);
-        RightPTOMotor.setVelocity(100, pct);
-        task::sleep(250);
-        LeftPTOMotor.setVelocity(0, pct);
-        RightPTOMotor.setVelocity(0, pct);
-      }
-    }
+    LeftPTOMotor.setVelocity(50, pct);
+    RightPTOMotor.setVelocity(-50, pct);
   }
 }
 
@@ -620,14 +700,11 @@ void buttonLEFT_pressed() {
 
 void brain_pressed() {}
 
-void buttonX_pressed() {
-  LeftPTO = !LeftPTO;
-  RightPTO = !RightPTO;
-}
+void buttonX_pressed() { PTO = !PTO; }
 
 void buttonB_pressed() {}
 
-void buttonY_pressed() {}
+void buttonY_pressed() { MogoMech = !MogoMech; }
 
 void buttonLup_pressed2() {}
 
@@ -738,6 +815,8 @@ int main() {
   task taskSensors(sensorsTask);
   task taskDrive(driveTask);
   task taskSorting(sortingTask);
+  task taskConveyorStuck(conveyorStuckTask);
+  task taskArmStates(armStatesTask);
   Brain.Screen.pressed(brain_pressed);
   Controller1.ButtonL1.pressed(buttonLup_pressed);
   Controller1.ButtonL2.pressed(buttonLdown_pressed);

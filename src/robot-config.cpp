@@ -16,13 +16,12 @@ motor LFDrive = motor(PORT12, ratio6_1, true);
 motor LHalfW = motor(PORT14, ratio6_1, true);
 motor LBDrive = motor(PORT13, ratio6_1, true);
 inertial Inertial15 = inertial(PORT15);
-digital_out MogoMech = digital_out(Brain.ThreeWirePort.A);
+digital_out MogoMech = digital_out(Brain.ThreeWirePort.F);
 optical Optical6 = optical(PORT6);
-digital_out SortingMech = digital_out(Brain.ThreeWirePort.B);
+digital_out SortingMech = digital_out(Brain.ThreeWirePort.G);
 motor RightPTOMotor = motor(PORT20, ratio18_1, false);
 motor LeftPTOMotor = motor(PORT11, ratio18_1, true);
-digital_out LeftPTO = digital_out(Brain.ThreeWirePort.C);
-digital_out RightPTO = digital_out(Brain.ThreeWirePort.D);
+digital_out PTO = digital_out(Brain.ThreeWirePort.H);
 motor LeftArm = motor(PORT1, ratio18_1, true);
 motor RightArm = motor(PORT2, ratio18_1, false);
 

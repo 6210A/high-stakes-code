@@ -16,8 +16,7 @@ extern optical Optical6;
 extern digital_out SortingMech;
 extern motor RightPTOMotor;
 extern motor LeftPTOMotor;
-extern digital_out LeftPTO;
-extern digital_out RightPTO;
+extern digital_out PTO;
 extern motor LeftArm;
 extern motor RightArm;
 
