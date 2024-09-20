@@ -17,13 +17,15 @@ motor LHalfW = motor(PORT14, ratio6_1, true);
 motor LBDrive = motor(PORT13, ratio6_1, true);
 inertial Inertial15 = inertial(PORT15);
 digital_out MogoMech = digital_out(Brain.ThreeWirePort.F);
-optical Optical6 = optical(PORT6);
+optical Optical = optical(PORT19);
 digital_out SortingMech = digital_out(Brain.ThreeWirePort.G);
 motor RightPTOMotor = motor(PORT20, ratio18_1, false);
 motor LeftPTOMotor = motor(PORT11, ratio18_1, true);
 digital_out PTO = digital_out(Brain.ThreeWirePort.H);
 motor LeftArm = motor(PORT1, ratio18_1, true);
-motor RightArm = motor(PORT2, ratio18_1, false);
+motor RightArm = motor(PORT9, ratio18_1, false);
+digital_out ClawPivot = digital_out(Brain.ThreeWirePort.E);
+rotation IntakeRotation = rotation(PORT2, false);
 
 // VEXcode generated functions
 // define variable for remote controller enable/disable

@@ -10,6 +10,91 @@
 // LBDrive              motor         13
 // Inertial15           inertial      15
 // MogoMech             digital_out   F
+// Optical              optical       19
+// SortingMech          digital_out   G
+// RightPTOMotor        motor         20
+// LeftPTOMotor         motor         11
+// PTO                  digital_out   H
+// LeftArm              motor         1
+// RightArm             motor         9
+// ClawPivot            digital_out   E
+// IntakeRotation       rotation      2
+// ---- END VEXCODE CONFIGURED DEVICES ----
+// ---- START VEXCODE CONFIGURED DEVICES ----
+// Robot Configuration:
+// [Name]               [Type]        [Port(s)]
+// Controller1          controller
+// RFDrive              motor         18
+// RHalfW               motor         16
+// RBDrive              motor         17
+// LFDrive              motor         12
+// LHalfW               motor         14
+// LBDrive              motor         13
+// Inertial15           inertial      15
+// MogoMech             digital_out   F
+// Optical6             optical       6
+// SortingMech          digital_out   G
+// RightPTOMotor        motor         20
+// LeftPTOMotor         motor         11
+// PTO                  digital_out   H
+// LeftArm              motor         1
+// RightArm             motor         9
+// ClawPivot            digital_out   E
+// IntakeRotation       rotation      2
+// ---- END VEXCODE CONFIGURED DEVICES ----
+// ---- START VEXCODE CONFIGURED DEVICES ----
+// Robot Configuration:
+// [Name]               [Type]        [Port(s)]
+// Controller1          controller
+// RFDrive              motor         18
+// RHalfW               motor         16
+// RBDrive              motor         17
+// LFDrive              motor         12
+// LHalfW               motor         14
+// LBDrive              motor         13
+// Inertial15           inertial      15
+// MogoMech             digital_out   F
+// Optical6             optical       6
+// SortingMech          digital_out   G
+// RightPTOMotor        motor         20
+// LeftPTOMotor         motor         11
+// PTO                  digital_out   H
+// LeftArm              motor         1
+// RightArm             motor         9
+// ClawPivot            digital_out   E
+// ---- END VEXCODE CONFIGURED DEVICES ----
+// ---- START VEXCODE CONFIGURED DEVICES ----
+// Robot Configuration:
+// [Name]               [Type]        [Port(s)]
+// Controller1          controller
+// RFDrive              motor         18
+// RHalfW               motor         16
+// RBDrive              motor         17
+// LFDrive              motor         12
+// LHalfW               motor         14
+// LBDrive              motor         13
+// Inertial15           inertial      15
+// MogoMech             digital_out   F
+// Optical6             optical       6
+// SortingMech          digital_out   G
+// RightPTOMotor        motor         20
+// LeftPTOMotor         motor         11
+// PTO                  digital_out   H
+// LeftArm              motor         1
+// RightArm             motor         9
+// ---- END VEXCODE CONFIGURED DEVICES ----
+// ---- START VEXCODE CONFIGURED DEVICES ----
+// Robot Configuration:
+// [Name]               [Type]        [Port(s)]
+// Controller1          controller
+// RFDrive              motor         18
+// RHalfW               motor         16
+// RBDrive              motor         17
+// LFDrive              motor         12
+// LHalfW               motor         14
+// LBDrive              motor         13
+// Inertial15           inertial      15
+// MogoMech             digital_out   F
 // Optical6             optical       6
 // SortingMech          digital_out   G
 // RightPTOMotor        motor         20
@@ -128,9 +213,11 @@ double averageX = 0;
 double averageY = 0;
 
 bool ignoreRelease = false;
-bool sorting = true;
+bool sortingColor = true;
 float armState = 0;
 float armGoal = 0;
+bool redirectActive = false;
+double currentPTO = 0;
 
 bool autonRunning = false;
 int autonNumber = 1;
@@ -205,7 +292,7 @@ void preAuton() {
   LeftArm.spin(fwd);
   RightArm.setVelocity(50, pct);
   LeftArm.setVelocity(50, pct);
-  task::sleep(250);    
+  task::sleep(250);
   while (RightArm.velocity(pct) > 1) {
     task::sleep(5);
   }
@@ -281,13 +368,23 @@ int controllerScreenTask() {
     Controller1.Screen.setCursor(1, 1);
     Controller1.Screen.print("Gyro: %3.2f  ", Inertial15.rotation());
     Controller1.Screen.setCursor(1, 15);
-    if (sorting == false) {
+    if (sortingColor) {
       Controller1.Screen.print("B in");
     } else {
       Controller1.Screen.print("R in");
     }
     Controller1.Screen.setCursor(2, 1);
-    Controller1.Screen.print("%3.0f", Optical6.hue());
+    Controller1.Screen.print("%1.0f ",
+                             RightArm.temperature(fahrenheit) / 10 - 5);
+    Controller1.Screen.setCursor(2, 3);
+    Controller1.Screen.print("%1.0f ",
+                             LeftArm.temperature(fahrenheit) / 10 - 5);
+    Controller1.Screen.setCursor(2, 5);
+    Controller1.Screen.print("State %2.0f ", armState);
+    Controller1.Screen.setCursor(2, 15);
+    Controller1.Screen.print("%d", Optical.isNearObject());
+    Controller1.Screen.setCursor(2, 17);
+    Controller1.Screen.print("%d", redirectActive);
 
     Controller1.Screen.setCursor(3, 1);
     Controller1.Screen.print("%1.0f ",
@@ -315,70 +412,129 @@ int controllerScreenTask() {
     Controller1.Screen.print("%1.0f ",
                              RightPTOMotor.temperature(fahrenheit) / 10 - 5);
 
-    Controller1.Screen.setCursor(3, 15);
-    Controller1.Screen.print("%1.0f ",
-                             LeftPTOMotor.temperature(fahrenheit) / 10 - 5);
+    // Controller1.Screen.setCursor(3, 15);
+    // Controller1.Screen.print("%1.0f ",
+    //                          LeftPTOMotor.temperature(fahrenheit) / 10 - 5);
+     Controller1.Screen.setCursor(3, 15);
+     Controller1.Screen.print("%3.0f ", currentPTO);
   }
 }
 
 int sortingTask() {
+  Optical.setLight(ledState::on);
+  Optical.brightness(100);
   while (1) {
-    if (sorting == false) { // eject red
-      if ((Optical6.hue() > 330) && (Optical6.hue() < 30)) {
-        SortingMech = true;
-        task::sleep(50);
-        SortingMech = false;
-      }
-    } else { // eject blue
-      if ((Optical6.hue() < 270) && (Optical6.hue() > 140)) {
-        SortingMech = true;
-        task::sleep(50);
-        SortingMech = false;
+    task::sleep(5);
+    if (Optical.isNearObject()) {
+      if (sortingColor) { // eject red
+        task::sleep(30);
+        if ((Optical.hue() > 330) && (Optical.hue() < 30)) {
+          task::sleep(300);
+          SortingMech = true;
+          task::sleep(50);
+          SortingMech = false;
+        }
+      } else { // eject blue
+        if ((Optical.hue() < 250) && (Optical.hue() > 90)) {
+          task::sleep(300);
+          SortingMech = true;
+          task::sleep(50);
+          SortingMech = false;
+        }
       }
     }
   }
 }
 
 int armStatesTask() {
+  LeftArm.setStopping(hold);
+  RightArm.setStopping(hold);
   while (1) {
-    //task::sleep(5);
-    LeftArm.spin(fwd, ((armGoal * 5) - LeftArm.position(deg) * .5), pct);
-    RightArm.spin(fwd, ((armGoal * 5) - RightArm.position(deg) * .5), pct);
+    task::sleep(5);
+    LeftArm.spin(fwd,
+                 ((-armGoal * 6) -
+                  (LeftArm.position(deg) + RightArm.position(deg)) * .3),
+                 pct);
+    RightArm.spin(fwd,
+                  ((-armGoal * 6) -
+                   (LeftArm.position(deg) + RightArm.position(deg)) * .3),
+                  pct);
     if (armState == 0) {
       armGoal = 0;
     }
     if (armState == 1) {
-      armGoal = -20;
+      armGoal = 15;
     }
     if (armState == 2) {
-      armGoal = -50;
+      armGoal = 35;
     }
     if (armState == 3)
-      armGoal = -100;
+      armGoal = 53;
   }
 }
 
 int conveyorStuckTask() {
   while (1) {
-    if (Controller1.ButtonR1.pressing() || Controller1.ButtonR2.pressing()) {
-      task::sleep(1000);
-      if (LeftPTOMotor.velocity(pct) < 5) {
-        task::sleep(1000);
-        if (LeftPTOMotor.velocity(pct) < 5) {
-          if (Controller1.ButtonR1.pressing()) {
-            LeftPTOMotor.setVelocity(100, pct);
-            LeftPTOMotor.setVelocity(-100, pct);
-            task::sleep(250);
-            LeftPTOMotor.setVelocity(0, pct);
-            LeftPTOMotor.setVelocity(0, pct);
-          } else if (Controller1.ButtonR2.pressing()) {
-            LeftPTOMotor.setVelocity(-100, pct);
-            LeftPTOMotor.setVelocity(100, pct);
-            task::sleep(250);
-            LeftPTOMotor.setVelocity(0, pct);
-            LeftPTOMotor.setVelocity(0, pct);
-          }
+    task::sleep(5);
+    // if (Controller1.ButtonR1.pressing() || Controller1.ButtonR2.pressing()) {
+    //   task::sleep(1000);
+    //   if (LeftPTOMotor.velocity(pct) < 5) {
+    //     task::sleep(1000);
+    //     if (LeftPTOMotor.velocity(pct) < 5) {
+    //       if (Controller1.ButtonR1.pressing()) {
+    //         LeftPTOMotor.setVelocity(100, pct);
+    //         LeftPTOMotor.setVelocity(-100, pct);
+    //         task::sleep(250);
+    //         LeftPTOMotor.setVelocity(0, pct);
+    //         LeftPTOMotor.setVelocity(0, pct);
+    //       } else if (Controller1.ButtonR2.pressing()) {
+    //         LeftPTOMotor.setVelocity(-100, pct);
+    //         LeftPTOMotor.setVelocity(100, pct);
+    //         task::sleep(250);
+    //         LeftPTOMotor.setVelocity(0, pct);
+    //         LeftPTOMotor.setVelocity(0, pct);
+    //       }
+    //     }
+    //   }
+    // }
+  }
+}
+
+bool redirectDelayTaskActive = false;
+int RDDRev = 1;
+int RPTORed = 1;
+
+int redirectDelayTask() {
+  redirectDelayTaskActive = true;
+  currentPTO = fabs(IntakeRotation.position(deg));
+  while ((fabs(IntakeRotation.position(deg)) - currentPTO) < 500) {
+    task::sleep(5);
+  }
+  RDDRev = -1;
+  RPTORed = 0;
+  task::sleep(1000);
+  RDDRev = 1;
+  RPTORed = 1;
+  redirectDelayTaskActive = false;
+  return 0;
+}
+
+int redirectTask() {
+  while (1) {
+    task::sleep(5);
+    if (redirectActive) {
+      if (Controller1.ButtonR1.pressing()) {
+        if (Optical.isNearObject() && !redirectDelayTaskActive) {
+          task taskRedirectDelay(redirectDelayTask);
+        } else {
+          RightPTOMotor.setVelocity(50 * RPTORed, pct);
+          LeftPTOMotor.setVelocity(-50 * RDDRev, pct);
         }
+      }
+    } else {
+      if (Controller1.ButtonR1.pressing()) {
+        RightPTOMotor.setVelocity(100, pct);
+        LeftPTOMotor.setVelocity(-100, pct);
       }
     }
   }
@@ -656,9 +812,6 @@ void buttonLdown_released() {}
 void buttonRup_pressed() {
   if (PTO) {
     PTO = false;
-  } else {
-    LeftPTOMotor.setVelocity(-100, pct);
-    RightPTOMotor.setVelocity(100, pct);
   }
 }
 
@@ -681,7 +834,7 @@ void buttonRdown_released() {
   RightPTOMotor.setVelocity(0, pct);
 }
 
-void buttonUP_pressed() {}
+void buttonUP_pressed() { sortingColor = !sortingColor; }
 
 void buttonDOWN_pressed() {}
 
@@ -702,9 +855,11 @@ void brain_pressed() {}
 
 void buttonX_pressed() { PTO = !PTO; }
 
-void buttonB_pressed() {}
+void buttonA_pressed() { ClawPivot = !ClawPivot; }
 
 void buttonY_pressed() { MogoMech = !MogoMech; }
+
+void buttonB_pressed() { redirectActive = !redirectActive; }
 
 void buttonLup_pressed2() {}
 
@@ -760,7 +915,7 @@ void autonomous() {
   }
 }
 
-void buttonA_pressed() {
+void buttonRight_pressed() {
   if (autonRunning) {
     autonRunning = false;
   } else if (!autonHappened) {
@@ -817,6 +972,7 @@ int main() {
   task taskSorting(sortingTask);
   task taskConveyorStuck(conveyorStuckTask);
   task taskArmStates(armStatesTask);
+  task taskRedirect(redirectTask);
   Brain.Screen.pressed(brain_pressed);
   Controller1.ButtonL1.pressed(buttonLup_pressed);
   Controller1.ButtonL2.pressed(buttonLdown_pressed);
