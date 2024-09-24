@@ -1,24 +1,24 @@
 // ---- START VEXCODE CONFIGURED DEVICES ----
 // Robot Configuration:
 // [Name]               [Type]        [Port(s)]
-// Controller1          controller
-// RFDrive              motor         18
-// RHalfW               motor         16
-// RBDrive              motor         17
-// LFDrive              motor         12
-// LHalfW               motor         14
-// LBDrive              motor         13
-// Inertial15           inertial      15
-// MogoMech             digital_out   F
-// Optical              optical       19
-// SortingMech          digital_out   G
-// RightPTOMotor        motor         20
-// LeftPTOMotor         motor         11
-// PTO                  digital_out   H
-// LeftArm              motor         1
-// RightArm             motor         9
-// ClawPivot            digital_out   E
-// IntakeRotation       rotation      2
+// Controller1          controller                    
+// RFDrive              motor         18              
+// RHalfW               motor         16              
+// RBDrive              motor         17              
+// LFDrive              motor         12              
+// LHalfW               motor         14              
+// LBDrive              motor         13              
+// Inertial15           inertial      15              
+// MogoMech             digital_out   F               
+// Optical              optical       19              
+// SortingMech          digital_out   G               
+// RightPTOMotor        motor         20              
+// LeftPTOMotor         motor         11              
+// PTO                  digital_out   H               
+// LeftArm              motor         1               
+// RightArm             motor         9               
+// ClawPivot            digital_out   E               
+// IntakeRotation       rotation      2               
 // ---- END VEXCODE CONFIGURED DEVICES ----
 // ---- START VEXCODE CONFIGURED DEVICES ----
 // Robot Configuration:
@@ -41,259 +41,6 @@
 // RightArm             motor         9
 // ClawPivot            digital_out   E
 // IntakeRotation       rotation      2
-// ---- END VEXCODE CONFIGURED DEVICES ----
-// ---- START VEXCODE CONFIGURED DEVICES ----
-// Robot Configuration:
-// [Name]               [Type]        [Port(s)]
-// Controller1          controller
-// RFDrive              motor         18
-// RHalfW               motor         16
-// RBDrive              motor         17
-// LFDrive              motor         12
-// LHalfW               motor         14
-// LBDrive              motor         13
-// Inertial15           inertial      15
-// MogoMech             digital_out   F
-// Optical              optical       19
-// SortingMech          digital_out   G
-// RightPTOMotor        motor         20
-// LeftPTOMotor         motor         11
-// PTO                  digital_out   H
-// LeftArm              motor         1
-// RightArm             motor         9
-// ClawPivot            digital_out   E
-// IntakeRotation       rotation      2
-// ---- END VEXCODE CONFIGURED DEVICES ----
-// ---- START VEXCODE CONFIGURED DEVICES ----
-// Robot Configuration:
-// [Name]               [Type]        [Port(s)]
-// Controller1          controller
-// RFDrive              motor         18
-// RHalfW               motor         16
-// RBDrive              motor         17
-// LFDrive              motor         12
-// LHalfW               motor         14
-// LBDrive              motor         13
-// Inertial15           inertial      15
-// MogoMech             digital_out   F
-// Optical              optical       19
-// SortingMech          digital_out   G
-// RightPTOMotor        motor         20
-// LeftPTOMotor         motor         11
-// PTO                  digital_out   H
-// LeftArm              motor         1
-// RightArm             motor         9
-// ClawPivot            digital_out   E
-// IntakeRotation       rotation      2
-// ---- END VEXCODE CONFIGURED DEVICES ----
-// ---- START VEXCODE CONFIGURED DEVICES ----
-// Robot Configuration:
-// [Name]               [Type]        [Port(s)]
-// Controller1          controller
-// RFDrive              motor         18
-// RHalfW               motor         16
-// RBDrive              motor         17
-// LFDrive              motor         12
-// LHalfW               motor         14
-// LBDrive              motor         13
-// Inertial15           inertial      15
-// MogoMech             digital_out   F
-// Optical              optical       19
-// SortingMech          digital_out   G
-// RightPTOMotor        motor         20
-// LeftPTOMotor         motor         11
-// PTO                  digital_out   H
-// LeftArm              motor         1
-// RightArm             motor         9
-// ClawPivot            digital_out   E
-// IntakeRotation       rotation      2
-// ---- END VEXCODE CONFIGURED DEVICES ----
-// ---- START VEXCODE CONFIGURED DEVICES ----
-// Robot Configuration:
-// [Name]               [Type]        [Port(s)]
-// Controller1          controller
-// RFDrive              motor         18
-// RHalfW               motor         16
-// RBDrive              motor         17
-// LFDrive              motor         12
-// LHalfW               motor         14
-// LBDrive              motor         13
-// Inertial15           inertial      15
-// MogoMech             digital_out   F
-// Optical              optical       19
-// SortingMech          digital_out   G
-// RightPTOMotor        motor         20
-// LeftPTOMotor         motor         11
-// PTO                  digital_out   H
-// LeftArm              motor         1
-// RightArm             motor         9
-// ClawPivot            digital_out   E
-// IntakeRotation       rotation      2
-// ---- END VEXCODE CONFIGURED DEVICES ----
-// ---- START VEXCODE CONFIGURED DEVICES ----
-// Robot Configuration:
-// [Name]               [Type]        [Port(s)]
-// Controller1          controller
-// RFDrive              motor         18
-// RHalfW               motor         16
-// RBDrive              motor         17
-// LFDrive              motor         12
-// LHalfW               motor         14
-// LBDrive              motor         13
-// Inertial15           inertial      15
-// MogoMech             digital_out   F
-// Optical              optical       19
-// SortingMech          digital_out   G
-// RightPTOMotor        motor         20
-// LeftPTOMotor         motor         11
-// PTO                  digital_out   H
-// LeftArm              motor         1
-// RightArm             motor         9
-// ClawPivot            digital_out   E
-// IntakeRotation       rotation      2
-// ---- END VEXCODE CONFIGURED DEVICES ----
-// ---- START VEXCODE CONFIGURED DEVICES ----
-// Robot Configuration:
-// [Name]               [Type]        [Port(s)]
-// Controller1          controller
-// RFDrive              motor         18
-// RHalfW               motor         16
-// RBDrive              motor         17
-// LFDrive              motor         12
-// LHalfW               motor         14
-// LBDrive              motor         13
-// Inertial15           inertial      15
-// MogoMech             digital_out   F
-// Optical6             optical       6
-// SortingMech          digital_out   G
-// RightPTOMotor        motor         20
-// LeftPTOMotor         motor         11
-// PTO                  digital_out   H
-// LeftArm              motor         1
-// RightArm             motor         9
-// ClawPivot            digital_out   E
-// IntakeRotation       rotation      2
-// ---- END VEXCODE CONFIGURED DEVICES ----
-// ---- START VEXCODE CONFIGURED DEVICES ----
-// Robot Configuration:
-// [Name]               [Type]        [Port(s)]
-// Controller1          controller
-// RFDrive              motor         18
-// RHalfW               motor         16
-// RBDrive              motor         17
-// LFDrive              motor         12
-// LHalfW               motor         14
-// LBDrive              motor         13
-// Inertial15           inertial      15
-// MogoMech             digital_out   F
-// Optical6             optical       6
-// SortingMech          digital_out   G
-// RightPTOMotor        motor         20
-// LeftPTOMotor         motor         11
-// PTO                  digital_out   H
-// LeftArm              motor         1
-// RightArm             motor         9
-// ClawPivot            digital_out   E
-// ---- END VEXCODE CONFIGURED DEVICES ----
-// ---- START VEXCODE CONFIGURED DEVICES ----
-// Robot Configuration:
-// [Name]               [Type]        [Port(s)]
-// Controller1          controller
-// RFDrive              motor         18
-// RHalfW               motor         16
-// RBDrive              motor         17
-// LFDrive              motor         12
-// LHalfW               motor         14
-// LBDrive              motor         13
-// Inertial15           inertial      15
-// MogoMech             digital_out   F
-// Optical6             optical       6
-// SortingMech          digital_out   G
-// RightPTOMotor        motor         20
-// LeftPTOMotor         motor         11
-// PTO                  digital_out   H
-// LeftArm              motor         1
-// RightArm             motor         9
-// ---- END VEXCODE CONFIGURED DEVICES ----
-// ---- START VEXCODE CONFIGURED DEVICES ----
-// Robot Configuration:
-// [Name]               [Type]        [Port(s)]
-// Controller1          controller
-// RFDrive              motor         18
-// RHalfW               motor         16
-// RBDrive              motor         17
-// LFDrive              motor         12
-// LHalfW               motor         14
-// LBDrive              motor         13
-// Inertial15           inertial      15
-// MogoMech             digital_out   F
-// Optical6             optical       6
-// SortingMech          digital_out   G
-// RightPTOMotor        motor         20
-// LeftPTOMotor         motor         11
-// PTO                  digital_out   H
-// LeftArm              motor         1
-// RightArm             motor         2
-// ---- END VEXCODE CONFIGURED DEVICES ----
-// ---- START VEXCODE CONFIGURED DEVICES ----
-// Robot Configuration:
-// [Name]               [Type]        [Port(s)]
-// Controller1          controller
-// RFDrive              motor         18
-// RHalfW               motor         16
-// RBDrive              motor         17
-// LFDrive              motor         12
-// LHalfW               motor         14
-// LBDrive              motor         13
-// Inertial15           inertial      15
-// MogoMech             digital_out   A
-// Optical6             optical       6
-// SortingMech          digital_out   G
-// RightPTOMotor        motor         20
-// LeftPTOMotor         motor         11
-// PTO                  digital_out   H
-// LeftArm              motor         1
-// RightArm             motor         2
-// ---- END VEXCODE CONFIGURED DEVICES ----
-// ---- START VEXCODE CONFIGURED DEVICES ----
-// Robot Configuration:
-// [Name]               [Type]        [Port(s)]
-// Controller1          controller
-// RFDrive              motor         18
-// RHalfW               motor         16
-// RBDrive              motor         17
-// LFDrive              motor         12
-// LHalfW               motor         14
-// LBDrive              motor         13
-// Inertial15           inertial      15
-// MogoMech             digital_out   A
-// Optical6             optical       6
-// SortingMech          digital_out   G
-// RightPTOMotor        motor         20
-// LeftPTOMotor         motor         11
-// PTO                  digital_out   H
-// LeftArm              motor         1
-// RightArm             motor         2
-// ---- END VEXCODE CONFIGURED DEVICES ----
-// ---- START VEXCODE CONFIGURED DEVICES ----
-// Robot Configuration:
-// [Name]               [Type]        [Port(s)]
-// Controller1          controller
-// RFDrive              motor         18
-// RHalfW               motor         16
-// RBDrive              motor         17
-// LFDrive              motor         12
-// LHalfW               motor         14
-// LBDrive              motor         13
-// Inertial15           inertial      15
-// MogoMech             digital_out   A
-// Optical6             optical       6
-// SortingMech          digital_out   B
-// RightPTOMotor        motor         20
-// LeftPTOMotor         motor         11
-// PTO                  digital_out   H
-// LeftArm              motor         1
-// RightArm             motor         2
 // ---- END VEXCODE CONFIGURED DEVICES ----
 
 #include "vex.h"
@@ -345,18 +92,20 @@ double totalY = 0;
 double averageX = 0;
 double averageY = 0;
 
-bool ignoreRelease = false;
-bool sortingColor = true;
+bool release2 = false;
 float armState = 0;
 float armGoal = 0;
+
 bool redirectActive = false;
-bool sortingDelayTaskActive = false;
+bool redirectDelayTaskActive = false;
+double hookLocation = 0;
+
+bool sortingColor = true;
+bool sortingOff = false;
 
 double currentPTO = 0;
-bool redirectDelayTaskActive = false;
 float conveyorMod = 1;
 int rollerMod = 1;
-double hookLocation = 0;
 
 bool autonRunning = false;
 int autonNumber = 1;
@@ -517,8 +266,8 @@ int controllerScreenTask() {
     } else {
       Controller1.Screen.print("R in");
     }
-    Controller1.Screen.setCursor(1, 15);
-    Controller1.Screen.print("%1.3f ", hookLocation);
+    Controller1.Screen.setCursor(1, 17);
+    Controller1.Screen.print("%d", autonRunning);
 
     Controller1.Screen.setCursor(2, 1);
     Controller1.Screen.print("%1.0f ",
@@ -527,7 +276,7 @@ int controllerScreenTask() {
     Controller1.Screen.print("%1.0f ",
                              LeftArm.temperature(fahrenheit) / 10 - 5);
     Controller1.Screen.setCursor(2, 6);
-    Controller1.Screen.print("State %2.0f", armState);
+    Controller1.Screen.print("State %1.0f", armState);
     Controller1.Screen.setCursor(2, 18);
     Controller1.Screen.print("%d", Optical.isNearObject());
     Controller1.Screen.setCursor(2, 20);
@@ -581,12 +330,15 @@ int armStatesTask() {
     if (armState == 0) {
       armGoal = 0;
     }
+    if (armState == 1) {
+      armGoal = 15;
+    }
+    if (armState == 2) {
+      armGoal = 35;
+    }
+    if (armState == 3)
+      armGoal = 45;
   }
-  if (armState == 1) {
-    armGoal = 35;
-  }
-  if (armState == 2)
-    armGoal = 45;
 }
 
 int intakeRotationTask() {
@@ -597,7 +349,7 @@ int intakeRotationTask() {
 }
 
 int sortingDelayTask() {
-  sortingDelayTaskActive = true;
+  sortingOff = true;
   currentPTO = fabs(IntakeRotation.position(deg));
   task::sleep(100);
   while (hookLocation < .95) {
@@ -608,22 +360,24 @@ int sortingDelayTask() {
   task::sleep(300);
   conveyorMod = 1;
   rollerMod = 1;
-  sortingDelayTaskActive = false;
+  sortingOff = false;
   return 0;
 }
 
 int redirectDelayTask() {
   redirectDelayTaskActive = true;
+  sortingOff = true;
   currentPTO = fabs(IntakeRotation.position(deg));
   task::sleep(100);
-  while (hookLocation < .72) {
+  while (hookLocation < .68) {
     task::sleep(1);
   }
-  conveyorMod = -1.5;
+  conveyorMod = -1;
   rollerMod = 0;
   task::sleep(750);
   conveyorMod = 1;
   rollerMod = 1;
+  sortingOff = false;
   redirectDelayTaskActive = false;
   return 0;
 }
@@ -635,6 +389,8 @@ int intakeTask() {
     task::sleep(5);
 
     if (Controller1.ButtonR1.pressing()) {
+
+      // Redirect
       if (redirectActive) {
         RightPTOMotor.setVelocity(100 * rollerMod, pct);
         LeftPTOMotor.setVelocity(-50 * conveyorMod, pct);
@@ -647,8 +403,10 @@ int intakeTask() {
         RightPTOMotor.setVelocity(100 * rollerMod, pct);
         LeftPTOMotor.setVelocity(-100 * conveyorMod, pct);
       }
+
+      // Sorting
       if (Optical.isNearObject()) {
-        if (!sortingDelayTaskActive) {
+        if (!sortingOff) {
           if (sortingColor) { // eject red
             if ((Optical.hue() > 330) || (Optical.hue() < 30)) {
               task taskSortingDelay(sortingDelayTask);
@@ -696,7 +454,7 @@ int sensorsTask() {
   while (1) {
     task::sleep(5);
     // GET MOTOR ENCODERS AND SCALE THEM TO DISTANCE IN INCHES (450 RPM)
-    avgDriveDistance = (LFDrive.position(deg) + RBDrive.position(deg)) * 0.0128;
+    avgDriveDistance = (LFDrive.position(deg) + RBDrive.position(deg)) * 0.00955;
 
     // GET AVERAGE MOTOR SPEED PERCENTAGE
     avgDriveSpeed = (LFDrive.velocity(pct) + RBDrive.velocity(pct)) * .5;
@@ -811,7 +569,7 @@ int driveTask() {
 }
 
 void driveDistance(int Speed, double Distance, double Heading) {
-  double kP = 0.2;
+  double kP = 0.6;
   double kI = 0.00;
   double kD = 0.01;
   double integral = 0;
@@ -850,13 +608,13 @@ void driveTillStop(int Speed, double Heading) {
 void driveTurn(int Speed, int Heading, int Accuracy) {
   int integral = 0;
   int previousError = 0;
-  double kP = .415;
+  double kP = .47;
   double kI = 0;
   double kD = 0.005;
   double lsp;
   double rsp;
 
-  int newHeading = Heading + Accuracy - 1;
+  int newHeading = Heading + Accuracy;
   while ((fabs(newHeading - gyro1) > Accuracy ||
           (fabs(LFDrive.velocity(pct)) > 2.5)) &&
          autonRunning) {
@@ -864,24 +622,24 @@ void driveTurn(int Speed, int Heading, int Accuracy) {
     integral += error;
     double derivativeTurn = error - previousError;
     double output = (kP * error) + (kI * integral) + (kD * derivativeTurn);
-    lsp = Speed * output;
+    lsp = +output;
     if (fabs(lsp) < 2) {
       lsp = 2 * fabs(lsp) / lsp;
     }
     leftSpeed = lsp;
-    rsp = -Speed * output;
+    rsp = -output;
     if (fabs(rsp) < 2) {
       rsp = 2 * fabs(rsp) / rsp;
     }
     rightSpeed = rsp;
     previousError = error;
-    task::sleep(5);
+    sleep(5);
   }
 
   stopDrive();
   // integral = 0;
   // previousError = 0;
-  task::sleep(10);
+  sleep(10);
 }
 
 int driveArc(int Speed, int Distance, int Heading, int Radius) {
@@ -944,12 +702,12 @@ void buttonLup_pressed() {
   if (armState < 4) {
     armState += 1;
   } else {
-    armState = 3;
+    armState = 4;
   }
 }
 
 void buttonLdown_pressed() {
-  if (armState > -1) {
+  if (armState > 0) {
     armState -= 1;
   } else {
     armState = 0;
@@ -964,23 +722,39 @@ void buttonRup_pressed() {
   if (PTO) {
     PTO = false;
   }
+  if (Controller1.ButtonR2.pressing()) {
+    release2 = true;
+    redirectActive = true;
+  }
 }
 
 void buttonRdown_pressed() {
   if (PTO) {
     PTO = false;
+  }
+  if (Controller1.ButtonR1.pressing()) {
+    release2 = true;
+    redirectActive = true;
   } else {
     LeftPTOMotor.setVelocity(50, pct);
     RightPTOMotor.setVelocity(-50, pct);
   }
 }
-
+ 
 void buttonRup_released() {
+  if (release2) {
+    release2 = false;
+    redirectActive = false;
+  }
   LeftPTOMotor.setVelocity(0, pct);
   RightPTOMotor.setVelocity(0, pct);
 }
 
 void buttonRdown_released() {
+  if (release2) {
+    release2 = false;
+    redirectActive = false;
+  }
   LeftPTOMotor.setVelocity(0, pct);
   RightPTOMotor.setVelocity(0, pct);
 }
@@ -988,8 +762,6 @@ void buttonRdown_released() {
 void buttonUP_pressed() { sortingColor = !sortingColor; }
 
 void buttonDOWN_pressed() {}
-
-void buttonRIGHT_pressed() {}
 
 void buttonLEFT_pressed() {
   if (autonNumber > 6) {
@@ -1010,7 +782,7 @@ void buttonA_pressed() { ClawPivot = !ClawPivot; }
 
 void buttonY_pressed() { MogoMech = !MogoMech; }
 
-void buttonB_pressed() { redirectActive = !redirectActive; }
+void buttonB_pressed() {}
 
 void buttonLup_pressed2() {}
 
@@ -1032,48 +804,34 @@ void skillsAuton() {}
 
 void skillsDriver() {}
 
-void PIDTest() {
-  driveTurn(40, 45, 10);
-  sleep(1000);
-  driveTurn(40, 135, 10);
-  sleep(1000);
-  driveTurn(40, 270, 10);
-  sleep(1000);
-  driveTurn(40, 450, 10);
-  sleep(5);
-}
+void PIDTest() { setGyro(0); driveTurn(50, 90, 3); driveDistance(50, 1, 90); }
 
 void autonomous() {
   autonHappened = true;
   autonRunning = true;
   driveHold = true;
   if (autonNumber == 1) {
-    headingMultiplier = 1;
-    quals();
+    PIDTest();
   } else if (autonNumber == 2) {
-    headingMultiplier = -1;
-    quals();
+
   } else if (autonNumber == 3) {
-    headingMultiplier = 1;
-    elims();
+
   } else if (autonNumber == 4) {
-    headingMultiplier = -1;
-    elims();
+
   } else if (autonNumber == 5) {
-    skillsAuton();
+
   } else if (autonNumber == 6) {
-    skillsDriver();
   }
 }
 
-void buttonRight_pressed() {
+void buttonRIGHT_pressed() {
   if (autonRunning) {
     autonRunning = false;
+    driveHold = false;
   } else if (!autonHappened) {
     autonomous();
   }
   driveTorque = 100;
-  driveHold = false;
 }
 
 void usercontrol() {
