@@ -605,7 +605,7 @@ void driveTillStop(int Speed, double Heading) {
   stopDrive();
 }
 
-void driveTurn(int Speed, int Heading, int Accuracy) {
+void driveTurn(int Heading, int Accuracy) {
   int integral = 0;
   int previousError = 0;
   double kP = .47;
