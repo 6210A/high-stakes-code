@@ -21,6 +21,7 @@ extern motor LeftArm;
 extern motor RightArm;
 extern digital_out ClawPivot;
 extern rotation IntakeRotation;
+extern digital_out IntakeLift;
 
 /**
  * Used to initialize code/tasks/devices added using tools in VEXcode Pro.

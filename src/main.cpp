@@ -1,24 +1,47 @@
 // ---- START VEXCODE CONFIGURED DEVICES ----
 // Robot Configuration:
 // [Name]               [Type]        [Port(s)]
-// Controller1          controller                    
-// RFDrive              motor         18              
-// RHalfW               motor         16              
-// RBDrive              motor         17              
-// LFDrive              motor         12              
-// LHalfW               motor         14              
-// LBDrive              motor         13              
-// Inertial15           inertial      15              
-// MogoMech             digital_out   F               
-// Optical              optical       19              
-// SortingMech          digital_out   G               
-// RightPTOMotor        motor         20              
-// LeftPTOMotor         motor         11              
-// PTO                  digital_out   H               
-// LeftArm              motor         1               
-// RightArm             motor         9               
-// ClawPivot            digital_out   E               
-// IntakeRotation       rotation      2               
+// Controller1          controller
+// RFDrive              motor         18
+// RHalfW               motor         16
+// RBDrive              motor         17
+// LFDrive              motor         12
+// LHalfW               motor         14
+// LBDrive              motor         13
+// Inertial15           inertial      15
+// MogoMech             digital_out   F
+// Optical              optical       19
+// SortingMech          digital_out   G
+// RightPTOMotor        motor         20
+// LeftPTOMotor         motor         11
+// PTO                  digital_out   H
+// LeftArm              motor         1
+// RightArm             motor         9
+// ClawPivot            digital_out   E
+// IntakeRotation       rotation      2
+// IntakeLift           digital_out   D
+// ---- END VEXCODE CONFIGURED DEVICES ----
+// ---- START VEXCODE CONFIGURED DEVICES ----
+// Robot Configuration:
+// [Name]               [Type]        [Port(s)]
+// Controller1          controller
+// RFDrive              motor         18
+// RHalfW               motor         16
+// RBDrive              motor         17
+// LFDrive              motor         12
+// LHalfW               motor         14
+// LBDrive              motor         13
+// Inertial15           inertial      15
+// MogoMech             digital_out   F
+// Optical              optical       19
+// SortingMech          digital_out   G
+// RightPTOMotor        motor         20
+// LeftPTOMotor         motor         11
+// PTO                  digital_out   H
+// LeftArm              motor         1
+// RightArm             motor         9
+// ClawPivot            digital_out   E
+// IntakeRotation       rotation      2
 // ---- END VEXCODE CONFIGURED DEVICES ----
 // ---- START VEXCODE CONFIGURED DEVICES ----
 // Robot Configuration:
@@ -102,6 +125,7 @@ double hookLocation = 0;
 
 bool sortingColor = true;
 bool sortingOff = false;
+bool ringDetected;
 
 double currentPTO = 0;
 float conveyorMod = 1;
@@ -278,7 +302,7 @@ int controllerScreenTask() {
     Controller1.Screen.setCursor(2, 6);
     Controller1.Screen.print("State %1.0f", armState);
     Controller1.Screen.setCursor(2, 18);
-    Controller1.Screen.print("%d", Optical.isNearObject());
+    Controller1.Screen.print("%d", ringDetected);
     Controller1.Screen.setCursor(2, 20);
     Controller1.Screen.print("%d", redirectActive);
 
@@ -394,7 +418,7 @@ int intakeTask() {
       if (redirectActive) {
         RightPTOMotor.setVelocity(100 * rollerMod, pct);
         LeftPTOMotor.setVelocity(-50 * conveyorMod, pct);
-        if (Optical.isNearObject()) {
+        if (ringDetected) {
           if (!redirectDelayTaskActive) {
             task taskRedirectDelay(redirectDelayTask);
           }
@@ -405,7 +429,7 @@ int intakeTask() {
       }
 
       // Sorting
-      if (Optical.isNearObject()) {
+      if (ringDetected) {
         if (!sortingOff) {
           if (sortingColor) { // eject red
             if ((Optical.hue() > 330) || (Optical.hue() < 30)) {
@@ -454,13 +478,17 @@ int sensorsTask() {
   while (1) {
     task::sleep(5);
     // GET MOTOR ENCODERS AND SCALE THEM TO DISTANCE IN INCHES (450 RPM)
-    avgDriveDistance = (LFDrive.position(deg) + RBDrive.position(deg)) * 0.00955;
+    avgDriveDistance =
+        (LFDrive.position(deg) + RBDrive.position(deg)) * 0.00955;
 
     // GET AVERAGE MOTOR SPEED PERCENTAGE
     avgDriveSpeed = (LFDrive.velocity(pct) + RBDrive.velocity(pct)) * .5;
 
     // GET gyro1 VALUE
     gyro1 = Inertial15.rotation(deg);
+
+    // Get optical value
+    ringDetected = Optical.isNearObject();
 
     // GET SLOWEST DRIVE MOTOR SPEED
     x = fabs(RFDrive.velocity(pct));
@@ -740,7 +768,7 @@ void buttonRdown_pressed() {
     RightPTOMotor.setVelocity(-50, pct);
   }
 }
- 
+
 void buttonRup_released() {
   if (release2) {
     release2 = false;
@@ -796,22 +824,59 @@ void buttonRdown_released2() {}
 
 void buttonRup_released2() {}
 
-void quals() {}
-
-void elims() {}
+void frontAuton5() {
+  setGyro(-148 * headingMultiplier);
+  ClawPivot = false;
+  armState = 2;
+  sleep(300);
+  driveDistance(30, 8, -148 * headingMultiplier);
+  sleep(300);
+  // score ring 1
+  armState = 0;
+  sleep(300);
+  driveDistance(-50, 12, -115 * headingMultiplier);
+  driveTurn(-90, 5);
+  driveDistance(30, 7, -90);
+  // pick up ring 2
+  IntakeLift = true;
+  RightPTOMotor.setVelocity(100, pct);
+  LeftPTOMotor.setVelocity(-100, pct);
+  sleep(500);
+  while (!ringDetected) {
+    sleep(1);
+  }
+  RightPTOMotor.setVelocity(0, pct);
+  LeftPTOMotor.setVelocity(0, pct);
+  driveDistance(-30, 6, -90);
+  driveTurn(-150, 3);
+  driveDistance(-30, 23, -150);
+  MogoMech = true;
+  RightPTOMotor.setVelocity(100, pct);
+  LeftPTOMotor.setVelocity(-100, pct);
+  sleep(300);
+  driveTurn(90, 3);
+  driveDistance(20, 15, 90);
+  driveTurn(180, 5);
+  driveDistance(30, 25, 160);
+}
 
 void skillsAuton() {}
 
 void skillsDriver() {}
 
-void PIDTest() { setGyro(0); driveTurn(50, 90, 3); driveDistance(50, 1, 90); }
+void PIDTest() {
+  setGyro(0);
+  driveArc(50, 40, 0, 30);
+  driveDistance(50, 1, 90);
+}
 
 void autonomous() {
   autonHappened = true;
   autonRunning = true;
   driveHold = true;
   if (autonNumber == 1) {
-    PIDTest();
+    headingMultiplier = 1;
+    frontAuton5();
   } else if (autonNumber == 2) {
 
   } else if (autonNumber == 3) {

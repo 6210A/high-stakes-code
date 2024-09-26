@@ -26,6 +26,7 @@ motor LeftArm = motor(PORT1, ratio18_1, true);
 motor RightArm = motor(PORT9, ratio18_1, false);
 digital_out ClawPivot = digital_out(Brain.ThreeWirePort.E);
 rotation IntakeRotation = rotation(PORT2, false);
+digital_out IntakeLift = digital_out(Brain.ThreeWirePort.D);
 
 // VEXcode generated functions
 // define variable for remote controller enable/disable
