@@ -13,7 +13,7 @@ extern motor LBDrive;
 extern inertial Inertial15;
 extern digital_out MogoMech;
 extern optical Optical;
-extern digital_out SortingMech;
+extern digital_out Doinker;
 extern motor RightPTOMotor;
 extern motor LeftPTOMotor;
 extern digital_out PTO;

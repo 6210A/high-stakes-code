@@ -11,6 +11,29 @@
 // Inertial15           inertial      15
 // MogoMech             digital_out   F
 // Optical              optical       19
+// Doinker              digital_out   G
+// RightPTOMotor        motor         20
+// LeftPTOMotor         motor         11
+// PTO                  digital_out   H
+// LeftArm              motor         1
+// RightArm             motor         9
+// ClawPivot            digital_out   E
+// IntakeRotation       rotation      2
+// IntakeLift           digital_out   D
+// ---- END VEXCODE CONFIGURED DEVICES ----
+// ---- START VEXCODE CONFIGURED DEVICES ----
+// Robot Configuration:
+// [Name]               [Type]        [Port(s)]
+// Controller1          controller
+// RFDrive              motor         18
+// RHalfW               motor         16
+// RBDrive              motor         17
+// LFDrive              motor         12
+// LHalfW               motor         14
+// LBDrive              motor         13
+// Inertial15           inertial      15
+// MogoMech             digital_out   F
+// Optical              optical       19
 // SortingMech          digital_out   G
 // RightPTOMotor        motor         20
 // LeftPTOMotor         motor         11
@@ -120,16 +143,21 @@ float armState = 0;
 float armGoal = 0;
 
 bool redirectActive = false;
-bool redirectDelayTaskActive = false;
+bool delayTaskActive = false;
 double hookLocation = 0;
+bool intakeRedirecting = false;
+bool stopIntake = false;
+double currentPTO = 0;
+int conveyorSpeed = 0;
+int rollerSpeed = 0;
 
 bool sortingColor = true;
-bool sortingOff = false;
+bool sortingTaskActive = false;
 bool ringDetected;
+bool redDetected;
+bool blueDetected;
 
-double currentPTO = 0;
-float conveyorMod = 1;
-int rollerMod = 1;
+bool intakeTaskOn;
 
 bool autonRunning = false;
 int autonNumber = 1;
@@ -188,6 +216,9 @@ void stopAll() {
 
 void preAuton() {
   fieldControlState = 0;
+  armState = 1;
+  IntakeLift = true;
+  ClawPivot = false;
   IntakeRotation.setPosition(0, degrees);
   Brain.Screen.clearScreen();
   Brain.Screen.printAt(320, 200, "Pre Auton");
@@ -211,8 +242,10 @@ void preAuton() {
   RightArm.setPosition(0, deg);
   LeftArm.setPosition(0, deg);
 
-  LeftPTOMotor.setVelocity(100, pct);
-  LeftPTOMotor.spinFor(reverse, 1.9, turns, true);
+  LeftPTOMotor.setVelocity(50, pct);
+  LeftPTOMotor.setStopping(hold);
+  LeftPTOMotor.spinFor(reverse, 1.917, turns, true);
+  LeftPTOMotor.setStopping(coast);
   task::sleep(200);
   LeftPTOMotor.spin(fwd);
   RightPTOMotor.spin(fwd);
@@ -372,37 +405,54 @@ int intakeRotationTask() {
   }
 }
 
+int intakeSpeedTask() {
+  while (1) {
+    task::sleep(5);
+    if (!PTO) {
+
+      if (redirectActive) {
+        conveyorSpeed = 50;
+        rollerSpeed = 100;
+      }
+      if (intakeRedirecting) {
+        conveyorSpeed = -50;
+        rollerSpeed = 0;
+      } else if (stopIntake) {
+        conveyorSpeed = 0;
+        rollerSpeed = 0;
+      } else {
+      }
+    }
+    LeftPTOMotor.setVelocity(conveyorSpeed * -1, pct);
+    RightPTOMotor.setVelocity(rollerSpeed, pct);
+  }
+}
+
 int sortingDelayTask() {
-  sortingOff = true;
+  delayTaskActive = true;
   currentPTO = fabs(IntakeRotation.position(deg));
   task::sleep(100);
   while (hookLocation < .95) {
     task::sleep(1);
   }
-  conveyorMod = 0;
-  rollerMod = 0;
+  stopIntake = true;
   task::sleep(300);
-  conveyorMod = 1;
-  rollerMod = 1;
-  sortingOff = false;
+  stopIntake = false;
+  delayTaskActive = false;
   return 0;
 }
 
 int redirectDelayTask() {
-  redirectDelayTaskActive = true;
-  sortingOff = true;
+  delayTaskActive = true;
   currentPTO = fabs(IntakeRotation.position(deg));
   task::sleep(100);
   while (hookLocation < .68) {
     task::sleep(1);
   }
-  conveyorMod = -1;
-  rollerMod = 0;
+  intakeRedirecting = true;
   task::sleep(750);
-  conveyorMod = 1;
-  rollerMod = 1;
-  sortingOff = false;
-  redirectDelayTaskActive = false;
+  intakeRedirecting = false;
+  delayTaskActive = false;
   return 0;
 }
 
@@ -412,64 +462,25 @@ int intakeTask() {
   while (1) {
     task::sleep(5);
 
-    if (Controller1.ButtonR1.pressing()) {
-
+    if (Controller1.ButtonR1.pressing() || autonRunning) {
       // Redirect
-      if (redirectActive) {
-        RightPTOMotor.setVelocity(100 * rollerMod, pct);
-        LeftPTOMotor.setVelocity(-50 * conveyorMod, pct);
-        if (ringDetected) {
-          if (!redirectDelayTaskActive) {
-            task taskRedirectDelay(redirectDelayTask);
-          }
-        }
-      } else {
-        RightPTOMotor.setVelocity(100 * rollerMod, pct);
-        LeftPTOMotor.setVelocity(-100 * conveyorMod, pct);
+      if (redirectActive && ringDetected && !delayTaskActive) {
+        task taskRedirectDelay(redirectDelayTask);
       }
+    }
 
-      // Sorting
-      if (ringDetected) {
-        if (!sortingOff) {
-          if (sortingColor) { // eject red
-            if ((Optical.hue() > 330) || (Optical.hue() < 30)) {
-              task taskSortingDelay(sortingDelayTask);
-            }
-          } else { // eject blue
-            if ((Optical.hue() < 250) && (Optical.hue() > 90)) {
-              task taskSortingDelay(sortingDelayTask);
-            }
-          }
+    // Sorting
+    if (ringDetected) {
+      if (sortingColor) { // eject red
+        if (redDetected && !delayTaskActive) {
+          task taskSortingDelay(sortingDelayTask);
+        }
+      } else { // eject blue
+        if (blueDetected && !delayTaskActive) {
+          task taskSortingDelay(sortingDelayTask);
         }
       }
     }
-  }
-}
-
-int conveyorStuckTask() {
-  while (1) {
-    task::sleep(5);
-    // if (Controller1.ButtonR1.pressing() || Controller1.ButtonR2.pressing()) {
-    //   task::sleep(1000);
-    //   if (LeftPTOMotor.velocity(pct) < 5) {
-    //     task::sleep(1000);
-    //     if (LeftPTOMotor.velocity(pct) < 5) {
-    //       if (Controller1.ButtonR1.pressing()) {
-    //         LeftPTOMotor.setVelocity(100, pct);
-    //         LeftPTOMotor.setVelocity(-100, pct);
-    //         task::sleep(250);
-    //         LeftPTOMotor.setVelocity(0, pct);
-    //         LeftPTOMotor.setVelocity(0, pct);
-    //       } else if (Controller1.ButtonR2.pressing()) {
-    //         LeftPTOMotor.setVelocity(-100, pct);
-    //         LeftPTOMotor.setVelocity(100, pct);
-    //         task::sleep(250);
-    //         LeftPTOMotor.setVelocity(0, pct);
-    //         LeftPTOMotor.setVelocity(0, pct);
-    //       }
-    //     }
-    //   }
-    // }
   }
 }
 
@@ -489,6 +500,8 @@ int sensorsTask() {
 
     // Get optical value
     ringDetected = Optical.isNearObject();
+    redDetected = ((Optical.hue() > 330) || (Optical.hue() < 30));
+    blueDetected = ((Optical.hue() < 250) && (Optical.hue() > 90));
 
     // GET SLOWEST DRIVE MOTOR SPEED
     x = fabs(RFDrive.velocity(pct));
@@ -636,11 +649,21 @@ void driveTillStop(int Speed, double Heading) {
 void driveTurn(int Heading, int Accuracy) {
   int integral = 0;
   int previousError = 0;
-  double kP = .47;
-  double kI = 0;
-  double kD = 0.005;
+  double kP;
+  double kI;
+  double kD;
   double lsp;
   double rsp;
+
+  if (MogoMech) {
+    kP = .47;
+    kI = 0;
+    kD = 0.005;
+  } else {
+    kP = .49;
+    kI = 0;
+    kD = 0.005;
+  }
 
   int newHeading = Heading + Accuracy;
   while ((fabs(newHeading - gyro1) > Accuracy ||
@@ -727,6 +750,9 @@ int driveArc(int Speed, int Distance, int Heading, int Radius) {
 }
 
 void buttonLup_pressed() {
+  if (Controller1.ButtonL2.pressing()) {
+    Doinker = true;
+  }
   if (armState < 4) {
     armState += 1;
   } else {
@@ -735,6 +761,9 @@ void buttonLup_pressed() {
 }
 
 void buttonLdown_pressed() {
+  if (Controller1.ButtonL1.pressing()) {
+    Doinker = true;
+  }
   if (armState > 0) {
     armState -= 1;
   } else {
@@ -742,30 +771,29 @@ void buttonLdown_pressed() {
   }
 }
 
-void buttonLup_released() {}
+void buttonLup_released() { Doinker = false; }
 
-void buttonLdown_released() {}
+void buttonLdown_released() { Doinker = false; }
 
 void buttonRup_pressed() {
-  if (PTO) {
-    PTO = false;
-  }
   if (Controller1.ButtonR2.pressing()) {
     release2 = true;
     redirectActive = true;
+  } else {
+    PTO = false;
+    conveyorSpeed = 100;
+    rollerSpeed = 100;
   }
 }
 
 void buttonRdown_pressed() {
-  if (PTO) {
-    PTO = false;
-  }
   if (Controller1.ButtonR1.pressing()) {
     release2 = true;
     redirectActive = true;
   } else {
-    LeftPTOMotor.setVelocity(50, pct);
-    RightPTOMotor.setVelocity(-50, pct);
+    PTO = false;
+    conveyorSpeed = -50;
+    rollerSpeed = -50;
   }
 }
 
@@ -774,8 +802,8 @@ void buttonRup_released() {
     release2 = false;
     redirectActive = false;
   }
-  LeftPTOMotor.setVelocity(0, pct);
-  RightPTOMotor.setVelocity(0, pct);
+  conveyorSpeed = 0;
+  rollerSpeed = 0;
 }
 
 void buttonRdown_released() {
@@ -783,13 +811,13 @@ void buttonRdown_released() {
     release2 = false;
     redirectActive = false;
   }
-  LeftPTOMotor.setVelocity(0, pct);
-  RightPTOMotor.setVelocity(0, pct);
+  conveyorSpeed = 0;
+  rollerSpeed = 0;
 }
 
 void buttonUP_pressed() { sortingColor = !sortingColor; }
 
-void buttonDOWN_pressed() {}
+void buttonDOWN_pressed() { ClawPivot = !ClawPivot; }
 
 void buttonLEFT_pressed() {
   if (autonNumber > 6) {
@@ -810,7 +838,7 @@ void buttonA_pressed() { ClawPivot = !ClawPivot; }
 
 void buttonY_pressed() { MogoMech = !MogoMech; }
 
-void buttonB_pressed() {}
+void buttonB_pressed() { IntakeLift = !IntakeLift; }
 
 void buttonLup_pressed2() {}
 
@@ -825,39 +853,99 @@ void buttonRdown_released2() {}
 void buttonRup_released2() {}
 
 void frontAuton5() {
+  setGyro(-75 * headingMultiplier);
+  armState = 2;
+  IntakeLift = false;
+  conveyorSpeed = 0;
+  rollerSpeed = 75;
+  sleep(750);
+  conveyorSpeed = 100;
+  rollerSpeed = 100;
+  ClawPivot = true;
+  if (headingMultiplier == 1) {
+    while (!redDetected) {
+      sleep(1);
+    }
+  } else if (headingMultiplier == -1) {
+    while (!blueDetected) {
+      sleep(1);
+    }
+  }
+  sleep(100);
+  conveyorSpeed = 0;
+  rollerSpeed = 0;
+  driveTurn(-160 * headingMultiplier, 3);
+  driveDistance(35, 10.5, -160 * headingMultiplier);
+  armState = 1;
+  sleep(300);
+  driveDistance(-50, 37, -160 * headingMultiplier);
+  MogoMech = true;
+  conveyorSpeed = 100;
+  rollerSpeed = 100;
+  sleep(100);
+  driveTurn(90 * headingMultiplier, 3);
+  driveDistance(20, 17, 90 * headingMultiplier);
+  sleep(200);
+  driveTurn(-65 * headingMultiplier, 3);
+  conveyorSpeed = 0;
+  rollerSpeed = 0;
+  IntakeLift = true;
+  driveDistance(30, 32, -65 * headingMultiplier);
+  Doinker = true;
+  sleep(50);
+  driveDistance(-30, 10, -75 * headingMultiplier);
+  Doinker = false;
+  IntakeLift = false;
+  rollerSpeed = 100;
+  sleep(100);
+  driveDistance(30, 25, -70);
+  Doinker = true;
+  sleep(50);
+  driveDistance(-35, 25, -40);
+  // driveTurn(-90 * headingMultiplier, 5);
+  // stopIntake = false;
+  // intakeSpeed = 100;
+  // driveDistance(30, 4, -90 * headingMultiplier);
+  // IntakeLift = false;
+  // armState = 0;
+  // driveDistance(30, 4, -90 * headingMultiplier);
+  // if (headingMultiplier == 1) {
+  //   while (!redDetected) {
+  //     sleep(1);
+  //   }
+  // } else if (headingMultiplier == -1) {
+  //   while (!blueDetected) {
+  //     sleep(1);
+  //   }
+  // }
+  // stopIntake = true;
+  // intakeSpeed = 0;
+  // driveDistance(-30, 14, -90 * headingMultiplier);
+  // driveTurn(180 * headingMultiplier, 5);
+  // sleep(300);
+  // driveTorque = 50;
+  // driveTillStop(40, 180 * headingMultiplier);
+  // driveTurn(100, 5);
+  // Doinker = true;
+  // driveTillStop(40, 110 * headingMultiplier);
+  // driveTorque = 100;
+  // driveTurn(45 * headingMultiplier, 7);
+  // Doinker = false;
+  // sleep(200);
+  // driveDistance(30, 10, 50 * headingMultiplier);
+}
+
+void frontAuton4() {
   setGyro(-148 * headingMultiplier);
-  ClawPivot = false;
+  stopIntake = true;
+  ClawPivot = true;
   armState = 2;
   sleep(300);
   driveDistance(30, 8, -148 * headingMultiplier);
   sleep(300);
-  // score ring 1
-  armState = 0;
+  armState = 1;
   sleep(300);
-  driveDistance(-50, 12, -115 * headingMultiplier);
-  driveTurn(-90, 5);
-  driveDistance(30, 7, -90);
-  // pick up ring 2
-  IntakeLift = true;
-  RightPTOMotor.setVelocity(100, pct);
-  LeftPTOMotor.setVelocity(-100, pct);
-  sleep(500);
-  while (!ringDetected) {
-    sleep(1);
-  }
-  RightPTOMotor.setVelocity(0, pct);
-  LeftPTOMotor.setVelocity(0, pct);
-  driveDistance(-30, 6, -90);
-  driveTurn(-150, 3);
-  driveDistance(-30, 23, -150);
-  MogoMech = true;
-  RightPTOMotor.setVelocity(100, pct);
-  LeftPTOMotor.setVelocity(-100, pct);
-  sleep(300);
-  driveTurn(90, 3);
-  driveDistance(20, 15, 90);
-  driveTurn(180, 5);
-  driveDistance(30, 25, 160);
+  driveDistance(-50, 11, -115 * headingMultiplier);
 }
 
 void skillsAuton() {}
@@ -866,8 +954,8 @@ void skillsDriver() {}
 
 void PIDTest() {
   setGyro(0);
-  driveArc(50, 40, 0, 30);
-  driveDistance(50, 1, 90);
+  driveTurn(180, 3);
+  driveDistance(50, 1, 180);
 }
 
 void autonomous() {
@@ -875,10 +963,15 @@ void autonomous() {
   autonRunning = true;
   driveHold = true;
   if (autonNumber == 1) {
+    IntakeLift = true;
+    sortingColor = false;
     headingMultiplier = 1;
     frontAuton5();
   } else if (autonNumber == 2) {
-
+    IntakeLift = true;
+    sortingColor = true;
+    headingMultiplier = -1;
+    frontAuton5();
   } else if (autonNumber == 3) {
 
   } else if (autonNumber == 4) {
@@ -903,6 +996,7 @@ void usercontrol() {
   resetTimer();
   autonRunning = false;
   driveHold = false;
+  IntakeLift = true;
   driveTorque = 100;
   fieldControlState = 4;
   stopAll();
@@ -943,10 +1037,10 @@ int main() {
   task taskCntrlrScreen(controllerScreenTask);
   task taskSensors(sensorsTask);
   task taskDrive(driveTask);
-  task taskConveyorStuck(conveyorStuckTask);
   task taskArmStates(armStatesTask);
   task taskIntake(intakeTask);
   task taskIntakeRotation(intakeRotationTask);
+  task taskIntakeSpeed(intakeSpeedTask);
   Brain.Screen.pressed(brain_pressed);
   Controller1.ButtonL1.pressed(buttonLup_pressed);
   Controller1.ButtonL2.pressed(buttonLdown_pressed);
