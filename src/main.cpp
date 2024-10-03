@@ -310,7 +310,7 @@ int armStatesTask() {
 
 int intakeRotationTask() {
   while (1) {
-    task::sleep(1);
+    task::sleep(5);
     hookLocation = (fmod((IntakeRotation.position(turns) * 12), 23) / 23);
   }
 }
@@ -553,6 +553,59 @@ void driveTillStop(int Speed, double Heading) {
   stopDrive();
 }
 
+void driveDistanceAcceleration(int initialSpeed, int peakSpeed, int endingSpeed,
+                               double Distance, double Heading) {
+  double kP = 0.6;
+  double kI = 0.00;
+  double kD = 0.01;
+  double integral = 0;
+  double previousError = 0;
+
+  resetDrive();
+  task::sleep(10);
+  double rightTurnDifference;
+  double currentSpeed = initialSpeed;
+  double accelerationDistance =
+      Distance * 0.3; // 30% of the distance for acceleration
+  double decelerationDistance =
+      Distance * 0.3; // 30% of the distance for deceleration
+  double constantSpeedDistance =
+      Distance - accelerationDistance - decelerationDistance;
+
+  while ((fabs(avgDriveDistance) < Distance) && autonRunning) {
+    double error = Heading - gyro1;
+    integral += error;
+    double derivative = error - previousError;
+    rightTurnDifference = kP * error + kI * integral + kD * derivative;
+
+    // Acceleration phase
+    if (fabs(avgDriveDistance) < accelerationDistance) {
+      currentSpeed =
+          initialSpeed + (peakSpeed - initialSpeed) *
+                             (fabs(avgDriveDistance) / accelerationDistance);
+    }
+    // Constant speed phase
+    else if (fabs(avgDriveDistance) <
+             (accelerationDistance + constantSpeedDistance)) {
+      currentSpeed = peakSpeed;
+    }
+    // Deceleration phase
+    else {
+      currentSpeed =
+          peakSpeed - (peakSpeed - endingSpeed) *
+                          ((fabs(avgDriveDistance) - accelerationDistance -
+                            constantSpeedDistance) /
+                           decelerationDistance);
+    }
+
+    leftSpeed = currentSpeed + rightTurnDifference;
+    rightSpeed = currentSpeed - rightTurnDifference;
+    previousError = error;
+    task::sleep(10);
+  }
+  stopDrive();
+}
+
 void driveTurn(int Heading, int Accuracy) {
   int integral = 0;
   int previousError = 0;
@@ -563,7 +616,7 @@ void driveTurn(int Heading, int Accuracy) {
   double rsp;
 
   if (MogoMech) {
-    kP = .47;
+    kP = .505;
     kI = 0;
     kD = 0.005;
   } else {
@@ -888,6 +941,48 @@ void frontAuton4() {
   driveTurn(15, 7);
 }
 
+void backAuton4() {
+  setGyro(154);
+  ClawPivot = true;
+  armState = 2;
+  IntakeLift = false;
+  sleep(300);
+  driveDistance(50, 5, 154);
+  driveTorque = 75;
+  driveTillStop(35, 110);
+  armState = 1;
+  sleep(300);
+  driveTorque = 100;
+  driveDistance(-50, 34, 154);
+  armState = 0;
+  MogoMech = true;
+  driveTurn(270, 5);
+  conveyorSpeed = 100;
+  rollerSpeed = 100;
+  driveDistance(50, 14, 270);
+  sleep(100);
+  driveDistance(70, 5, 270);
+  sleep(300);
+  stopIntake = true;
+  driveDistance(-50, 12, 270);
+  driveTurn(330, 5);
+  stopIntake = false;
+  conveyorSpeed = 100;
+  rollerSpeed = 100;
+  armState = 1;
+  driveDistance(50, 15, 330);
+  sleep(350);
+  driveDistance(-50, 12, 330);
+  driveTurn(270, 5);
+  driveDistance(30, 12, 270);
+  driveTurn(360, 5);
+  driveDistance(30, 12, 360);
+  sleep(350);
+  driveDistance(-70, 10, 360);
+  driveTurn(448, 5);
+  driveDistance(45, 40, 448);
+}
+
 void skillsAuton() {}
 
 void skillsDriver() {}
@@ -906,7 +1001,8 @@ void autonomous() {
     IntakeLift = true;
     sortingColor = false;
     headingMultiplier = 1;
-    frontAuton5();
+    // frontAuton5();
+    backAuton4();
   } else if (autonNumber == 2) {
     IntakeLift = true;
     sortingColor = true;
