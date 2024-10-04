@@ -343,8 +343,10 @@ int sortingDelayTask() {
     task::sleep(1);
   }
   stopIntake = true;
-  task::sleep(300);
+  task::sleep(150);
   stopIntake = false;
+  conveyorSpeed = 100;
+  rollerSpeed = 100;
   delayTaskActive = false;
   return 0;
 }
@@ -357,7 +359,7 @@ int redirectDelayTask() {
     task::sleep(1);
   }
   intakeRedirecting = true;
-  task::sleep(750);
+  task::sleep(200);
   intakeRedirecting = false;
   delayTaskActive = false;
   return 0;
