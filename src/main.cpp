@@ -125,7 +125,7 @@ void stopAll() {
 
 void preAuton() {
   fieldControlState = 0;
-  armState = 1;
+  armState = 0;
   sleep(300);
   IntakeLift = false;
   ClawPivot = false;
@@ -618,7 +618,7 @@ void driveTurn(int Heading, int Accuracy) {
   double rsp;
 
   if (MogoMech) {
-    kP = .505;
+    kP = .504;
     kI = 0;
     kD = 0.005;
   } else {
@@ -814,134 +814,167 @@ void buttonRdown_released2() {}
 
 void buttonRup_released2() {}
 
-void frontAuton5() {
+void frontAuton4() {
   stopIntake = false;
-  // setGyro(-75 * headingMultiplier);
-  // armState = 2;
-  // IntakeLift = false;
+  setGyro(-75 * headingMultiplier);
+  armState = 2;
+  IntakeLift = false;
   conveyorSpeed = 0;
-  // rollerSpeed = 75;
-  // sleep(100);
-  // driveTurn(-160 * headingMultiplier, 3);
-  // rollerSpeed = 100;
-  // ClawPivot = true;
-  // sleep(100);
-  // conveyorSpeed = 100;
-  //   if (headingMultiplier == 1) {
-  //   while (!redDetected) {
-  //     sleep(1);
-  //   }
-  // } else if (headingMultiplier == -1) {
-  //   while (!blueDetected) {
-  //     sleep(1);
-  //   }
-  // }
-  // conveyorSpeed = 0;
-  // driveDistance(35, 10.5, -160 * headingMultiplier);
-  // armState = 1;
-  // sleep(500);
-  // rollerSpeed = 0;
-  // driveDistance(-50, 40, -160 * headingMultiplier);
-  // MogoMech = true;
-  // conveyorSpeed = 100;
-  // rollerSpeed = 100;
-  // sleep(100);
-  // driveTurn(90 * headingMultiplier, 3);
-  // driveDistance(20, 18, 90 * headingMultiplier);
-
-  setGyro(90);
+  rollerSpeed = 75;
+  sleep(100);
+  driveTurn(-160 * headingMultiplier, 3);
+  rollerSpeed = 100;
+  ClawPivot = true;
+  conveyorSpeed = 100;
+  if (headingMultiplier == 1) {
+    while (!redDetected) {
+      sleep(1);
+    }
+  } else if (headingMultiplier == -1) {
+    while (!blueDetected) {
+      sleep(1);
+    }
+  }
+  conveyorSpeed = 0;
+  driveDistance(35, 10.5, -155 * headingMultiplier);
+  armState = 1;
+  sleep(150);
+  rollerSpeed = 0;
+  driveDistance(-80, 44, -160 * headingMultiplier);
+  MogoMech = true;
+  sleep(50);
+  driveDistance(70, 2, -160);
+  conveyorSpeed = 100;
+  rollerSpeed = 100;
+  sleep(100);
+  driveTurn(90 * headingMultiplier, 2);
+  driveDistance(50, 18, 90 * headingMultiplier);
   rollerSpeed = 100;
   sleep(5);
   conveyorSpeed = 100;
   sleep(5);
   MogoMech = true;
   ClawPivot = true;
-
-  sleep(200);
-  driveTurn(-65 * headingMultiplier, 3);
-  IntakeLift = true;
-  driveDistance(30, 17, -60 * headingMultiplier);
+  // go to middle
+  sleep(5);
+  driveTurn(-75 * headingMultiplier, 3);
+  driveDistance(40, 17, -70 * headingMultiplier);
   conveyorSpeed = 0;
   rollerSpeed = 0;
-  driveDistance(30, 17, -60 * headingMultiplier);
+  driveDistance(40, 18, -65 * headingMultiplier);
   Doinker = true;
-  sleep(50);
-  driveDistance(-30, 16, -90 * headingMultiplier);
-  Doinker = false;
-  IntakeLift = false;
-  rollerSpeed = 100;
   sleep(100);
-  driveDistance(30, 35, -75 * headingMultiplier);
-  Doinker = true;
-  sleep(50);
-  driveDistance(-35, 25, -40 * headingMultiplier);
+  driveDistance(-30, 12, -90 * headingMultiplier);
+  Doinker = false;
+  driveTurn(-67, 3);
+  rollerSpeed = 100;
+  conveyorSpeed = 100;
+  driveDistance(40, 6, -67);
+  sleep(200);
+  driveDistance(-30, 6, -67);
 }
 
-// driveTurn(-90 * headingMultiplier, 5);
-// stopIntake = false;
-// intakeSpeed = 100;
-// driveDistance(30, 4, -90 * headingMultiplier);
-// IntakeLift = false;
-// armState = 0;
-// driveDistance(30, 4, -90 * headingMultiplier);
-// if (headingMultiplier == 1) {
-//   while (!redDetected) {
-//     sleep(1);
-//   }
-// } else if (headingMultiplier == -1) {
-//   while (!blueDetected) {
-//     sleep(1);
-//   }
-// }
-// stopIntake = true;
-// intakeSpeed = 0;
-// driveDistance(-30, 14, -90 * headingMultiplier);
-// driveTurn(180 * headingMultiplier, 5);
-// sleep(300);
-// driveTorque = 50;
-// driveTillStop(40, 180 * headingMultiplier);
-// driveTurn(100, 5);
-// Doinker = true;
-// driveTillStop(40, 110 * headingMultiplier);
-// driveTorque = 100;
-// driveTurn(45 * headingMultiplier, 7);
-// Doinker = false;
-// sleep(200);
-// driveDistance(30, 10, 50 * headingMultiplier);
-
-void frontAuton4() {
-  setGyro(-148 * headingMultiplier);
-  stopIntake = true;
-  ClawPivot = true;
+void frontAuton5() {
+    stopIntake = false;
+  setGyro(-75 * headingMultiplier);
   armState = 2;
-  sleep(300);
-  driveDistance(30, 7, -150 * headingMultiplier);
-  sleep(300);
-  armState = 1;
-  sleep(50);
-  driveDistance(-65, 22, -148 * headingMultiplier);
-  driveTurn(-180, 3);
-  driveDistance(-30, 13, -180);
-  MogoMech = true;
   IntakeLift = false;
-  armState = 3;
-  driveTurn(-270 * headingMultiplier, 2);
-  setGyro(90);
-  stopIntake = false;
+  conveyorSpeed = 0;
+  rollerSpeed = 75;
+  sleep(100);
+  driveTurn(-160 * headingMultiplier, 3);
+  rollerSpeed = 100;
+  ClawPivot = true;
+  conveyorSpeed = 100;
+  if (headingMultiplier == 1) {
+    while (!redDetected) {
+      sleep(1);
+    }
+  } else if (headingMultiplier == -1) {
+    while (!blueDetected) {
+      sleep(1);
+    }
+  }
+  conveyorSpeed = 0;
+  driveDistance(35, 11.5, -155 * headingMultiplier);
+  armState = 1;
+  sleep(150);
+  rollerSpeed = 0;
+  driveDistance(-80, 44, -160 * headingMultiplier);
+  MogoMech = true;
+  sleep(50);
+  driveDistance(70, 2, -160);
   conveyorSpeed = 100;
   rollerSpeed = 100;
   sleep(100);
-  driveDistance(30, 24, 90 * headingMultiplier);
-  driveDistance(-80, 10, 90);
-  driveTurn(180 * headingMultiplier, 3);
-  driveTorque = 75;
-  driveTillStop(40, 180 * headingMultiplier);
-  driveDistance(-20, 3, 180);
-  driveTurn(100, 7);
+  driveTurn(90 * headingMultiplier, 2);
+  driveDistance(50, 18, 90 * headingMultiplier);
+  rollerSpeed = 100;
+  sleep(5);
+  conveyorSpeed = 100;
+  sleep(5);
+  MogoMech = true;
+  ClawPivot = true;
+  // go to middle
+  sleep(5);
+  driveTurn(-75 * headingMultiplier, 3);
+  driveDistance(40, 17, -70 * headingMultiplier);
+  conveyorSpeed = 0;
+  rollerSpeed = 0;
+  driveDistance(40, 18, -65 * headingMultiplier);
   Doinker = true;
-  driveDistance(40, 25, 95);
-  driveTurn(15, 7);
+  sleep(100);
+  driveDistance(-30, 12, -90 * headingMultiplier);
+  Doinker = false;
+  driveTurn(-67, 3);
+  rollerSpeed = 100;
+  conveyorSpeed = 100;
+  driveDistance(40, 6, -67);
+  sleep(200);
+  driveDistance(-30, 6, -67);
+  sleep(400);
+  armState = 3;
+  rollerSpeed = 0;
+  conveyorSpeed = 0;
+  driveTorque = 75;
+  sleep(300);
+  driveTillStop(70, -67);
+  armState = 1;
 }
+
+// void frontAuton4() {
+//   setGyro(-148 * headingMultiplier);
+//   stopIntake = true;
+//   ClawPivot = true;
+//   armState = 2;
+//   sleep(300);
+//   driveDistance(30, 7, -150 * headingMultiplier);
+//   sleep(300);
+//   armState = 1;
+//   sleep(50);
+//   driveDistance(-65, 22, -148 * headingMultiplier);
+//   driveTurn(-180, 3);
+//   driveDistance(-30, 13, -180);
+//   MogoMech = true;
+//   IntakeLift = false;
+//   armState = 3;
+//   driveTurn(-270 * headingMultiplier, 2);
+//   setGyro(90);
+//   stopIntake = false;
+//   conveyorSpeed = 100;
+//   rollerSpeed = 100;
+//   sleep(100);
+//   driveDistance(30, 24, 90 * headingMultiplier);
+//   driveDistance(-80, 10, 90);
+//   driveTurn(180 * headingMultiplier, 3);
+//   driveTorque = 75;
+//   driveTillStop(40, 180 * headingMultiplier);
+//   driveDistance(-20, 3, 180);
+//   driveTurn(100, 7);
+//   Doinker = true;
+//   driveDistance(40, 25, 95);
+//   driveTurn(15, 7);
+// }
 
 void backAuton4() {
   setGyro(154);
@@ -1003,8 +1036,8 @@ void autonomous() {
     IntakeLift = true;
     sortingColor = false;
     headingMultiplier = 1;
-    // frontAuton5();
-    backAuton4();
+    frontAuton5();
+    // backAuton4();
   } else if (autonNumber == 2) {
     IntakeLift = true;
     sortingColor = true;
