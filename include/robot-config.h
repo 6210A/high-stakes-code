@@ -13,7 +13,7 @@ extern motor LBDrive;
 extern inertial Inertial15;
 extern digital_out MogoMech;
 extern optical Optical;
-extern digital_out Doinker;
+extern digital_out RightDoinker;
 extern motor RightPTOMotor;
 extern motor LeftPTOMotor;
 extern digital_out PTO;
@@ -22,6 +22,7 @@ extern motor RightArm;
 extern digital_out ClawPivot;
 extern rotation IntakeRotation;
 extern digital_out IntakeLift;
+extern digital_out LeftDoinker;
 
 /**
  * Used to initialize code/tasks/devices added using tools in VEXcode Pro.
