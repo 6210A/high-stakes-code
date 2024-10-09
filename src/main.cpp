@@ -840,66 +840,6 @@ void buttonRdown_released2() {}
 void buttonRup_released2() {}
 
 void frontAuton4() {
-  stopIntake = false;
-  setGyro(-75 * headingMultiplier);
-  armState = 2;
-  IntakeLift = false;
-  conveyorSpeed = 0;
-  rollerSpeed = 75;
-  sleep(100);
-  driveTurn(-160 * headingMultiplier, 3);
-  rollerSpeed = 100;
-  ClawPivot = true;
-  conveyorSpeed = 100;
-  if (headingMultiplier == 1) {
-    while (!redDetected) {
-      sleep(1);
-    }
-  } else if (headingMultiplier == -1) {
-    while (!blueDetected) {
-      sleep(1);
-    }
-  }
-  conveyorSpeed = 0;
-  driveDistance(35, 10.5, -155 * headingMultiplier);
-  armState = 1;
-  sleep(150);
-  rollerSpeed = 0;
-  driveDistance(-80, 44, -160 * headingMultiplier);
-  MogoMech = true;
-  sleep(50);
-  driveDistance(70, 2, -160);
-  conveyorSpeed = 100;
-  rollerSpeed = 100;
-  sleep(100);
-  driveTurn(90 * headingMultiplier, 2);
-  driveDistance(50, 18, 90 * headingMultiplier);
-  rollerSpeed = 100;
-  sleep(5);
-  conveyorSpeed = 100;
-  sleep(5);
-  MogoMech = true;
-  ClawPivot = true;
-  // go to middle
-  sleep(5);
-  driveTurn(-75 * headingMultiplier, 3);
-  driveDistance(40, 17, -70 * headingMultiplier);
-  conveyorSpeed = 0;
-  rollerSpeed = 0;
-  driveDistance(40, 18, -65 * headingMultiplier);
-  RightDoinker = true;
-  sleep(100);
-  driveDistance(-30, 12, -90 * headingMultiplier);
-  RightDoinker = false;
-  driveTurn(-67, 3);
-  rollerSpeed = 100;
-  conveyorSpeed = 100;
-  driveDistance(40, 6, -67);
-  sleep(200);
-  driveDistance(-30, 6, -67);
-}
-
-void frontAuton5() {
     stopIntake = false;
   setGyro(-75 * headingMultiplier);
   armState = 2;
@@ -1049,12 +989,46 @@ void backAuton4() {
 
 void goalRush() {
   setGyro(0);
-  driveDistance(70, 16, 0);
-  driveDistance(60, 17, -18);
+  driveDistance(90, 16, 0);
+  driveDistance(90, 17, -18);
   LeftDoinker = true;
   sleep(150);
-  driveDistance(-40, 10, 0);
+  driveDistance(-50, 4, 0);
   LeftDoinker = false;
+  driveDistance(-40, 14, 0);
+  driveTurn(-50, 5);
+  rollerSpeed = 100;
+  conveyorSpeed = 100;
+  driveDistance(40, 15, -50);
+  conveyorSpeed = 0;
+  driveDistance(-30, 4, -50);
+  driveTurn(-190, 3);
+  driveDistance(-70, 17, -185);
+  sleep(50);
+  MogoMech = true;
+  conveyorSpeed = 100;
+  sleep(1000);
+  conveyorSpeed = 0;
+  rollerSpeed = 0;
+  MogoMech = false;
+  driveDistance(40, 9, -180);
+  driveTurn(-270, 5);
+  driveDistanceAcceleration(-70, -30, -10, 24, -270);
+  MogoMech = true;
+  armState = 2;
+  IntakeLift = true;
+  driveDistance(50, 2, -270);
+  driveTurn(-130, 5);
+  driveDistance(55, 37, -130);
+  rollerSpeed = 100;
+  IntakeLift = false;
+  conveyorSpeed = 100;
+  sleep(300);
+  driveTurn(-180, 3);
+  driveDistance(30, 11.5, -180);
+  armState = 0;
+  sleep(500);
+  conveyorSpeed = 0;
 }
 
 void skillsAuton() {}
