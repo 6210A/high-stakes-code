@@ -3,26 +3,26 @@
 // ---- START VEXCODE CONFIGURED DEVICES ----
 // Robot Configuration:
 // [Name]               [Type]        [Port(s)]
-// Controller1          controller                    
-// RFDrive              motor         18              
-// RHalfW               motor         16              
-// RBDrive              motor         17              
-// LFDrive              motor         12              
-// LHalfW               motor         14              
-// LBDrive              motor         13              
-// Inertial15           inertial      15              
-// MogoMech             digital_out   F               
-// Optical              optical       19              
-// RightDoinker         digital_out   G               
-// RightPTOMotor        motor         20              
-// LeftPTOMotor         motor         11              
-// PTO                  digital_out   H               
-// LeftArm              motor         1               
-// RightArm             motor         9               
-// ClawPivot            digital_out   E               
-// IntakeRotation       rotation      2               
-// IntakeLift           digital_out   D               
-// LeftDoinker          digital_out   C               
+// Controller1          controller
+// RFDrive              motor         18
+// RHalfW               motor         16
+// RBDrive              motor         17
+// LFDrive              motor         12
+// LHalfW               motor         14
+// LBDrive              motor         13
+// Inertial15           inertial      15
+// MogoMech             digital_out   F
+// Optical              optical       19
+// RightDoinker         digital_out   G
+// RightPTOMotor        motor         20
+// LeftPTOMotor         motor         11
+// PTO                  digital_out   H
+// LeftArm              motor         1
+// RightArm             motor         9
+// ClawPivot            digital_out   E
+// IntakeRotation       rotation      2
+// IntakeLift           digital_out   D
+// LeftDoinker          digital_out   C
 // ---- END VEXCODE CONFIGURED DEVICES ----
 #include <cmath>
 #include <iostream>
@@ -380,7 +380,7 @@ int redirectDelayTask() {
   delayTaskActive = true;
   currentPTO = fabs(IntakeRotation.position(deg));
   task::sleep(100);
-  while (hookLocation < .68) {
+  while (hookLocation < .9) {
     task::sleep(1);
   }
   intakeRedirecting = true;
@@ -398,8 +398,10 @@ int intakeTask() {
 
     if (Controller1.ButtonR1.pressing() || autonRunning) {
       // Redirect
-      if (redirectActive && ringDetected && !delayTaskActive) {
-        task taskRedirectDelay(redirectDelayTask);
+      if (redirectActive) {
+        if (ringDetected && !delayTaskActive) {
+          task taskRedirectDelay(redirectDelayTask);
+        }
       }
     }
 
@@ -840,7 +842,7 @@ void buttonRdown_released2() {}
 void buttonRup_released2() {}
 
 void frontAuton4() {
-    stopIntake = false;
+  stopIntake = false;
   setGyro(-75 * headingMultiplier);
   armState = 2;
   IntakeLift = false;
@@ -887,7 +889,11 @@ void frontAuton4() {
   conveyorSpeed = 0;
   rollerSpeed = 0;
   driveDistance(40, 18, -65 * headingMultiplier);
-  RightDoinker = true;
+  if (headingMultiplier > 0) {
+    RightDoinker = true;
+  } else if (headingMultiplier < 0) {
+    LeftDoinker = true;
+  }
   sleep(100);
   driveDistance(-30, 12, -90 * headingMultiplier);
   RightDoinker = false;
@@ -896,7 +902,7 @@ void frontAuton4() {
   conveyorSpeed = 100;
   driveDistance(40, 6, -67);
   sleep(200);
-  driveDistance(-30, 6, -67);
+  driveDistance(-30, 15, -67);
   sleep(400);
   armState = 3;
   rollerSpeed = 0;
@@ -989,49 +995,95 @@ void backAuton4() {
 
 void goalRush() {
   setGyro(0);
-  driveDistance(90, 16, 0);
-  driveDistance(90, 17, -18);
-  LeftDoinker = true;
-  sleep(150);
-  driveDistance(-50, 4, 0);
-  LeftDoinker = false;
-  driveDistance(-40, 14, 0);
-  driveTurn(-50, 5);
+  ClawPivot = true;
+  IntakeLift = false;
+  driveDistance(90, 16, 0 * headingMultiplier);
+  if (headingMultiplier > 0) {
+    driveDistance(90, 17, -20 * headingMultiplier);
+  } else if (headingMultiplier < 0) {
+    driveDistance(90, 18, -50 * headingMultiplier);
+  }
+  if (headingMultiplier > 0) {
+    LeftDoinker = true;
+  } else if (headingMultiplier < 0) {
+    RightDoinker = true;
+  }
+  sleep(300);
+  driveDistance(-50, 6, 0 * headingMultiplier);
+  if (headingMultiplier > 0) {
+    LeftDoinker = false;
+  } else if (headingMultiplier < 0) {
+    RightDoinker = false;
+  }
+  driveDistance(-40, 14, 0 * headingMultiplier);
+  driveTurn(-40 * headingMultiplier, 5);
   rollerSpeed = 100;
   conveyorSpeed = 100;
-  driveDistance(40, 15, -50);
+  driveDistance(75, 18, -40 * headingMultiplier);
   conveyorSpeed = 0;
-  driveDistance(-30, 4, -50);
-  driveTurn(-190, 3);
-  driveDistance(-70, 17, -185);
-  sleep(50);
+  driveDistance(-50, 4, -40 * headingMultiplier);
+  driveTurn(-195 * headingMultiplier, 3);
+  driveDistance(-45, 22, -180 * headingMultiplier);
   MogoMech = true;
   conveyorSpeed = 100;
-  sleep(1000);
+  sleep(900);
   conveyorSpeed = 0;
-  rollerSpeed = 0;
   MogoMech = false;
-  driveDistance(40, 9, -180);
-  driveTurn(-270, 5);
-  driveDistanceAcceleration(-70, -30, -10, 24, -270);
+  driveDistance(50, 3, -180 * headingMultiplier);
+  driveTurn(-270 * headingMultiplier, 5);
+  driveDistanceAcceleration(-70, -30, -10, 24, -290 * headingMultiplier);
   MogoMech = true;
   armState = 2;
   IntakeLift = true;
-  driveDistance(50, 2, -270);
-  driveTurn(-130, 5);
-  driveDistance(55, 37, -130);
+  driveDistance(50, 2, -270 * headingMultiplier);
+  driveTurn(-130 * headingMultiplier, 5);
+  driveDistance(55, 40, -130 * headingMultiplier);
   rollerSpeed = 100;
   IntakeLift = false;
+  driveDistance(55, 2, -130 * headingMultiplier);
   conveyorSpeed = 100;
-  sleep(300);
-  driveTurn(-180, 3);
-  driveDistance(30, 11.5, -180);
-  armState = 0;
   sleep(500);
+  driveTurn(-190 * headingMultiplier, 5);
+  driveTorque = 20;
+  driveTillStop(70, -190 * headingMultiplier);
+  driveDistance(-40, 3, -170 * headingMultiplier);
   conveyorSpeed = 0;
+  armState = 0;
+  sleep(250);
+  driveDistance(-60, 3, -180 * headingMultiplier);
+  driveTurn(-270, 10);
+  driveTillStop(70, -270 * headingMultiplier);
 }
 
-void skillsAuton() {}
+void skillsAuton() {
+  setGyro(180);
+  armState = 2;
+  sleep(350);
+  ClawPivot = true;
+  armState = 0;
+  sleep(100);
+  driveDistance(-50, 10, 180);
+  driveTurn(90, 3);
+  driveDistance(-60, 30, 90);
+  MogoMech = true;
+  sleep(100);
+  driveTurn(0, 3);
+  rollerSpeed = 100;
+  sleep(10);
+  conveyorSpeed = 100;
+  driveDistance(40, 30, 0);
+  driveTurn(-10, 3);
+  driveDistance(35, 15, -10);
+  sleep(100);
+  driveTurn(170, 3);
+  driveDistance(35, 15, 170);
+  driveTurn(180, 3);
+  driveTillStop(40, 180);
+  sleep(300);
+  rollerSpeed = 0;
+  sleep(10);
+  conveyorSpeed = 0;
+}
 
 void skillsDriver() {}
 
@@ -1046,39 +1098,47 @@ void autonomous() {
   autonRunning = true;
   driveHold = true;
   if (autonNumber == 1) {
-    //Red
+    // Red
     IntakeLift = true;
     sortingColor = false;
     headingMultiplier = 1;
-    //frontAuton4();
-    backAuton4();
+    // frontAuton4();
+    // backAuton4();
+    goalRush();
   } else if (autonNumber == 2) {
-    //Blue
+    // Blue
     IntakeLift = true;
     sortingColor = true;
     headingMultiplier = -1;
     frontAuton4();
   } else if (autonNumber == 3) {
-    //Red
+    // Red
     IntakeLift = true;
     sortingColor = false;
     headingMultiplier = 1;
     backAuton4();
   } else if (autonNumber == 4) {
-    //Blue
+    // Blue
     IntakeLift = true;
     sortingColor = true;
     headingMultiplier = -1;
     backAuton4();
   } else if (autonNumber == 5) {
-    //Red
+    // Red
     ClawPivot = true;
     IntakeLift = false;
     sortingColor = false;
     headingMultiplier = 1;
     goalRush();
   } else if (autonNumber == 6) {
-
+    // Blue
+    headingMultiplier = -1;
+    ClawPivot = true;
+    IntakeLift = false;
+    sortingColor = true;
+    goalRush();
+  } else if (autonNumber == 7) {
+    skillsAuton();
   }
 }
 
