@@ -75,8 +75,9 @@ double averageY = 0;
 bool release2 = false;
 float armState = 0;
 float armGoal = 0;
+bool manualArm = false;
 
-bool redirectActive = false;
+bool redirectActive;
 bool delayTaskActive = false;
 double hookLocation = 0;
 bool intakeRedirecting = false;
@@ -94,7 +95,7 @@ bool blueDetected;
 bool intakeTaskOn;
 
 bool autonRunning = false;
-int autonNumber = 5;
+int autonNumber = 4;
 bool autonHappened = false;
 
 void sleep(int sleepmsec) {
@@ -152,7 +153,7 @@ void preAuton() {
   fieldControlState = 0;
   armState = 0;
   sleep(300);
-  IntakeLift = false;
+  IntakeLift = true;
   ClawPivot = false;
   IntakeRotation.setPosition(0, degrees);
   Brain.Screen.clearScreen();
@@ -208,23 +209,26 @@ int brainScreenTask() {
     Brain.Screen.printAt(320, 150, "PotR: %3.2f   ");
 
     if (autonNumber == 1) {
-      Brain.Screen.printAt(1, 210, "Auton: Qual. Right");
-      Brain.Screen.setFillColor(purple);
+      Brain.Screen.printAt(1, 210, "Auton: Red Front");
+      Brain.Screen.setFillColor(red);
     } else if (autonNumber == 2) {
-      Brain.Screen.printAt(1, 210, "Auton: Qual. Left");
-      Brain.Screen.setFillColor("#2bffb5");
+      Brain.Screen.printAt(1, 210, "Auton: Blue Front");
+      Brain.Screen.setFillColor(blue);
     } else if (autonNumber == 3) {
-      Brain.Screen.printAt(1, 210, "Auton: Red Elims");
+      Brain.Screen.printAt(1, 210, "Auton: Red Back");
       Brain.Screen.setFillColor(red);
     } else if (autonNumber == 4) {
-      Brain.Screen.printAt(1, 210, "Auton: Blue Elims");
-      Brain.Screen.setFillColor("#00ecff");
+      Brain.Screen.printAt(1, 210, "Auton: Blue Back");
+      Brain.Screen.setFillColor(blue);
     } else if (autonNumber == 5) {
-      Brain.Screen.printAt(1, 210, "Auton: Auton Skills");
-      Brain.Screen.setFillColor(yellow);
+      Brain.Screen.printAt(1, 210, "Auton: Red Goal Rush");
+      Brain.Screen.setFillColor(red);
     } else if (autonNumber == 6) {
-      Brain.Screen.printAt(1, 210, "Auton: Driver Skills");
-      Brain.Screen.setFillColor("#ff5ac6");
+      Brain.Screen.printAt(1, 210, "Auton: Blue Goal Rush");
+      Brain.Screen.setFillColor(blue);
+    } else if (autonNumber == 7) {
+      Brain.Screen.printAt(1, 210, "Auton Skills");
+      Brain.Screen.setFillColor(yellow);
     }
 
     if (fieldControlState == 0) {
@@ -259,7 +263,7 @@ int controllerScreenTask() {
       Controller1.Screen.print("R in");
     }
     Controller1.Screen.setCursor(1, 17);
-    Controller1.Screen.print("%d", autonRunning);
+    Controller1.Screen.print("%d", manualArm); // autonRunning);
 
     Controller1.Screen.setCursor(2, 1);
     Controller1.Screen.print("%1.0f ",
@@ -272,7 +276,7 @@ int controllerScreenTask() {
     Controller1.Screen.setCursor(2, 18);
     Controller1.Screen.print("%d", ringDetected);
     Controller1.Screen.setCursor(2, 20);
-    Controller1.Screen.print("%d", redirectActive);
+    Controller1.Screen.print("%d", intakeRedirecting);
 
     Controller1.Screen.setCursor(3, 1);
     Controller1.Screen.print("%1.0f ",
@@ -311,14 +315,27 @@ int armStatesTask() {
   RightArm.setStopping(hold);
   while (1) {
     task::sleep(5);
-    LeftArm.spin(fwd,
-                 ((-armGoal * 6) -
-                  (LeftArm.position(deg) + RightArm.position(deg)) * .3),
-                 pct);
-    RightArm.spin(fwd,
-                  ((-armGoal * 6) -
-                   (LeftArm.position(deg) + RightArm.position(deg)) * .3),
-                  pct);
+    if (!manualArm) {
+      LeftArm.spin(fwd,
+                   ((-armGoal * 6) -
+                    (LeftArm.position(deg) + RightArm.position(deg)) * .3),
+                   pct);
+      RightArm.spin(fwd,
+                    ((-armGoal * 6) -
+                     (LeftArm.position(deg) + RightArm.position(deg)) * .3),
+                    pct);
+    } else if (manualArm) {
+      if (Controller1.ButtonL1.pressing()) {
+        RightArm.spin(fwd);
+        RightArm.setVelocity(-70, pct);
+        LeftArm.spin(fwd);
+        LeftArm.setVelocity(-70, pct);
+      } else if (Controller1.ButtonL2.pressing()) {
+        RightArm.spin(fwd);
+        RightArm.setVelocity(70, pct);
+        LeftArm.spin(fwd);
+        LeftArm.setVelocity(70, pct);}
+    }
     if (armState == 0) {
       armGoal = 0;
     }
@@ -329,7 +346,7 @@ int armStatesTask() {
       armGoal = 35;
     }
     if (armState == 3)
-      armGoal = 46;
+      armGoal = 48;
   }
 }
 
@@ -348,8 +365,11 @@ int intakeSpeedTask() {
         conveyorSpeed = 50;
         rollerSpeed = 100;
       } else if (intakeRedirecting) {
+        task::sleep(5);
         conveyorSpeed = -50;
+        task::sleep(5);
         rollerSpeed = 0;
+        task::sleep(5);
       } else if (stopIntake) {
         conveyorSpeed = 0;
         rollerSpeed = 0;
@@ -362,7 +382,6 @@ int intakeSpeedTask() {
 
 int sortingDelayTask() {
   delayTaskActive = true;
-  currentPTO = fabs(IntakeRotation.position(deg));
   task::sleep(100);
   while (hookLocation < .95) {
     task::sleep(1);
@@ -375,14 +394,13 @@ int sortingDelayTask() {
   delayTaskActive = false;
   return 0;
 }
-
 int redirectDelayTask() {
   delayTaskActive = true;
-  currentPTO = fabs(IntakeRotation.position(deg));
   task::sleep(100);
-  while (hookLocation < .9) {
+  while (hookLocation < .68) {
     task::sleep(1);
   }
+
   intakeRedirecting = true;
   task::sleep(200);
   intakeRedirecting = false;
@@ -738,31 +756,59 @@ int driveArc(int Speed, int Distance, int Heading, int Radius) {
   return 0;
 }
 
+void buttonDOWN_pressed() { manualArm = !manualArm; }
+
 void buttonLup_pressed() {
   if (Controller1.ButtonL2.pressing()) {
     RightDoinker = true;
+    LeftDoinker = true;
   }
-  if (armState < 4) {
-    armState += 1;
-  } else {
-    armState = 4;
+  if (!manualArm) {
+    if (armState < 3) {
+      armState += 1;
+    } else {
+      armState = 3;
+    }
+  } else if (manualArm) {
+    RightArm.setVelocity(70, pct);
+    LeftArm.setVelocity(70, pct);
   }
 }
 
 void buttonLdown_pressed() {
   if (Controller1.ButtonL1.pressing()) {
     RightDoinker = true;
+    LeftDoinker = true;
   }
-  if (armState > 0) {
-    armState -= 1;
-  } else {
-    armState = 0;
+  if (!manualArm) {
+    if (armState > 0) {
+      armState -= 1;
+    } else {
+      armState = 0;
+    }
+  } else if (manualArm) {
+    RightArm.setVelocity(-70, pct);
+    LeftArm.setVelocity(-70, pct);
   }
 }
 
-void buttonLup_released() { RightDoinker = false; }
+void buttonLup_released() {
+  if (manualArm) {
+    RightArm.setVelocity(0, pct);
+    LeftArm.setVelocity(0, pct);
+  }
+  RightDoinker = false;
+  LeftDoinker = false;
+}
 
-void buttonLdown_released() { RightDoinker = false; }
+void buttonLdown_released() {
+  if (manualArm) {
+    RightArm.setVelocity(0, pct);
+    LeftArm.setVelocity(0, pct);
+  }
+  RightDoinker = false;
+  LeftDoinker = false;
+}
 
 void buttonRup_pressed() {
   if (Controller1.ButtonR2.pressing()) {
@@ -806,10 +852,8 @@ void buttonRdown_released() {
 
 void buttonUP_pressed() { sortingColor = !sortingColor; }
 
-void buttonDOWN_pressed() { ClawPivot = !ClawPivot; }
-
 void buttonLEFT_pressed() {
-  if (autonNumber > 6) {
+  if (autonNumber > 7) {
     autonNumber = 1;
   } else {
     autonNumber += 1;
@@ -841,7 +885,7 @@ void buttonRdown_released2() {}
 
 void buttonRup_released2() {}
 
-void frontAuton4() {
+void frontRedAuton4() {
   stopIntake = false;
   setGyro(-75 * headingMultiplier);
   armState = 2;
@@ -853,15 +897,7 @@ void frontAuton4() {
   rollerSpeed = 100;
   ClawPivot = true;
   conveyorSpeed = 100;
-  if (headingMultiplier == 1) {
-    while (!redDetected) {
-      sleep(1);
-    }
-  } else if (headingMultiplier == -1) {
-    while (!blueDetected) {
-      sleep(1);
-    }
-  }
+  sleep(450);
   conveyorSpeed = 0;
   driveDistance(35, 11.5, -155 * headingMultiplier);
   armState = 1;
@@ -870,7 +906,7 @@ void frontAuton4() {
   driveDistance(-80, 44, -160 * headingMultiplier);
   MogoMech = true;
   sleep(50);
-  driveDistance(70, 2, -160);
+  driveDistance(70, 2, -160 * headingMultiplier);
   conveyorSpeed = 100;
   rollerSpeed = 100;
   sleep(100);
@@ -897,100 +933,92 @@ void frontAuton4() {
   sleep(100);
   driveDistance(-30, 12, -90 * headingMultiplier);
   RightDoinker = false;
-  driveTurn(-67, 3);
+  driveTurn(-67 * headingMultiplier, 3);
   rollerSpeed = 100;
   conveyorSpeed = 100;
-  driveDistance(40, 6, -67);
+  driveDistance(40, 6, -67 * headingMultiplier);
   sleep(200);
-  driveDistance(-30, 15, -67);
-  sleep(400);
-  armState = 3;
-  rollerSpeed = 0;
-  conveyorSpeed = 0;
-  driveTorque = 75;
-  sleep(300);
-  driveTillStop(70, -67);
-  armState = 1;
+  driveDistance(-30, 15, -67 * headingMultiplier);
+  // sleep(400);
+  // armState = 3;
+  // rollerSpeed = 0;
+  // conveyorSpeed = 0;
+  // driveTorque = 75;
+  // sleep(300);
+  // driveTillStop(30, -67 * headingMultiplier);
+  // armState = 1;
 }
 
-// void frontAuton4() {
-//   setGyro(-148 * headingMultiplier);
-//   stopIntake = true;
-//   ClawPivot = true;
-//   armState = 2;
-//   sleep(300);
-//   driveDistance(30, 7, -150 * headingMultiplier);
-//   sleep(300);
-//   armState = 1;
-//   sleep(50);
-//   driveDistance(-65, 22, -148 * headingMultiplier);
-//   driveTurn(-180, 3);
-//   driveDistance(-30, 13, -180);
-//   MogoMech = true;
-//   IntakeLift = false;
-//   armState = 3;
-//   driveTurn(-270 * headingMultiplier, 2);
-//   setGyro(90);
-//   stopIntake = false;
-//   conveyorSpeed = 100;
-//   rollerSpeed = 100;
-//   sleep(100);
-//   driveDistance(30, 24, 90 * headingMultiplier);
-//   driveDistance(-80, 10, 90);
-//   driveTurn(180 * headingMultiplier, 3);
-//   driveTorque = 75;
-//   driveTillStop(40, 180 * headingMultiplier);
-//   driveDistance(-20, 3, 180);
-//   driveTurn(100, 7);
-//   RightDoinker = true;
-//   driveDistance(40, 25, 95);
-//   driveTurn(15, 7);
-// }
-
-void backAuton4() {
-  setGyro(154);
-  ClawPivot = true;
+void frontBlueAuton4() {
+  stopIntake = false;
+  setGyro(80);
   armState = 2;
   IntakeLift = false;
-  sleep(300);
-  driveDistance(50, 6, 154);
-  driveTorque = 75;
-  driveTillStop(35, 90);
+  ClawPivot = true;
+  conveyorSpeed = 0;
+  rollerSpeed = 75;
+  sleep(100);
+  driveTurn(-160 * headingMultiplier, 3);
+  rollerSpeed = 100;
+  conveyorSpeed = 100;
+  if (headingMultiplier == 1) {
+    while (!redDetected) {
+      sleep(1);
+    }
+  } else if (headingMultiplier == -1) {
+    while (!blueDetected) {
+      sleep(1);
+    }
+  }
+  conveyorSpeed = 0;
+  driveDistance(35, 10, -165 * headingMultiplier);
   armState = 1;
+  sleep(150);
+  rollerSpeed = 0;
+  driveDistance(-70, 46, -160 * headingMultiplier);
+  MogoMech = true;
+  sleep(100);
+  driveDistance(60, 4, -160 * headingMultiplier);
+  conveyorSpeed = 100;
+  rollerSpeed = 100;
+  sleep(100);
+  driveTurn(80 * headingMultiplier, 2);
+  driveDistance(50, 25, 80 * headingMultiplier);
+  armState = 3;
   sleep(300);
-  driveTorque = 100;
-  driveDistance(-50, 34, 153);
+  driveTillStop(40, -180);
+}
+
+void backAuton4() {
+  setGyro(154 * headingMultiplier);
+  ClawPivot = true;
+  IntakeLift = false;
+  driveDistance(-65, 27, 153 * headingMultiplier);
   armState = 0;
   MogoMech = true;
-  driveTurn(260, 3);
+  driveTurn(260 * headingMultiplier, 3);
   sleep(5);
   conveyorSpeed = 100;
   sleep(5);
   rollerSpeed = 100;
-  driveDistance(50, 14, 260);
+  driveDistance(60, 11, 260 * headingMultiplier);
   sleep(75);
-  driveDistance(70, 2, 260);
-  sleep(300);
-  stopIntake = true;
-  driveDistance(-50, 12, 270);
-  driveTurn(320, 5);
-  stopIntake = false;
-  sleep(5);
-  conveyorSpeed = 100;
-  sleep(5);
-  rollerSpeed = 100;
+  driveDistance(70, 6, 260 * headingMultiplier);
+  sleep(500);
+  driveDistance(-60, 12, 270 * headingMultiplier);
+  driveTurn(320 * headingMultiplier, 5);
   armState = 1;
-  driveDistance(50, 11, 320);
+  driveDistance(60, 9, 320 * headingMultiplier);
   sleep(350);
-  driveDistance(-50, 9, 320);
-  driveTurn(270, 5);
-  driveDistance(30, 17, 270);
-  driveTurn(360, 5);
-  driveDistance(30, 12, 360);
+  driveDistance(-60, 7, 320 * headingMultiplier);
+  driveTurn(270 * headingMultiplier, 5);
+  driveDistance(30, 15, 270 * headingMultiplier);
+  driveTurn(360 * headingMultiplier, 5);
+  driveDistance(30, 12, 360 * headingMultiplier);
   sleep(350);
-  driveDistance(-70, 7, 360);
-  driveTurn(445, 5);
-  driveDistance(45, 42, 445);
+  driveDistance(-70, 7, 360 * headingMultiplier);
+  driveTurn(445 * headingMultiplier, 5);
+  driveDistanceAcceleration(70, 35, 10, 50, 445 * headingMultiplier);
 }
 
 void goalRush() {
@@ -999,9 +1027,9 @@ void goalRush() {
   IntakeLift = false;
   driveDistance(90, 16, 0 * headingMultiplier);
   if (headingMultiplier > 0) {
-    driveDistance(90, 17, -20 * headingMultiplier);
+    driveDistance(90, 17, -22 * headingMultiplier);
   } else if (headingMultiplier < 0) {
-    driveDistance(90, 18, -50 * headingMultiplier);
+    driveDistance(90, 18, -55 * headingMultiplier);
   }
   if (headingMultiplier > 0) {
     LeftDoinker = true;
@@ -1009,50 +1037,56 @@ void goalRush() {
     RightDoinker = true;
   }
   sleep(300);
-  driveDistance(-50, 6, 0 * headingMultiplier);
+  driveDistance(-50, 8, 5 * headingMultiplier);
   if (headingMultiplier > 0) {
     LeftDoinker = false;
   } else if (headingMultiplier < 0) {
     RightDoinker = false;
   }
+  driveDistance(-50, 2, 0 * headingMultiplier);
   driveDistance(-40, 14, 0 * headingMultiplier);
   driveTurn(-40 * headingMultiplier, 5);
   rollerSpeed = 100;
   conveyorSpeed = 100;
-  driveDistance(75, 18, -40 * headingMultiplier);
+  driveDistance(75, 17, -40 * headingMultiplier);
   conveyorSpeed = 0;
   driveDistance(-50, 4, -40 * headingMultiplier);
-  driveTurn(-195 * headingMultiplier, 3);
-  driveDistance(-45, 22, -180 * headingMultiplier);
+  driveTurn(-190 * headingMultiplier, 3);
+  driveDistance(-50, 24, -180 * headingMultiplier);
   MogoMech = true;
+  sleep(50);
   conveyorSpeed = 100;
   sleep(900);
-  conveyorSpeed = 0;
   MogoMech = false;
-  driveDistance(50, 3, -180 * headingMultiplier);
+  conveyorSpeed = 0;
+  rollerSpeed = 0;
+  driveDistance(50, 4, -180 * headingMultiplier);
   driveTurn(-270 * headingMultiplier, 5);
-  driveDistanceAcceleration(-70, -30, -10, 24, -290 * headingMultiplier);
+  driveDistanceAcceleration(-70, -30, -10, 26, -265 * headingMultiplier);
   MogoMech = true;
+  conveyorSpeed = 100;
   armState = 2;
   IntakeLift = true;
   driveDistance(50, 2, -270 * headingMultiplier);
   driveTurn(-130 * headingMultiplier, 5);
-  driveDistance(55, 40, -130 * headingMultiplier);
+  driveDistance(60, 32, -130 * headingMultiplier);
   rollerSpeed = 100;
   IntakeLift = false;
-  driveDistance(55, 2, -130 * headingMultiplier);
+  driveDistance(60, 12, -130 * headingMultiplier);
+  driveDistance(-60, 4, -220 * headingMultiplier);
   conveyorSpeed = 100;
   sleep(500);
-  driveTurn(-190 * headingMultiplier, 5);
-  driveTorque = 20;
-  driveTillStop(70, -190 * headingMultiplier);
-  driveDistance(-40, 3, -170 * headingMultiplier);
-  conveyorSpeed = 0;
+  driveTurn(-180 * headingMultiplier, 2);
+  driveTorque = 40;
+  rollerSpeed = 0;
+  driveTillStop(30, -180 * headingMultiplier);
+  driveTorque = 100;
+  driveDistance(-60, 1, -180 * headingMultiplier);
   armState = 0;
-  sleep(250);
-  driveDistance(-60, 3, -180 * headingMultiplier);
-  driveTurn(-270, 10);
-  driveTillStop(70, -270 * headingMultiplier);
+  sleep(400);
+  driveDistance(-60, 4, -180 * headingMultiplier);
+  driveTurn(-300, 10);
+  driveDistance(60, 50, -300);
 }
 
 void skillsAuton() {
@@ -1102,15 +1136,13 @@ void autonomous() {
     IntakeLift = true;
     sortingColor = false;
     headingMultiplier = 1;
-    // frontAuton4();
-    // backAuton4();
-    goalRush();
+    frontRedAuton4();
   } else if (autonNumber == 2) {
     // Blue
     IntakeLift = true;
     sortingColor = true;
     headingMultiplier = -1;
-    frontAuton4();
+    frontBlueAuton4();
   } else if (autonNumber == 3) {
     // Red
     IntakeLift = true;
@@ -1154,6 +1186,8 @@ void buttonRIGHT_pressed() {
 
 void usercontrol() {
   resetTimer();
+  PTO = false;
+  stopIntake = false;
   autonRunning = false;
   driveHold = false;
   IntakeLift = false;
