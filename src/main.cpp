@@ -394,13 +394,13 @@ int sortingDelayTask() {
   delayTaskActive = false;
   return 0;
 }
+
 int redirectDelayTask() {
   delayTaskActive = true;
   task::sleep(100);
   while (hookLocation < .68) {
     task::sleep(1);
   }
-
   intakeRedirecting = true;
   task::sleep(200);
   intakeRedirecting = false;
@@ -952,9 +952,9 @@ void frontRedAuton4() {
 void frontBlueAuton4() {
   stopIntake = false;
   setGyro(80);
+  ClawPivot = true;
   armState = 2;
   IntakeLift = false;
-  ClawPivot = true;
   conveyorSpeed = 0;
   rollerSpeed = 75;
   sleep(100);
