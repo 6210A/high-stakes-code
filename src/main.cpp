@@ -1,282 +1,250 @@
+
 #include "vex.h"
 
 // ---- START VEXCODE CONFIGURED DEVICES ----
 // Robot Configuration:
 // [Name]               [Type]        [Port(s)]
+// LFDrive              motor         1
+// LTDrive              motor         2
+// LBDrive              motor         3
+// RFDrive              motor         13
+// RTDrive              motor         15
+// RBDrive              motor         14
+// LeftIntake           motor         7
+// RightIntake          motor         12
+// Arm                  motor         16
+// Inertial11           inertial      11
+// OdomForward          rotation      20
+// OdomSideways         rotation      21
 // Controller1          controller
-// RFDrive              motor         18
-// RHalfW               motor         16
-// RBDrive              motor         17
-// LFDrive              motor         12
-// LHalfW               motor         14
-// LBDrive              motor         13
-// Inertial15           inertial      15
-// MogoMech             digital_out   F
-// Optical              optical       19
-// RightDoinker         digital_out   G
-// RightPTOMotor        motor         20
-// LeftPTOMotor         motor         11
-// PTO                  digital_out   H
-// LeftArm              motor         1
-// RightArm             motor         9
-// ClawPivot            digital_out   E
-// IntakeRotation       rotation      2
-// IntakeLift           digital_out   D
-// LeftDoinker          digital_out   C
 // ---- END VEXCODE CONFIGURED DEVICES ----
-#include <cmath>
-#include <iostream>
-#include <math.h>
 
 using namespace vex;
-vex::competition Competition;
+competition Competition;
 
-int fieldControlState = 0;
-int axis1;
-int axis2;
-int axis3;
-int axis4;
+/*---------------------------------------------------------------------------*/
+/*                             VEXcode Config                                */
+/*                                                                           */
+/*  Before you do anything else, start by configuring your motors and        */
+/*  sensors. In VEXcode Pro V5, you can do this using the graphical          */
+/*  configurer port icon at the top right. In the VSCode extension, you'll   */
+/*  need to go to robot-config.cpp and robot-config.h and create the         */
+/*  motors yourself by following the style shown. All motors must be         */
+/*  properly reversed, meaning the drive should drive forward when all       */
+/*  motors spin forward.                                                     */
+/*---------------------------------------------------------------------------*/
 
-double gyro1;
-int msecClock;
-int headingMultiplier = 1;
+/*---------------------------------------------------------------------------*/
+/*                             JAR-Template Config                           */
+/*                                                                           */
+/*  Where all the magic happens. Follow the instructions below to input      */
+/*  all the physical constants and values for your robot. You should         */
+/*  already have configured your motors.                                     */
+/*---------------------------------------------------------------------------*/
 
-double avgDriveDistance;
-double avgDriveSpeed;
-int slowestDrive;
-int fastestDrive;
-int leftSpeed = 0;
-int rightSpeed = 0;
-int driveTorque = 100;
-int leftDriveTorque;
-int rightDriveTorque;
-bool driveHold = false;
-float leftSpeedIncrement;
-float rightSpeedIncrement;
+Drive chassis(
 
-double wheelDiameter = 2.0;
-double wheelCircumference = wheelDiameter * M_PI;
-double ticksPerRevolution = 360.0; // for v5 rotation sensor as they are sped
-double x = 0.0;
-double y = 0.0;
-const int numReadings = 10;
-double readingsX[numReadings];
-double readingsY[numReadings]; // for sam: this just means that this variable is
-                               // an array with a size of numReadings, which
-                               // is 10.0, in the format of a double(same with
-                               // readingsX). it is used in the odom function to
-                               // find the average encoder value over 10 steps
-int readIndex = 0;
-double totalX = 0;
-double totalY = 0;
-double averageX = 0;
-double averageY = 0;
+    // Pick your drive setup from the list below:
+    // ZERO_TRACKER_NO_ODOM
+    // ZERO_TRACKER_ODOM
+    // TANK_ONE_FORWARD_ENCODER
+    // TANK_ONE_FORWARD_ROTATION
+    // TANK_ONE_SIDEWAYS_ENCODER
+    // TANK_ONE_SIDEWAYS_ROTATION
+    // TANK_TWO_ENCODER
+    // TANK_TWO_ROTATION
+    // HOLONOMIC_TWO_ENCODER
+    // HOLONOMIC_TWO_ROTATION
+    //
+    // Write it here:
+    TANK_TWO_ROTATION,
 
-bool release2 = false;
+    // Add the names of your Drive motors into the motor groups below, separated
+    // by commas, i.e. motor_group(Motor1,Motor2,Motor3). You will input whatever
+    // motor names you chose when you configured your robot using the sidebar
+    // configurer, they don't have to be "Motor1" and "Motor2".
+
+    // Left Motors:
+    motor_group(LFDrive, LTDrive, LBDrive),
+
+    // Right Motors:
+    motor_group(RFDrive, RTDrive, RBDrive),
+
+    // Specify the PORT NUMBER of your inertial sensor, in PORT format (i.e.
+    // "PORT1", not simply "1"):
+    PORT10,
+
+    // Input your wheel diameter. (4" omnis are actually closer to 4.125"):
+    2.75,
+
+    // External ratio, must be in decimal, in the format of input teeth/output
+    // teeth. If your motor has an 84-tooth gear and your wheel has a 60-tooth
+    // gear, this value will be 1.4. If the motor drives the wheel directly, this
+    // value is 1:
+    0.8,
+
+    // Gyro scale, this is what your gyro reads when you spin the robot 360
+    // degrees. For most cases 360 will do fine here, but this scale factor can
+    // be very helpful when precision is necessary.
+    360,
+
+    /*---------------------------------------------------------------------------*/
+    /*                                  PAUSE! */
+    /*                                                                           */
+    /*  The rest of the drive constructor is for robots using POSITION TRACKING.
+     */
+    /*  If you are not using position tracking, leave the rest of the values as
+     */
+    /*  they are. */
+    /*---------------------------------------------------------------------------*/
+
+    // If you are using ZERO_TRACKER_ODOM, you ONLY need to adjust the FORWARD
+    // TRACKER CENTER DISTANCE.
+
+    // FOR HOLONOMIC DRIVES ONLY: Input your drive motors by position. This is
+    // only necessary for holonomic drives, otherwise this section can be left
+    // alone. LF:      //RF:
+    PORT1, -PORT2,
+
+    // LB:      //RB:
+    PORT3, -PORT4,
+
+    // If you are using position tracking, this is the Forward Tracker port (the
+    // tracker which runs parallel to the direction of the chassis). If this is a
+    // rotation sensor, enter it in "PORT1" format, inputting the port below. If
+    // this is an encoder, enter the port as an integer. Triport A will be a "1",
+    // Triport B will be a "2", etc.
+    1,
+
+    // Input the Forward Tracker diameter (reverse it to make the direction
+    // switch):
+    2,
+
+    // Input Forward Tracker center distance (a positive distance corresponds to
+    // a tracker on the right side of the robot, negative is left.) For a zero
+    // tracker tank drive with odom, put the positive distance from the center of
+    // the robot to the right side of the drive. This distance is in inches:
+    -2,
+
+    // Input the Sideways Tracker Port, following the same steps as the Forward
+    // Tracker Port:
+    1,
+
+    // Sideways tracker diameter (reverse to make the direction switch):
+    -2,
+
+    // Sideways tracker center distance (positive distance is behind the center
+    // of the robot, negative is in front):
+    5.5
+
+);
+bool ispreauto;
+int current_auton_selection = 0;
+bool auto_started = false;
+
+int intakeSpeed = 0;
+float armGoal = 1;
 float armState = 0;
-float armGoal = 0;
-bool manualArm = false;
 
-bool redirectActive;
-bool delayTaskActive = false;
-double hookLocation = 0;
-bool intakeRedirecting = false;
-bool stopIntake = false;
-double currentPTO = 0;
-int conveyorSpeed = 0;
-int rollerSpeed = 0;
+void sleep(int sleepmsec) { task::sleep(sleepmsec); }
 
-bool sortingColor = true;
-bool sortingTaskActive = false;
-bool ringDetected;
-bool redDetected;
-bool blueDetected;
+/**
+ * Function before autonomous. It prints the current auton number on the screen
+ * and tapping the screen cycles the selected auton by 1. Add anything else you
+ * may need, like resetting pneumatic components. You can rename these autons to
+ * be more descriptive, if you like.
+ */
 
-bool intakeTaskOn;
-
-bool autonRunning = false;
-int autonNumber = 4;
-bool autonHappened = false;
-
-void sleep(int sleepmsec) {
-  if (autonRunning) {
-    task::sleep(sleepmsec);
+void pre_auton() {
+  // Initializing Robot Configuration. DO NOT REMOVE!
+  vexcodeInit();
+  ispreauto = true;
+  default_constants();
+  LeftIntake.spin(fwd);
+  RightIntake.spin(fwd);
+  Arm.spin(fwd);
+  Arm.setVelocity(-100, pct);
+  sleep(100);
+  while (Arm.velocity(pct) < -2) {
+    sleep(5);
   }
-}
+  Arm.setVelocity(0, pct);
+  Arm.setPosition(0, deg);
+  ispreauto = false;
 
-void resetTimer() {
-  Brain.resetTimer();
-  task::sleep(5);
-}
-
-void resetGyro() {
-  Inertial15.setRotation(0, deg);
-  task::sleep(5);
-}
-
-void setGyro(int Heading) {
-  Inertial15.setRotation(Heading, deg);
-  task::sleep(5);
-}
-
-void resetDrive() {
-  LFDrive.resetPosition();
-  RFDrive.resetPosition();
-  LHalfW.resetPosition();
-  RHalfW.resetPosition();
-  LBDrive.resetPosition();
-  RBDrive.resetPosition();
-  LeftPTOMotor.resetPosition();
-  RightPTOMotor.resetPosition();
-  task::sleep(5);
-}
-
-void stopDrive() {
-  leftSpeed = 0;
-  rightSpeed = 0;
-  task::sleep(5);
-}
-
-void stopAll() {
-  LFDrive.stop();
-  RFDrive.stop();
-  LHalfW.stop();
-  RHalfW.stop();
-  LBDrive.stop();
-  RBDrive.stop();
-  LeftPTOMotor.stop();
-  RightPTOMotor.stop();
-  task::sleep(5);
-}
-
-void preAuton() {
-  fieldControlState = 0;
-  armState = 0;
-  sleep(300);
-  IntakeLift = true;
-  ClawPivot = false;
-  IntakeRotation.setPosition(0, degrees);
-  Brain.Screen.clearScreen();
-  Brain.Screen.printAt(320, 200, "Pre Auton");
-  resetDrive();
-  task::sleep(100);
-  Controller1.Screen.clearScreen();
-  fieldControlState = 1;
-
-  // Zero Arm Motors
-  RightArm.spin(fwd);
-  LeftArm.spin(fwd);
-  RightArm.setVelocity(50, pct);
-  LeftArm.setVelocity(50, pct);
-  task::sleep(250);
-  while (RightArm.velocity(pct) > 1) {
-    task::sleep(5);
-  }
-  RightArm.setVelocity(0, pct);
-  LeftArm.setVelocity(0, pct);
-  task::sleep(100);
-  RightArm.setPosition(0, deg);
-  LeftArm.setPosition(0, deg);
-
-  LeftPTOMotor.setVelocity(50, pct);
-  LeftPTOMotor.setStopping(hold);
-  LeftPTOMotor.spinFor(reverse, 1.917, turns, true);
-  LeftPTOMotor.setStopping(coast);
-  task::sleep(200);
-  LeftPTOMotor.spin(fwd);
-  RightPTOMotor.spin(fwd);
-  RightPTOMotor.setVelocity(0, pct);
-  LeftPTOMotor.setVelocity(0, pct);
-}
-
-int brainScreenTask() {
-  while (1) {
-    task::sleep(100);
+  while (!auto_started) {
     Brain.Screen.clearScreen();
-    Brain.Screen.printAt(1, 20, "LFMotor: %5.2f   ", gyro1);
-    Brain.Screen.printAt(188, 20, "RFMotor: %5.2f   ", gyro1);
-    Brain.Screen.printAt(1, 40, "LTMotor: %5.2f   ", gyro1);
-    Brain.Screen.printAt(188, 40, "RTMotor: %5.2f   ", gyro1);
-    Brain.Screen.printAt(1, 60, "Avg Motor Dist: %4.2f   ", avgDriveDistance);
-    Brain.Screen.printAt(1, 100, "gyro1: %5.2f    ", gyro1);
-    Brain.Screen.printAt(1, 140, "msecClock: %d    ", msecClock);
-    Brain.Screen.printAt(1, 170, "       ");
-    Brain.Screen.printAt(370, 20, "Axis1: %d", axis1);
-    Brain.Screen.printAt(370, 40, "Axis2: %d", axis2);
-    Brain.Screen.printAt(370, 60, "Axis3: %d", axis3);
-    Brain.Screen.printAt(370, 80, "Axis4: %d", axis4);
-    Brain.Screen.printAt(320, 110, "Reflect: %3.2f  ");
-    Brain.Screen.printAt(320, 150, "PotR: %3.2f   ");
-
-    if (autonNumber == 1) {
-      Brain.Screen.printAt(1, 210, "Auton: Red Front");
-      Brain.Screen.setFillColor(red);
-    } else if (autonNumber == 2) {
-      Brain.Screen.printAt(1, 210, "Auton: Blue Front");
-      Brain.Screen.setFillColor(blue);
-    } else if (autonNumber == 3) {
-      Brain.Screen.printAt(1, 210, "Auton: Red Back");
-      Brain.Screen.setFillColor(red);
-    } else if (autonNumber == 4) {
-      Brain.Screen.printAt(1, 210, "Auton: Blue Back");
-      Brain.Screen.setFillColor(blue);
-    } else if (autonNumber == 5) {
-      Brain.Screen.printAt(1, 210, "Auton: Red Goal Rush");
-      Brain.Screen.setFillColor(red);
-    } else if (autonNumber == 6) {
-      Brain.Screen.printAt(1, 210, "Auton: Blue Goal Rush");
-      Brain.Screen.setFillColor(blue);
-    } else if (autonNumber == 7) {
-      Brain.Screen.printAt(1, 210, "Auton Skills");
-      Brain.Screen.setFillColor(yellow);
+    Brain.Screen.printAt(5, 20, "Battery Percentage:");
+    Brain.Screen.printAt(5, 40, "%d", Brain.Battery.capacity());
+    Brain.Screen.printAt(5, 60, "Heading:");
+    Brain.Screen.printAt(5, 80, "%f", chassis.get_absolute_heading());
+    Brain.Screen.printAt(5, 100, "Selected Auton:");
+    switch (current_auton_selection) {
+    case 0:
+      Brain.Screen.printAt(5, 120, "Auton 1");
+      break;
+    case 1:
+      Brain.Screen.printAt(5, 120, "Auton 2");
+      break;
+    case 2:
+      Brain.Screen.printAt(5, 120, "Auton 3");
+      break;
+    case 3:
+      Brain.Screen.printAt(5, 120, "Auton 4");
+      break;
+    case 4:
+      Brain.Screen.printAt(5, 120, "Auton 5");
+      break;
+    case 5:
+      Brain.Screen.printAt(5, 120, "Auton 6");
+      break;
+    case 6:
+      Brain.Screen.printAt(5, 120, "Auton 7");
+      break;
+    case 7:
+      Brain.Screen.printAt(5, 120, "Auton 8");
+      break;
     }
-
-    if (fieldControlState == 0) {
-      Brain.Screen.printAt(320, 200, "Pre Auton");
+    if (Brain.Screen.pressing()) {
+      while (Brain.Screen.pressing()) {
+      }
+      current_auton_selection++;
+    } else if (current_auton_selection == 8) {
+      current_auton_selection = 0;
     }
-    if (fieldControlState == 1) {
-      Brain.Screen.printAt(320, 200, "Pre Auton Done");
-    }
-    if (fieldControlState == 2) {
-      Brain.Screen.printAt(320, 200, "Autonomous");
-    }
-    if (fieldControlState == 3) {
-      Brain.Screen.printAt(320, 200, "Autonomous Done");
-    }
-    if (fieldControlState == 4) {
-      Brain.Screen.printAt(320, 200, "Driver");
-    }
+    task::sleep(10);
   }
 }
 
 int controllerScreenTask() {
   Controller1.Screen.clearScreen();
   while (1) {
-    task::sleep(50);
+    sleep(50);
 
     Controller1.Screen.setCursor(1, 1);
-    Controller1.Screen.print("G: %3.2f  ", Inertial15.rotation());
-    Controller1.Screen.setCursor(1, 10);
-    if (sortingColor) {
-      Controller1.Screen.print("B in");
-    } else {
-      Controller1.Screen.print("R in");
-    }
-    Controller1.Screen.setCursor(1, 17);
-    Controller1.Screen.print("%d", manualArm); // autonRunning);
+    Controller1.Screen.print("G: %3.2f", Inertial11.rotation());
+    Controller1.Screen.setCursor(1, 12);
+    Controller1.Screen.print("A: %1.0f", armState);
+    // if (sortingColor) {
+    //   Controller1.Screen.print("B in");
+    // } else {
+    //   Controller1.Screen.print("R in");
+    // }
+    // Controller1.Screen.setCursor(1, 16);
+    // Controller1.Screen.print("A%d", autonRunning);
+    // Controller1.Screen.setCursor(1, 19);
+    // Controller1.Screen.print("R%d", ringDetected);
 
-    Controller1.Screen.setCursor(2, 1);
-    Controller1.Screen.print("%1.0f ",
-                             RightArm.temperature(fahrenheit) / 10 - 5);
-    Controller1.Screen.setCursor(2, 3);
-    Controller1.Screen.print("%1.0f ",
-                             LeftArm.temperature(fahrenheit) / 10 - 5);
-    Controller1.Screen.setCursor(2, 6);
-    Controller1.Screen.print("State %1.0f", armState);
-    Controller1.Screen.setCursor(2, 18);
-    Controller1.Screen.print("%d", ringDetected);
-    Controller1.Screen.setCursor(2, 20);
-    Controller1.Screen.print("%d", intakeRedirecting);
+    // Controller1.Screen.setCursor(2, 1);
+    // Controller1.Screen.print("%1.0f ",
+    //                          RightArm.temperature(fahrenheit) / 10 - 5);
+    // Controller1.Screen.setCursor(2, 3);
+    // Controller1.Screen.print("%1.0f ",
+    //                          LeftArm.temperature(fahrenheit) / 10 - 5);
+    // Controller1.Screen.setCursor(2, 6);
+    // Controller1.Screen.print("State %1.0f", armState);
+    // Controller1.Screen.setCursor(2, 15);
+    // Controller1.Screen.print("%1.0f", autonNumber);
 
     Controller1.Screen.setCursor(3, 1);
     Controller1.Screen.print("%1.0f ",
@@ -288,590 +256,103 @@ int controllerScreenTask() {
 
     Controller1.Screen.setCursor(3, 5);
     Controller1.Screen.print("%1.0f ",
-                             LBDrive.temperature(fahrenheit) / 10 - 5);
+                             LTDrive.temperature(fahrenheit) / 10 - 5);
 
     Controller1.Screen.setCursor(3, 7);
     Controller1.Screen.print("%1.0f ",
-                             RBDrive.temperature(fahrenheit) / 10 - 5);
+                             RTDrive.temperature(fahrenheit) / 10 - 5);
 
     Controller1.Screen.setCursor(3, 9);
-    Controller1.Screen.print("%1.0f ", LHalfW.temperature(fahrenheit) / 10 - 5);
+    Controller1.Screen.print("%1.0f ",
+                             LBDrive.temperature(fahrenheit) / 10 - 5);
 
     Controller1.Screen.setCursor(3, 11);
-    Controller1.Screen.print("%1.0f ", RHalfW.temperature(fahrenheit) / 10 - 5);
+    Controller1.Screen.print("%1.0f ",
+                             RBDrive.temperature(fahrenheit) / 10 - 5);
 
     Controller1.Screen.setCursor(3, 15);
     Controller1.Screen.print("%1.0f ",
-                             RightPTOMotor.temperature(fahrenheit) / 10 - 5);
+                             LeftIntake.temperature(fahrenheit) / 10 - 5);
 
     Controller1.Screen.setCursor(3, 17);
     Controller1.Screen.print("%1.0f ",
-                             LeftPTOMotor.temperature(fahrenheit) / 10 - 5);
+                             RightIntake.temperature(fahrenheit) / 10 - 5);
+    Controller1.Screen.setCursor(3, 19);
+    Controller1.Screen.print("%1.0f ", Arm.temperature(fahrenheit) / 10 - 5);
+  }
+}
+
+int intakeControlTask() {
+  while (1) {
+    sleep(5);
+    LeftIntake.setVelocity(intakeSpeed, pct);
+    RightIntake.setVelocity(intakeSpeed, pct);
   }
 }
 
 int armStatesTask() {
-  LeftArm.setStopping(hold);
-  RightArm.setStopping(hold);
+  Arm.setStopping(hold);
   while (1) {
-    task::sleep(5);
-    if (!manualArm) {
-      LeftArm.spin(fwd,
-                   ((-armGoal * 6) -
-                    (LeftArm.position(deg) + RightArm.position(deg)) * .3),
-                   pct);
-      RightArm.spin(fwd,
-                    ((-armGoal * 6) -
-                     (LeftArm.position(deg) + RightArm.position(deg)) * .3),
-                    pct);
-    } else if (manualArm) {
-      if (Controller1.ButtonL1.pressing()) {
-        RightArm.spin(fwd);
-        RightArm.setVelocity(-70, pct);
-        LeftArm.spin(fwd);
-        LeftArm.setVelocity(-70, pct);
-      } else if (Controller1.ButtonL2.pressing()) {
-        RightArm.spin(fwd);
-        RightArm.setVelocity(70, pct);
-        LeftArm.spin(fwd);
-        LeftArm.setVelocity(70, pct);}
-    }
-    if (armState == 0) {
-      armGoal = 0;
-    }
-    if (armState == 1) {
-      armGoal = 15;
-    }
-    if (armState == 2) {
-      armGoal = 35;
-    }
-    if (armState == 3)
-      armGoal = 48;
-  }
-}
+    sleep(20);
+    if (!ispreauto) {
+      Arm.setVelocity(((armGoal * 4) - Arm.position(deg) * .5), pct);
 
-int intakeRotationTask() {
-  while (1) {
-    task::sleep(5);
-    hookLocation = (fmod((IntakeRotation.position(turns) * 12), 23) / 23);
-  }
-}
-
-int intakeSpeedTask() {
-  while (1) {
-    task::sleep(5);
-    if (!PTO) {
-      if (redirectActive) {
-        conveyorSpeed = 50;
-        rollerSpeed = 100;
-      } else if (intakeRedirecting) {
-        task::sleep(5);
-        conveyorSpeed = -50;
-        task::sleep(5);
-        rollerSpeed = 0;
-        task::sleep(5);
-      } else if (stopIntake) {
-        conveyorSpeed = 0;
-        rollerSpeed = 0;
+      if (armState == 0) {
+        armGoal = 4;
       }
-      LeftPTOMotor.setVelocity(conveyorSpeed * -1, pct);
-      RightPTOMotor.setVelocity(rollerSpeed, pct);
-    }
-  }
-}
-
-int sortingDelayTask() {
-  delayTaskActive = true;
-  task::sleep(100);
-  while (hookLocation < .95) {
-    task::sleep(1);
-  }
-  stopIntake = true;
-  task::sleep(150);
-  stopIntake = false;
-  conveyorSpeed = 100;
-  rollerSpeed = 100;
-  delayTaskActive = false;
-  return 0;
-}
-
-int redirectDelayTask() {
-  delayTaskActive = true;
-  task::sleep(100);
-  while (hookLocation < .68) {
-    task::sleep(1);
-  }
-  intakeRedirecting = true;
-  task::sleep(200);
-  intakeRedirecting = false;
-  delayTaskActive = false;
-  return 0;
-}
-
-int intakeTask() {
-  Optical.setLight(ledState::on);
-  Optical.setLightPower(100, pct);
-  while (1) {
-    task::sleep(5);
-
-    if (Controller1.ButtonR1.pressing() || autonRunning) {
-      // Redirect
-      if (redirectActive) {
-        if (ringDetected && !delayTaskActive) {
-          task taskRedirectDelay(redirectDelayTask);
-        }
+      if (armState == 1) {
+        armGoal = 14;
       }
-    }
-
-    // Sorting
-    if (ringDetected) {
-      if (sortingColor) { // eject red
-        if (redDetected && !delayTaskActive) {
-          task taskSortingDelay(sortingDelayTask);
-        }
-      } else { // eject blue
-        if (blueDetected && !delayTaskActive) {
-          task taskSortingDelay(sortingDelayTask);
-        }
+      if (armState == 2) {
+        armGoal = 70;
       }
     }
   }
 }
-
-int sensorsTask() {
-  int x = 100;
-  while (1) {
-    task::sleep(5);
-    // GET MOTOR ENCODERS AND SCALE THEM TO DISTANCE IN INCHES (450 RPM)
-    avgDriveDistance =
-        (LFDrive.position(deg) + RBDrive.position(deg)) * 0.00955;
-
-    // GET AVERAGE MOTOR SPEED PERCENTAGE
-    avgDriveSpeed = (LFDrive.velocity(pct) + RBDrive.velocity(pct)) * .5;
-
-    // GET gyro1 VALUE
-    gyro1 = Inertial15.rotation(deg);
-
-    // Get optical value
-    ringDetected = Optical.isNearObject();
-    redDetected = ((Optical.hue() > 330) || (Optical.hue() < 30));
-    blueDetected = ((Optical.hue() < 250) && (Optical.hue() > 90));
-
-    // GET SLOWEST DRIVE MOTOR SPEED
-    x = fabs(RFDrive.velocity(pct));
-    if (x > fabs(LFDrive.velocity(pct))) {
-      x = fabs(LFDrive.velocity(pct));
-    }
-    if (x > fabs(LBDrive.velocity(pct))) {
-      x = fabs(LBDrive.velocity(pct));
-    }
-    if (x > fabs(RBDrive.velocity(pct))) {
-      x = fabs(RBDrive.velocity(pct));
-    }
-    if (x > fabs(LHalfW.velocity(pct))) {
-      x = fabs(LHalfW.velocity(pct));
-    }
-    if (x > fabs(RHalfW.velocity(pct))) {
-      x = fabs(RHalfW.velocity(pct));
-    }
-    if (PTO) {
-      if (x > fabs(LeftPTOMotor.velocity(pct))) {
-        x = fabs(LeftPTOMotor.velocity(pct));
-      }
-      if (x > fabs(RightPTOMotor.velocity(pct))) {
-        x = fabs(RightPTOMotor.velocity(pct));
-      }
-    }
-    slowestDrive = abs(x);
-
-    x = fabs(RFDrive.velocity(pct));
-    if (x < fabs(LFDrive.velocity(pct))) {
-      x = fabs(LFDrive.velocity(pct));
-    }
-    if (x < fabs(LBDrive.velocity(pct))) {
-      x = fabs(LBDrive.velocity(pct));
-    }
-    if (x < fabs(RBDrive.velocity(pct))) {
-      x = fabs(RBDrive.velocity(pct));
-    }
-    if (x < fabs(LHalfW.velocity(pct))) {
-      x = fabs(LHalfW.velocity(pct));
-    }
-    if (x < fabs(RHalfW.velocity(pct))) {
-      x = fabs(RHalfW.velocity(pct));
-    }
-    if (PTO) {
-      if (x < fabs(LeftPTOMotor.velocity(pct))) {
-        x = fabs(LeftPTOMotor.velocity(pct));
-      }
-      if (x < fabs(RightPTOMotor.velocity(pct))) {
-        x = fabs(RightPTOMotor.velocity(pct));
-      }
-    }
-    fastestDrive = abs(x);
-
-    msecClock = Brain.timer(msec);
-  }
-}
-
-int driveTask() {
-  while (1) {
-    if (driveHold) {
-      LFDrive.setStopping(hold);
-      LBDrive.setStopping(hold);
-      RBDrive.setStopping(hold);
-      RFDrive.setStopping(hold);
-      LHalfW.setStopping(hold);
-      RHalfW.setStopping(hold);
-    } else {
-      LFDrive.setStopping(coast);
-      LBDrive.setStopping(coast);
-      RBDrive.setStopping(coast);
-      RFDrive.setStopping(coast);
-      LHalfW.setStopping(coast);
-      RHalfW.setStopping(coast);
-    }
-
-    LeftPTOMotor.setStopping(coast);
-    RightPTOMotor.setStopping(coast);
-
-    leftDriveTorque = driveTorque * 1.15;
-    rightDriveTorque = driveTorque;
-
-    LFDrive.setMaxTorque(leftDriveTorque, pct);
-    LHalfW.setMaxTorque(leftDriveTorque, pct);
-    LBDrive.setMaxTorque(leftDriveTorque, pct);
-    RFDrive.setMaxTorque(rightDriveTorque, pct);
-    RHalfW.setMaxTorque(rightDriveTorque, pct);
-    RBDrive.setMaxTorque(rightDriveTorque, pct);
-    if (PTO) {
-      LeftPTOMotor.setMaxTorque(leftDriveTorque, pct);
-      RightPTOMotor.setMaxTorque(rightDriveTorque, pct);
-    }
-
-    LFDrive.spin(fwd, leftSpeed, pct);
-    LBDrive.spin(fwd, leftSpeed, pct);
-    LHalfW.spin(fwd, leftSpeed, pct);
-    RFDrive.spin(fwd, rightSpeed, pct);
-    RBDrive.spin(fwd, rightSpeed, pct);
-    RHalfW.spin(fwd, rightSpeed, pct);
-    if (PTO) {
-      LeftPTOMotor.spin(fwd, leftSpeed, pct);
-      RightPTOMotor.spin(fwd, rightSpeed, pct);
-    }
-    task::sleep(6);
-  }
-}
-
-void driveDistance(int Speed, double Distance, double Heading) {
-  double kP = 0.6;
-  double kI = 0.00;
-  double kD = 0.01;
-  double integral = 0;
-  double previousError = 0;
-
-  resetDrive();
-  task::sleep(10);
-  double rightTurnDifference;
-  while ((fabs(avgDriveDistance) < Distance) && autonRunning) {
-    double error = Heading - gyro1;
-    integral += error;
-    double derivative = error - previousError;
-    rightTurnDifference = kP * error + kI * integral + kD * derivative;
-    leftSpeed = Speed + rightTurnDifference;
-    rightSpeed = Speed - rightTurnDifference;
-    previousError = error;
-    task::sleep(10);
-  }
-  stopDrive();
-}
-
-void driveTillStop(int Speed, double Heading) {
-  resetDrive();
-  resetTimer();
-  task::sleep(10);
-  int rightTurnDifference;
-  while ((slowestDrive > 3 || msecClock < 500) && autonRunning) {
-    rightTurnDifference = (Heading - gyro1) * .65;
-    leftSpeed = Speed + rightTurnDifference;
-    rightSpeed = Speed - rightTurnDifference;
-    task::sleep(10);
-  }
-  stopDrive();
-}
-
-void driveDistanceAcceleration(int initialSpeed, int peakSpeed, int endingSpeed,
-                               double Distance, double Heading) {
-  double kP = 0.6;
-  double kI = 0.00;
-  double kD = 0.01;
-  double integral = 0;
-  double previousError = 0;
-
-  resetDrive();
-  task::sleep(10);
-  double rightTurnDifference;
-  double currentSpeed = initialSpeed;
-  double accelerationDistance =
-      Distance * 0.3; // 30% of the distance for acceleration
-  double decelerationDistance =
-      Distance * 0.3; // 30% of the distance for deceleration
-  double constantSpeedDistance =
-      Distance - accelerationDistance - decelerationDistance;
-
-  while ((fabs(avgDriveDistance) < Distance) && autonRunning) {
-    double error = Heading - gyro1;
-    integral += error;
-    double derivative = error - previousError;
-    rightTurnDifference = kP * error + kI * integral + kD * derivative;
-
-    // Acceleration phase
-    if (fabs(avgDriveDistance) < accelerationDistance) {
-      currentSpeed =
-          initialSpeed + (peakSpeed - initialSpeed) *
-                             (fabs(avgDriveDistance) / accelerationDistance);
-    }
-    // Constant speed phase
-    else if (fabs(avgDriveDistance) <
-             (accelerationDistance + constantSpeedDistance)) {
-      currentSpeed = peakSpeed;
-    }
-    // Deceleration phase
-    else {
-      currentSpeed =
-          peakSpeed - (peakSpeed - endingSpeed) *
-                          ((fabs(avgDriveDistance) - accelerationDistance -
-                            constantSpeedDistance) /
-                           decelerationDistance);
-    }
-
-    leftSpeed = currentSpeed + rightTurnDifference;
-    rightSpeed = currentSpeed - rightTurnDifference;
-    previousError = error;
-    task::sleep(10);
-  }
-  stopDrive();
-}
-
-void driveTurn(int Heading, int Accuracy) {
-  int integral = 0;
-  int previousError = 0;
-  double kP;
-  double kI;
-  double kD;
-  double lsp;
-  double rsp;
-
-  if (MogoMech) {
-    kP = .504;
-    kI = 0;
-    kD = 0.005;
-  } else {
-    kP = .5;
-    kI = 0;
-    kD = 0.005;
-  }
-
-  int newHeading = Heading + Accuracy;
-  while ((fabs(newHeading - gyro1) > Accuracy ||
-          (fabs(LFDrive.velocity(pct)) > 2.5)) &&
-         autonRunning) {
-    double error = newHeading - gyro1;
-    integral += error;
-    double derivativeTurn = error - previousError;
-    double output = (kP * error) + (kI * integral) + (kD * derivativeTurn);
-    lsp = +output;
-    if (fabs(lsp) < 2) {
-      lsp = 2 * fabs(lsp) / lsp;
-    }
-    leftSpeed = lsp;
-    rsp = -output;
-    if (fabs(rsp) < 2) {
-      rsp = 2 * fabs(rsp) / rsp;
-    }
-    rightSpeed = rsp;
-    previousError = error;
-    sleep(5);
-  }
-
-  stopDrive();
-  // integral = 0;
-  // previousError = 0;
-  sleep(10);
-}
-
-int driveArc(int Speed, int Distance, int Heading, int Radius) {
-  int integral = 0;
-  int previousError = 0;
-  double kP = 0.415; // scales it to inches
-  double kI = 0;
-  double kD = 0.005;
-  double lsp;
-  double rsp;
-
-  // define the target variables
-  double targetDistance = Distance;
-  double targetHeading = Heading;
-  int currentDistance = 0;
-
-  // safeguard to prevent invalid inputs
-  if (Radius == 0 || Speed == 0 || Distance == 0) {
-    return -1;
-  }
-
-  // calculate error
-  while (currentDistance < targetDistance && autonRunning) {
-    double error = targetHeading - gyro1;
-    integral += error;
-    double derivativeTurn = error - previousError;
-    double output = (kP * error) + (kI * integral) + (kD * derivativeTurn);
-
-    // calculate the actual left and right speeds based on the inputted radius
-    // and velocity and the calculated output
-    lsp = Speed * (1 - output / Radius);
-    rsp = Speed * (1 + output / Radius);
-
-    // safeguard to prevent stalling
-    if (fabs(lsp) < 2) {
-      lsp = 2 * fabs(lsp) / lsp;
-    }
-    if (fabs(rsp) < 2) {
-      rsp = 2 * fabs(rsp) / rsp;
-    }
-
-    // set the motor speeds
-    leftSpeed = lsp;
-    rightSpeed = rsp;
-
-    // update error and distance
-    previousError = error;
-    currentDistance =
-        (LFDrive.position(deg) + RBDrive.position(deg)) / 2 * 0.0128;
-
-    task::sleep(5);
-  }
-  stopDrive();
-  task::sleep(10);
-
-  return 0;
-}
-
-void buttonDOWN_pressed() { manualArm = !manualArm; }
 
 void buttonLup_pressed() {
-  if (Controller1.ButtonL2.pressing()) {
-    RightDoinker = true;
-    LeftDoinker = true;
-  }
-  if (!manualArm) {
-    if (armState < 3) {
-      armState += 1;
-    } else {
-      armState = 3;
-    }
-  } else if (manualArm) {
-    RightArm.setVelocity(70, pct);
-    LeftArm.setVelocity(70, pct);
+  if (armState < 2) {
+    armState += 1;
+  } else {
+    armState = 2;
   }
 }
 
 void buttonLdown_pressed() {
-  if (Controller1.ButtonL1.pressing()) {
-    RightDoinker = true;
-    LeftDoinker = true;
-  }
-  if (!manualArm) {
-    if (armState > 0) {
-      armState -= 1;
-    } else {
-      armState = 0;
-    }
-  } else if (manualArm) {
-    RightArm.setVelocity(-70, pct);
-    LeftArm.setVelocity(-70, pct);
-  }
-}
-
-void buttonLup_released() {
-  if (manualArm) {
-    RightArm.setVelocity(0, pct);
-    LeftArm.setVelocity(0, pct);
-  }
-  RightDoinker = false;
-  LeftDoinker = false;
-}
-
-void buttonLdown_released() {
-  if (manualArm) {
-    RightArm.setVelocity(0, pct);
-    LeftArm.setVelocity(0, pct);
-  }
-  RightDoinker = false;
-  LeftDoinker = false;
-}
-
-void buttonRup_pressed() {
-  if (Controller1.ButtonR2.pressing()) {
-    release2 = true;
-    redirectActive = true;
+  if (armState > 0) {
+    armState -= 1;
   } else {
-    PTO = false;
-    conveyorSpeed = 100;
-    rollerSpeed = 100;
+    armState = 0;
   }
 }
 
-void buttonRdown_pressed() {
-  if (Controller1.ButtonR1.pressing()) {
-    release2 = true;
-    redirectActive = true;
-  } else {
-    PTO = false;
-    conveyorSpeed = -50;
-    rollerSpeed = -50;
-  }
-}
+void buttonLup_released() {}
 
-void buttonRup_released() {
-  if (release2) {
-    release2 = false;
-    redirectActive = false;
-  }
-  conveyorSpeed = 0;
-  rollerSpeed = 0;
-}
+void buttonLdown_released() {}
 
-void buttonRdown_released() {
-  if (release2) {
-    release2 = false;
-    redirectActive = false;
-  }
-  conveyorSpeed = 0;
-  rollerSpeed = 0;
-}
+void buttonRup_pressed() { intakeSpeed = 100; }
 
-void buttonUP_pressed() { sortingColor = !sortingColor; }
+void buttonRdown_pressed() { intakeSpeed = -100; }
 
-void buttonLEFT_pressed() {
-  if (autonNumber > 7) {
-    autonNumber = 1;
-  } else {
-    autonNumber += 1;
-  }
-  if (autonRunning) {
-    autonRunning = false;
-  }
-}
+void buttonRup_released() { intakeSpeed = 0; }
 
-void brain_pressed() {}
+void buttonRdown_released() { intakeSpeed = 0; }
 
-void buttonX_pressed() { PTO = !PTO; }
+void buttonUP_pressed() {}
 
-void buttonA_pressed() { ClawPivot = !ClawPivot; }
+void buttonDOWN_pressed() {}
 
-void buttonY_pressed() { MogoMech = !MogoMech; }
+void buttonLEFT_pressed() {}
 
-void buttonB_pressed() { IntakeLift = !IntakeLift; }
+void buttonRIGHT_pressed() {}
+
+void buttonX_pressed() {}
+
+void buttonA_pressed() {}
+
+void buttonY_pressed() {}
+
+void buttonB_pressed() {}
 
 void buttonLup_pressed2() {}
 
@@ -885,357 +366,86 @@ void buttonRdown_released2() {}
 
 void buttonRup_released2() {}
 
-void frontRedAuton4() {
-  stopIntake = false;
-  setGyro(-75 * headingMultiplier);
-  armState = 2;
-  IntakeLift = false;
-  conveyorSpeed = 0;
-  rollerSpeed = 75;
-  sleep(100);
-  driveTurn(-160 * headingMultiplier, 3);
-  rollerSpeed = 100;
-  ClawPivot = true;
-  conveyorSpeed = 100;
-  sleep(450);
-  conveyorSpeed = 0;
-  driveDistance(35, 11.5, -155 * headingMultiplier);
-  armState = 1;
-  sleep(150);
-  rollerSpeed = 0;
-  driveDistance(-80, 44, -160 * headingMultiplier);
-  MogoMech = true;
-  sleep(50);
-  driveDistance(70, 2, -160 * headingMultiplier);
-  conveyorSpeed = 100;
-  rollerSpeed = 100;
-  sleep(100);
-  driveTurn(90 * headingMultiplier, 2);
-  driveDistance(50, 18, 90 * headingMultiplier);
-  rollerSpeed = 100;
-  sleep(5);
-  conveyorSpeed = 100;
-  sleep(5);
-  MogoMech = true;
-  ClawPivot = true;
-  // go to middle
-  sleep(5);
-  driveTurn(-75 * headingMultiplier, 3);
-  driveDistance(40, 17, -70 * headingMultiplier);
-  conveyorSpeed = 0;
-  rollerSpeed = 0;
-  driveDistance(40, 18, -65 * headingMultiplier);
-  if (headingMultiplier > 0) {
-    RightDoinker = true;
-  } else if (headingMultiplier < 0) {
-    LeftDoinker = true;
-  }
-  sleep(100);
-  driveDistance(-30, 12, -90 * headingMultiplier);
-  RightDoinker = false;
-  driveTurn(-67 * headingMultiplier, 3);
-  rollerSpeed = 100;
-  conveyorSpeed = 100;
-  driveDistance(40, 6, -67 * headingMultiplier);
-  sleep(200);
-  driveDistance(-30, 15, -67 * headingMultiplier);
-  // sleep(400);
-  // armState = 3;
-  // rollerSpeed = 0;
-  // conveyorSpeed = 0;
-  // driveTorque = 75;
-  // sleep(300);
-  // driveTillStop(30, -67 * headingMultiplier);
-  // armState = 1;
-}
+/**
+ * Auton function, which runs the selected auton. Case 0 is the default,
+ * and will run in the brain screen goes untouched during preauton. Replace
+ * drive_test(), for example, with your own auton function you created in
+ * autons.cpp and declared in autons.h.
+ */
 
-void frontBlueAuton4() {
-  stopIntake = false;
-  setGyro(80);
-  ClawPivot = true;
-  armState = 2;
-  IntakeLift = false;
-  conveyorSpeed = 0;
-  rollerSpeed = 75;
-  sleep(100);
-  driveTurn(-160 * headingMultiplier, 3);
-  rollerSpeed = 100;
-  conveyorSpeed = 100;
-  if (headingMultiplier == 1) {
-    while (!redDetected) {
-      sleep(1);
-    }
-  } else if (headingMultiplier == -1) {
-    while (!blueDetected) {
-      sleep(1);
-    }
-  }
-  conveyorSpeed = 0;
-  driveDistance(35, 10, -165 * headingMultiplier);
-  armState = 1;
-  sleep(150);
-  rollerSpeed = 0;
-  driveDistance(-70, 46, -160 * headingMultiplier);
-  MogoMech = true;
-  sleep(100);
-  driveDistance(60, 4, -160 * headingMultiplier);
-  conveyorSpeed = 100;
-  rollerSpeed = 100;
-  sleep(100);
-  driveTurn(80 * headingMultiplier, 2);
-  driveDistance(50, 25, 80 * headingMultiplier);
-  armState = 3;
-  sleep(300);
-  driveTillStop(40, -180);
-}
-
-void backAuton4() {
-  setGyro(154 * headingMultiplier);
-  ClawPivot = true;
-  IntakeLift = false;
-  driveDistance(-65, 27, 153 * headingMultiplier);
-  armState = 0;
-  MogoMech = true;
-  driveTurn(260 * headingMultiplier, 3);
-  sleep(5);
-  conveyorSpeed = 100;
-  sleep(5);
-  rollerSpeed = 100;
-  driveDistance(60, 11, 260 * headingMultiplier);
-  sleep(75);
-  driveDistance(70, 6, 260 * headingMultiplier);
-  sleep(500);
-  driveDistance(-60, 12, 270 * headingMultiplier);
-  driveTurn(320 * headingMultiplier, 5);
-  armState = 1;
-  driveDistance(60, 9, 320 * headingMultiplier);
-  sleep(350);
-  driveDistance(-60, 7, 320 * headingMultiplier);
-  driveTurn(270 * headingMultiplier, 5);
-  driveDistance(30, 15, 270 * headingMultiplier);
-  driveTurn(360 * headingMultiplier, 5);
-  driveDistance(30, 12, 360 * headingMultiplier);
-  sleep(350);
-  driveDistance(-70, 7, 360 * headingMultiplier);
-  driveTurn(445 * headingMultiplier, 5);
-  driveDistanceAcceleration(70, 35, 10, 50, 445 * headingMultiplier);
-}
-
-void goalRush() {
-  setGyro(0);
-  ClawPivot = true;
-  IntakeLift = false;
-  driveDistance(90, 16, 0 * headingMultiplier);
-  if (headingMultiplier > 0) {
-    driveDistance(90, 17, -22 * headingMultiplier);
-  } else if (headingMultiplier < 0) {
-    driveDistance(90, 18, -55 * headingMultiplier);
-  }
-  if (headingMultiplier > 0) {
-    LeftDoinker = true;
-  } else if (headingMultiplier < 0) {
-    RightDoinker = true;
-  }
-  sleep(300);
-  driveDistance(-50, 8, 5 * headingMultiplier);
-  if (headingMultiplier > 0) {
-    LeftDoinker = false;
-  } else if (headingMultiplier < 0) {
-    RightDoinker = false;
-  }
-  driveDistance(-50, 2, 0 * headingMultiplier);
-  driveDistance(-40, 14, 0 * headingMultiplier);
-  driveTurn(-40 * headingMultiplier, 5);
-  rollerSpeed = 100;
-  conveyorSpeed = 100;
-  driveDistance(75, 17, -40 * headingMultiplier);
-  conveyorSpeed = 0;
-  driveDistance(-50, 4, -40 * headingMultiplier);
-  driveTurn(-190 * headingMultiplier, 3);
-  driveDistance(-50, 24, -180 * headingMultiplier);
-  MogoMech = true;
-  sleep(50);
-  conveyorSpeed = 100;
-  sleep(900);
-  MogoMech = false;
-  conveyorSpeed = 0;
-  rollerSpeed = 0;
-  driveDistance(50, 4, -180 * headingMultiplier);
-  driveTurn(-270 * headingMultiplier, 5);
-  driveDistanceAcceleration(-70, -30, -10, 26, -265 * headingMultiplier);
-  MogoMech = true;
-  conveyorSpeed = 100;
-  armState = 2;
-  IntakeLift = true;
-  driveDistance(50, 2, -270 * headingMultiplier);
-  driveTurn(-130 * headingMultiplier, 5);
-  driveDistance(60, 32, -130 * headingMultiplier);
-  rollerSpeed = 100;
-  IntakeLift = false;
-  driveDistance(60, 12, -130 * headingMultiplier);
-  driveDistance(-60, 4, -220 * headingMultiplier);
-  conveyorSpeed = 100;
-  sleep(500);
-  driveTurn(-180 * headingMultiplier, 2);
-  driveTorque = 40;
-  rollerSpeed = 0;
-  driveTillStop(30, -180 * headingMultiplier);
-  driveTorque = 100;
-  driveDistance(-60, 1, -180 * headingMultiplier);
-  armState = 0;
-  sleep(400);
-  driveDistance(-60, 4, -180 * headingMultiplier);
-  driveTurn(-300, 10);
-  driveDistance(60, 50, -300);
-}
-
-void skillsAuton() {
-  setGyro(180);
-  armState = 2;
-  sleep(350);
-  ClawPivot = true;
-  armState = 0;
-  sleep(100);
-  driveDistance(-50, 10, 180);
-  driveTurn(90, 3);
-  driveDistance(-60, 30, 90);
-  MogoMech = true;
-  sleep(100);
-  driveTurn(0, 3);
-  rollerSpeed = 100;
-  sleep(10);
-  conveyorSpeed = 100;
-  driveDistance(40, 30, 0);
-  driveTurn(-10, 3);
-  driveDistance(35, 15, -10);
-  sleep(100);
-  driveTurn(170, 3);
-  driveDistance(35, 15, 170);
-  driveTurn(180, 3);
-  driveTillStop(40, 180);
-  sleep(300);
-  rollerSpeed = 0;
-  sleep(10);
-  conveyorSpeed = 0;
-}
-
-void skillsDriver() {}
-
-void PIDTest() {
-  setGyro(0);
-  driveTurn(180, 3);
-  driveDistance(50, 1, 180);
-}
-
-void autonomous() {
-  autonHappened = true;
-  autonRunning = true;
-  driveHold = true;
-  if (autonNumber == 1) {
-    // Red
-    IntakeLift = true;
-    sortingColor = false;
-    headingMultiplier = 1;
-    frontRedAuton4();
-  } else if (autonNumber == 2) {
-    // Blue
-    IntakeLift = true;
-    sortingColor = true;
-    headingMultiplier = -1;
-    frontBlueAuton4();
-  } else if (autonNumber == 3) {
-    // Red
-    IntakeLift = true;
-    sortingColor = false;
-    headingMultiplier = 1;
-    backAuton4();
-  } else if (autonNumber == 4) {
-    // Blue
-    IntakeLift = true;
-    sortingColor = true;
-    headingMultiplier = -1;
-    backAuton4();
-  } else if (autonNumber == 5) {
-    // Red
-    ClawPivot = true;
-    IntakeLift = false;
-    sortingColor = false;
-    headingMultiplier = 1;
-    goalRush();
-  } else if (autonNumber == 6) {
-    // Blue
-    headingMultiplier = -1;
-    ClawPivot = true;
-    IntakeLift = false;
-    sortingColor = true;
-    goalRush();
-  } else if (autonNumber == 7) {
-    skillsAuton();
+void autonomous(void) {
+  auto_started = true;
+  switch (current_auton_selection) {
+  case 0:
+    drive_test();
+    break;
+  case 1:
+    drive_test();
+    break;
+  case 2:
+    turn_test();
+    break;
+  case 3:
+    swing_test();
+    break;
+  case 4:
+    full_test();
+    break;
+  case 5:
+    odom_test();
+    break;
+  case 6:
+    tank_odom_test();
+    break;
+  case 7:
+    holonomic_odom_test();
+    break;
   }
 }
 
-void buttonRIGHT_pressed() {
-  if (autonRunning) {
-    autonRunning = false;
-    driveHold = false;
-  } else if (!autonHappened) {
-    autonomous();
-  }
-  driveTorque = 100;
-}
+/*---------------------------------------------------------------------------*/
+/*                                                                           */
+/*                              User Control Task                            */
+/*                                                                           */
+/*  This task is used to control your robot during the user control phase of */
+/*  a VEX Competition.                                                       */
+/*                                                                           */
+/*  You must modify the code to add your own robot specific commands here.   */
+/*---------------------------------------------------------------------------*/
 
-void usercontrol() {
-  resetTimer();
-  PTO = false;
-  stopIntake = false;
-  autonRunning = false;
-  driveHold = false;
-  IntakeLift = false;
-  driveTorque = 100;
-  fieldControlState = 4;
-  stopAll();
+void usercontrol(void) {
+  // User control code here, inside the loop
   while (1) {
-    task::sleep(10);
-    if (autonRunning == false) {
-      axis1 = Controller1.Axis1.value();
-      if (abs(axis1) < 5) {
-        axis1 = 0;
-      }
-      axis2 = Controller1.Axis2.value();
-      if (abs(axis2) < 5) {
-        axis2 = 0;
-      }
-      axis3 = Controller1.Axis3.value();
-      if (abs(axis3) < 5) {
-        axis3 = 0;
-      }
-      axis4 = Controller1.Axis4.value();
-      if (abs(axis4) < 5) {
-        axis4 = 0;
-      }
+    // This is the main execution loop for the user control program.
+    // Each time through the loop your program should update motor + servo
+    // values based on feedback from the joysticks.
 
-      leftSpeed = axis3 + axis1;
+    // ........................................................................
+    // Insert user code here. This is where you use the joystick values to
+    // update your motors, etc.
+    // ........................................................................
 
-      rightSpeed = axis3 - axis1;
+    // Replace this line with chassis.control_tank(); for tank drive
+    // or chassis.control_holonomic(); for holo drive.
+    chassis.control_arcade();
 
-      if (LFDrive.velocity(pct) >= -20) {
-        resetDrive();
-      }
-    }
+    wait(20, msec); // Sleep the task for a short amount of time to
+                    // prevent wasted resources.
   }
 }
 
+//
+// Main will set up the competition functions and callbacks.
+//
 int main() {
-  preAuton();
-  task taskBrainScreen(brainScreenTask);
-  task taskCntrlrScreen(controllerScreenTask);
-  task taskSensors(sensorsTask);
-  task taskDrive(driveTask);
+  // Set up callbacks for autonomous and driver control periods.
+  Competition.autonomous(autonomous);
+  Competition.drivercontrol(usercontrol);
+
+  task taskControllerScreen(controllerScreenTask);
+  task taskIntakeControl(intakeControlTask);
   task taskArmStates(armStatesTask);
-  task taskIntake(intakeTask);
-  task taskIntakeRotation(intakeRotationTask);
-  task taskIntakeSpeed(intakeSpeedTask);
-  Brain.Screen.pressed(brain_pressed);
+
   Controller1.ButtonL1.pressed(buttonLup_pressed);
   Controller1.ButtonL2.pressed(buttonLdown_pressed);
   Controller1.ButtonL1.released(buttonLup_released);
@@ -1252,4 +462,12 @@ int main() {
   Controller1.ButtonB.pressed(buttonB_pressed);
   Controller1.ButtonX.pressed(buttonX_pressed);
   Controller1.ButtonY.pressed(buttonY_pressed);
+
+  // Run the pre-autonomous function.
+  pre_auton();
+
+  // Prevent main from exiting with an infinite loop.
+  while (true) {
+    wait(100, msec);
+  }
 }

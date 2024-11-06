@@ -3,26 +3,19 @@ using namespace vex;
 extern brain Brain;
 
 // VEXcode devices
-extern controller Controller1;
-extern motor RFDrive;
-extern motor RHalfW;
-extern motor RBDrive;
 extern motor LFDrive;
-extern motor LHalfW;
+extern motor LTDrive;
 extern motor LBDrive;
-extern inertial Inertial15;
-extern digital_out MogoMech;
-extern optical Optical;
-extern digital_out RightDoinker;
-extern motor RightPTOMotor;
-extern motor LeftPTOMotor;
-extern digital_out PTO;
-extern motor LeftArm;
-extern motor RightArm;
-extern digital_out ClawPivot;
-extern rotation IntakeRotation;
-extern digital_out IntakeLift;
-extern digital_out LeftDoinker;
+extern motor RFDrive;
+extern motor RTDrive;
+extern motor RBDrive;
+extern motor LeftIntake;
+extern motor RightIntake;
+extern motor Arm;
+extern inertial Inertial11;
+extern rotation OdomForward;
+extern rotation OdomSideways;
+extern controller Controller1;
 
 /**
  * Used to initialize code/tasks/devices added using tools in VEXcode Pro.
