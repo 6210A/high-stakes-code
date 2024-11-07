@@ -1,3 +1,55 @@
+// ---- START VEXCODE CONFIGURED DEVICES ----
+// Robot Configuration:
+// [Name]               [Type]        [Port(s)]
+// LFDrive              motor         1               
+// LTDrive              motor         2               
+// LBDrive              motor         3               
+// RFDrive              motor         13              
+// RTDrive              motor         15              
+// RBDrive              motor         14              
+// LeftIntake           motor         7               
+// RightIntake          motor         12              
+// Arm                  motor         16              
+// Inertial9            inertial      9               
+// OdomForward          rotation      20              
+// OdomSideways         rotation      21              
+// Controller1          controller                    
+// Optical              optical       11              
+// ---- END VEXCODE CONFIGURED DEVICES ----
+// ---- START VEXCODE CONFIGURED DEVICES ----
+// Robot Configuration:
+// [Name]               [Type]        [Port(s)]
+// LFDrive              motor         1               
+// LTDrive              motor         2               
+// LBDrive              motor         3               
+// RFDrive              motor         13              
+// RTDrive              motor         15              
+// RBDrive              motor         14              
+// LeftIntake           motor         7               
+// RightIntake          motor         12              
+// Arm                  motor         16              
+// Inertial9            inertial      9               
+// OdomForward          rotation      20              
+// OdomSideways         rotation      21              
+// Controller1          controller                    
+// ---- END VEXCODE CONFIGURED DEVICES ----
+// ---- START VEXCODE CONFIGURED DEVICES ----
+// Robot Configuration:
+// [Name]               [Type]        [Port(s)]
+// LFDrive              motor         1               
+// LTDrive              motor         2               
+// LBDrive              motor         3               
+// RFDrive              motor         13              
+// RTDrive              motor         15              
+// RBDrive              motor         14              
+// LeftIntake           motor         7               
+// RightIntake          motor         12              
+// Arm                  motor         16              
+// Inertial9            inertial      9               
+// OdomForward          rotation      20              
+// OdomSideways         rotation      21              
+// Controller1          controller                    
+// ---- END VEXCODE CONFIGURED DEVICES ----
 
 #include "vex.h"
 
@@ -142,9 +194,23 @@ bool ispreauto;
 int current_auton_selection = 0;
 bool auto_started = false;
 
-int intakeSpeed = 0;
 float armGoal = 1;
 float armState = 0;
+
+int intakeSpeed = 0;
+double hookLocation;
+bool intakeRunning;
+int originalIntakeSpeed;
+
+int slowestDrive;
+bool ringDetected;
+bool redDetected;
+bool blueDetected;
+
+float gyro1;
+int msecClock;
+
+std::string sortingColor = "red";
 
 void sleep(int sleepmsec) { task::sleep(sleepmsec); }
 

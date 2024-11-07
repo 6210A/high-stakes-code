@@ -12,10 +12,11 @@ extern motor RBDrive;
 extern motor LeftIntake;
 extern motor RightIntake;
 extern motor Arm;
-extern inertial Inertial11;
+extern inertial Inertial9;
 extern rotation OdomForward;
 extern rotation OdomSideways;
 extern controller Controller1;
+extern optical Optical;
 
 /**
  * Used to initialize code/tasks/devices added using tools in VEXcode Pro.

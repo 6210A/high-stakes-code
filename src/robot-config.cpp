@@ -17,10 +17,11 @@ motor RBDrive = motor(PORT14, ratio18_1, false);
 motor LeftIntake = motor(PORT7, ratio18_1, true);
 motor RightIntake = motor(PORT12, ratio18_1, false);
 motor Arm = motor(PORT16, ratio18_1, false);
-inertial Inertial11 = inertial(PORT11);
+inertial Inertial9 = inertial(PORT9);
 rotation OdomForward = rotation(PORT20, false);
 rotation OdomSideways = rotation(PORT21, false);
 controller Controller1 = controller(primary);
+optical Optical = optical(PORT11);
 
 // VEXcode generated functions
 // define variable for remote controller enable/disable
