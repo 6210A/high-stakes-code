@@ -148,13 +148,6 @@ float armState = 0;
 
 void sleep(int sleepmsec) { task::sleep(sleepmsec); }
 
-/**
- * Function before autonomous. It prints the current auton number on the screen
- * and tapping the screen cycles the selected auton by 1. Add anything else you
- * may need, like resetting pneumatic components. You can rename these autons to
- * be more descriptive, if you like.
- */
-
 void pre_auton() {
   // Initializing Robot Configuration. DO NOT REMOVE!
   vexcodeInit();
@@ -222,7 +215,7 @@ int controllerScreenTask() {
     sleep(50);
 
     Controller1.Screen.setCursor(1, 1);
-    Controller1.Screen.print("G: %3.2f", Inertial11.rotation());
+    Controller1.Screen.print("G: %3.2f", Inertial9.rotation());
     Controller1.Screen.setCursor(1, 12);
     Controller1.Screen.print("A: %1.0f", armState);
     // if (sortingColor) {
@@ -282,11 +275,71 @@ int controllerScreenTask() {
   }
 }
 
-int intakeControlTask() {
+int sensorsTask() {
+  Optical.setLight(ledState::on);
+  Optical.setLightPower(100, pct);
   while (1) {
+    task::sleep(5);
+
+    // GET gyro1 VALUE
+    gyro1 = Inertial9.rotation(deg);
+
+    // Get optical value
+    ringDetected = Optical.isNearObject();
+    redDetected = ((Optical.hue() > 330) || (Optical.hue() < 30));
+    blueDetected = ((Optical.hue() < 250) && (Optical.hue() > 90));
+
+    msecClock = Brain.timer(msec);
+  }
+}
+
+int intakeControlTask() {
+  while(1) {
     sleep(5);
     LeftIntake.setVelocity(intakeSpeed, pct);
     RightIntake.setVelocity(intakeSpeed, pct);
+    if (intakeSpeed > 0) {
+      intakeRunning = true;
+    } else {
+      intakeRunning = false;
+    }
+  }
+}
+
+int sortingTask() {
+  bool pausedForRed = false;
+  bool pausedForBlue = false;
+
+  while (1) {
+    sleep(5);
+    if (sortingColor == "red" && redDetected && intakeRunning && !pausedForRed) {
+      pausedForRed = true;
+      originalIntakeSpeed = intakeSpeed;
+      LeftIntake.resetPosition();
+      while (LeftIntake.position(degrees) < 200) {
+        sleep(1);
+      }
+      intakeSpeed = 0; 
+      sleep(200); 
+      intakeSpeed = originalIntakeSpeed; 
+    } else if (sortingColor == "blue" && blueDetected && intakeRunning && !pausedForBlue) {
+      pausedForBlue = true;
+      originalIntakeSpeed = intakeSpeed;
+      LeftIntake.resetPosition();
+      while (LeftIntake.position(degrees) < 200) {
+        sleep(1);
+      }
+      intakeSpeed = 0;
+      sleep(200); 
+      intakeSpeed = originalIntakeSpeed; 
+    }
+
+    if (!redDetected) {
+      pausedForRed = false;
+    }
+    if (!blueDetected) {
+      pausedForBlue = false;
+    }
   }
 }
 
@@ -403,18 +456,7 @@ void autonomous(void) {
   }
 }
 
-/*---------------------------------------------------------------------------*/
-/*                                                                           */
-/*                              User Control Task                            */
-/*                                                                           */
-/*  This task is used to control your robot during the user control phase of */
-/*  a VEX Competition.                                                       */
-/*                                                                           */
-/*  You must modify the code to add your own robot specific commands here.   */
-/*---------------------------------------------------------------------------*/
-
 void usercontrol(void) {
-  // User control code here, inside the loop
   while (1) {
     // This is the main execution loop for the user control program.
     // Each time through the loop your program should update motor + servo
@@ -444,6 +486,8 @@ int main() {
 
   task taskControllerScreen(controllerScreenTask);
   task taskIntakeControl(intakeControlTask);
+  task taskSensors(sensorsTask);
+  task taskSorting(sortingTask);
   task taskArmStates(armStatesTask);
 
   Controller1.ButtonL1.pressed(buttonLup_pressed);
