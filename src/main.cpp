@@ -4,18 +4,339 @@
 // LFDrive              motor         1               
 // LTDrive              motor         3               
 // LBDrive              motor         2               
+// RFDrive              motor         19              
+// RTDrive              motor         14              
+// RBDrive              motor         15              
+// LeftIntake           motor         9               
+// RightIntake          motor         13              
+// Arm                  motor         18              
+// Inertial8            inertial      8               
+// OdomForward          rotation      20              
+// OdomSideways         rotation      21              
+// Controller1          controller                    
+// Optical              optical       11              
+// Expander17           triport       17              
+// MogoMech             digital_out   F               
+// Doinker              digital_out   E               
+// HangMech             digital_out   D               
+// IntakeLift           digital_out   B               
+// ---- END VEXCODE CONFIGURED DEVICES ----
+// ---- START VEXCODE CONFIGURED DEVICES ----
+// Robot Configuration:
+// [Name]               [Type]        [Port(s)]
+// LFDrive              motor         1               
+// LTDrive              motor         3               
+// LBDrive              motor         2               
+// RFDrive              motor         19              
+// RTDrive              motor         14              
+// RBDrive              motor         15              
+// LeftIntake           motor         9               
+// RightIntake          motor         13              
+// Arm                  motor         18              
+// Inertial8            inertial      8               
+// OdomForward          rotation      20              
+// OdomSideways         rotation      21              
+// Controller1          controller                    
+// Optical              optical       11              
+// Expander17           triport       17              
+// MogoMech             digital_out   F               
+// Doinker              digital_out   E               
+// HangMech             digital_out   H               
+// IntakeLift           digital_out   B               
+// ---- END VEXCODE CONFIGURED DEVICES ----
+// ---- START VEXCODE CONFIGURED DEVICES ----
+// Robot Configuration:
+// [Name]               [Type]        [Port(s)]
+// LFDrive              motor         1               
+// LTDrive              motor         3               
+// LBDrive              motor         2               
+// RFDrive              motor         19              
+// RTDrive              motor         14              
+// RBDrive              motor         15              
+// LeftIntake           motor         9               
+// RightIntake          motor         13              
+// Arm                  motor         18              
+// Inertial8            inertial      8               
+// OdomForward          rotation      20              
+// OdomSideways         rotation      21              
+// Controller1          controller                    
+// Optical              optical       11              
+// Expander17           triport       17              
+// MogoMech             digital_out   F               
+// Doinker              digital_out   E               
+// HangMech             digital_out   H               
+// IntakeLift           digital_out   G               
+// ---- END VEXCODE CONFIGURED DEVICES ----
+// ---- START VEXCODE CONFIGURED DEVICES ----
+// Robot Configuration:
+// [Name]               [Type]        [Port(s)]
+// LFDrive              motor         1               
+// LTDrive              motor         3               
+// LBDrive              motor         2               
+// RFDrive              motor         19              
+// RTDrive              motor         14              
+// RBDrive              motor         15              
+// LeftIntake           motor         9               
+// RightIntake          motor         13              
+// Arm                  motor         18              
+// Inertial8            inertial      8               
+// OdomForward          rotation      20              
+// OdomSideways         rotation      21              
+// Controller1          controller                    
+// Optical              optical       11              
+// Expander17           triport       17              
+// MogoMech             digital_out   F               
+// Doinker              digital_out   E               
+// HangMech             digital_out   B               
+// IntakeLift           digital_out   G               
+// ---- END VEXCODE CONFIGURED DEVICES ----
+// ---- START VEXCODE CONFIGURED DEVICES ----
+// Robot Configuration:
+// [Name]               [Type]        [Port(s)]
+// LFDrive              motor         1               
+// LTDrive              motor         3               
+// LBDrive              motor         2               
+// RFDrive              motor         19              
+// RTDrive              motor         14              
+// RBDrive              motor         15              
+// LeftIntake           motor         9               
+// RightIntake          motor         13              
+// Arm                  motor         18              
+// Inertial8            inertial      8               
+// OdomForward          rotation      20              
+// OdomSideways         rotation      21              
+// Controller1          controller                    
+// Optical              optical       11              
+// Expander17           triport       17              
+// MogoMech             digital_out   F               
+// Doinker              digital_out   A               
+// HangMech             digital_out   B               
+// IntakeLift           digital_out   G               
+// ---- END VEXCODE CONFIGURED DEVICES ----
+// ---- START VEXCODE CONFIGURED DEVICES ----
+// Robot Configuration:
+// [Name]               [Type]        [Port(s)]
+// LFDrive              motor         1               
+// LTDrive              motor         3               
+// LBDrive              motor         2               
+// RFDrive              motor         19              
+// RTDrive              motor         14              
+// RBDrive              motor         15              
+// LeftIntake           motor         9               
+// RightIntake          motor         13              
+// Arm                  motor         18              
+// Inertial8            inertial      8               
+// OdomForward          rotation      20              
+// OdomSideways         rotation      21              
+// Controller1          controller                    
+// Optical              optical       11              
+// Expander17           triport       17              
+// MogoMech             digital_out   F               
+// Doinker              digital_out   A               
+// HangMech             digital_out   B               
+// IntakeLift           digital_out   G               
+// ---- END VEXCODE CONFIGURED DEVICES ----
+// ---- START VEXCODE CONFIGURED DEVICES ----
+// Robot Configuration:
+// [Name]               [Type]        [Port(s)]
+// LFDrive              motor         1               
+// LTDrive              motor         3               
+// LBDrive              motor         2               
+// RFDrive              motor         19              
+// RTDrive              motor         14              
+// RBDrive              motor         15              
+// LeftIntake           motor         9               
+// RightIntake          motor         13              
+// Arm                  motor         18              
+// Inertial8            inertial      8               
+// OdomForward          rotation      20              
+// OdomSideways         rotation      21              
+// Controller1          controller                    
+// Optical              optical       11              
+// Expander17           triport       17              
+// MogoMech             digital_out   F               
+// Doinker              digital_out   A               
+// HangMech             digital_out   B               
+// ---- END VEXCODE CONFIGURED DEVICES ----
+// ---- START VEXCODE CONFIGURED DEVICES ----
+// Robot Configuration:
+// [Name]               [Type]        [Port(s)]
+// LFDrive              motor         1               
+// LTDrive              motor         3               
+// LBDrive              motor         2               
+// RFDrive              motor         19              
+// RTDrive              motor         14              
+// RBDrive              motor         15              
+// LeftIntake           motor         9               
+// RightIntake          motor         13              
+// Arm                  motor         18              
+// Inertial8            inertial      8               
+// OdomForward          rotation      20              
+// OdomSideways         rotation      21              
+// Controller1          controller                    
+// Optical              optical       11              
+// Expander17           triport       17              
+// MogoMech             digital_out   F               
+// Doinker              digital_out   A               
+// ---- END VEXCODE CONFIGURED DEVICES ----
+// ---- START VEXCODE CONFIGURED DEVICES ----
+// Robot Configuration:
+// [Name]               [Type]        [Port(s)]
+// LFDrive              motor         1               
+// LTDrive              motor         3               
+// LBDrive              motor         2               
+// RFDrive              motor         19              
+// RTDrive              motor         14              
+// RBDrive              motor         15              
+// LeftIntake           motor         9               
+// RightIntake          motor         13              
+// Arm                  motor         18              
+// Inertial8            inertial      8               
+// OdomForward          rotation      20              
+// OdomSideways         rotation      21              
+// Controller1          controller                    
+// Optical              optical       11              
+// Expander17           triport       17              
+// MogoMech             digital_out   F               
+// ---- END VEXCODE CONFIGURED DEVICES ----
+// ---- START VEXCODE CONFIGURED DEVICES ----
+// Robot Configuration:
+// [Name]               [Type]        [Port(s)]
+// LFDrive              motor         1               
+// LTDrive              motor         3               
+// LBDrive              motor         2               
+// RFDrive              motor         19              
+// RTDrive              motor         14              
+// RBDrive              motor         15              
+// LeftIntake           motor         9               
+// RightIntake          motor         13              
+// Arm                  motor         18              
+// Inertial8            inertial      8               
+// OdomForward          rotation      20              
+// OdomSideways         rotation      21              
+// Controller1          controller                    
+// Optical              optical       11              
+// Expander17           triport       17              
+// MogoMech             digital_out   F               
+// ---- END VEXCODE CONFIGURED DEVICES ----
+// ---- START VEXCODE CONFIGURED DEVICES ----
+// Robot Configuration:
+// [Name]               [Type]        [Port(s)]
+// LFDrive              motor         1               
+// LTDrive              motor         3               
+// LBDrive              motor         2               
+// RFDrive              motor         19              
+// RTDrive              motor         14              
+// RBDrive              motor         15              
+// LeftIntake           motor         9               
+// RightIntake          motor         13              
+// Arm                  motor         18              
+// Inertial8            inertial      8               
+// OdomForward          rotation      20              
+// OdomSideways         rotation      21              
+// Controller1          controller                    
+// Optical              optical       11              
+// Expander17           triport       17              
+// MogoMech             digital_out   F               
+// ---- END VEXCODE CONFIGURED DEVICES ----
+// ---- START VEXCODE CONFIGURED DEVICES ----
+// Robot Configuration:
+// [Name]               [Type]        [Port(s)]
+// LFDrive              motor         1               
+// LTDrive              motor         3               
+// LBDrive              motor         2               
+// RFDrive              motor         19              
+// RTDrive              motor         14              
+// RBDrive              motor         15              
+// LeftIntake           motor         9               
+// RightIntake          motor         13              
+// Arm                  motor         18              
+// Inertial8            inertial      8               
+// OdomForward          rotation      20              
+// OdomSideways         rotation      21              
+// Controller1          controller                    
+// Optical              optical       11              
+// Expander17           triport       17              
+// MogoMech             digital_out   F               
+// ---- END VEXCODE CONFIGURED DEVICES ----
+// ---- START VEXCODE CONFIGURED DEVICES ----
+// Robot Configuration:
+// [Name]               [Type]        [Port(s)]
+// LFDrive              motor         1               
+// LTDrive              motor         3               
+// LBDrive              motor         2               
+// RFDrive              motor         19              
+// RTDrive              motor         14              
+// RBDrive              motor         15              
+// LeftIntake           motor         9               
+// RightIntake          motor         13              
+// Arm                  motor         18              
+// Inertial8            inertial      8               
+// OdomForward          rotation      20              
+// OdomSideways         rotation      21              
+// Controller1          controller                    
+// Optical              optical       11              
+// Expander17           triport       17              
+// MogoMech             digital_out   F               
+// ---- END VEXCODE CONFIGURED DEVICES ----
+// ---- START VEXCODE CONFIGURED DEVICES ----
+// Robot Configuration:
+// [Name]               [Type]        [Port(s)]
+// LFDrive              motor         1               
+// LTDrive              motor         3               
+// LBDrive              motor         2               
+// RFDrive              motor         19              
+// RTDrive              motor         14              
+// RBDrive              motor         15              
+// LeftIntake           motor         9               
+// RightIntake          motor         13              
+// Arm                  motor         18              
+// Inertial8            inertial      8               
+// OdomForward          rotation      20              
+// OdomSideways         rotation      21              
+// Controller1          controller                    
+// Optical              optical       11              
+// Expander7            triport       7               
+// MogoMech             digital_out   F               
+// ---- END VEXCODE CONFIGURED DEVICES ----
+// ---- START VEXCODE CONFIGURED DEVICES ----
+// Robot Configuration:
+// [Name]               [Type]        [Port(s)]
+// LFDrive              motor         1               
+// LTDrive              motor         3               
+// LBDrive              motor         2               
+// RFDrive              motor         19              
+// RTDrive              motor         14              
+// RBDrive              motor         15              
+// LeftIntake           motor         9               
+// RightIntake          motor         13              
+// Arm                  motor         18              
+// Inertial8            inertial      8               
+// OdomForward          rotation      20              
+// OdomSideways         rotation      21              
+// Controller1          controller                    
+// Optical              optical       11              
+// Expander7            triport       7               
+// MogoMech             digital_out   F               
+// ---- END VEXCODE CONFIGURED DEVICES ----
+// ---- START VEXCODE CONFIGURED DEVICES ----
+// Robot Configuration:
+// [Name]               [Type]        [Port(s)]
+// LFDrive              motor         1               
+// LTDrive              motor         3               
+// LBDrive              motor         2               
 // RFDrive              motor         16              
-// RTDrive              motor         13              
-// RBDrive              motor         14              
-// LeftIntake           motor         7               
-// RightIntake          motor         12              
+// RTDrive              motor         14              
+// RBDrive              motor         15              
+// LeftIntake           motor         9               
+// RightIntake          motor         13              
 // Arm                  motor         18              
-// Inertial9            inertial      9               
+// Inertial8            inertial      8               
 // OdomForward          rotation      20              
 // OdomSideways         rotation      21              
 // Controller1          controller                    
 // Optical              optical       11              
-// Expander17           triport       17              
+// Expander7            triport       7               
 // MogoMech             digital_out   F               
 // ---- END VEXCODE CONFIGURED DEVICES ----
 // ---- START VEXCODE CONFIGURED DEVICES ----
@@ -24,18 +345,18 @@
 // LFDrive              motor         1               
 // LTDrive              motor         3               
 // LBDrive              motor         2               
-// RFDrive              motor         15              
-// RTDrive              motor         13              
-// RBDrive              motor         14              
-// LeftIntake           motor         7               
-// RightIntake          motor         12              
+// RFDrive              motor         16              
+// RTDrive              motor         14              
+// RBDrive              motor         17              
+// LeftIntake           motor         9               
+// RightIntake          motor         13              
 // Arm                  motor         18              
-// Inertial9            inertial      9               
+// Inertial8            inertial      8               
 // OdomForward          rotation      20              
 // OdomSideways         rotation      21              
 // Controller1          controller                    
 // Optical              optical       11              
-// Expander17           triport       17              
+// Expander7            triport       7               
 // MogoMech             digital_out   F               
 // ---- END VEXCODE CONFIGURED DEVICES ----
 // ---- START VEXCODE CONFIGURED DEVICES ----
@@ -44,344 +365,21 @@
 // LFDrive              motor         1               
 // LTDrive              motor         3               
 // LBDrive              motor         2               
-// RFDrive              motor         15              
-// RTDrive              motor         16              
-// RBDrive              motor         14              
-// LeftIntake           motor         7               
-// RightIntake          motor         12              
+// RFDrive              motor         16              
+// RTDrive              motor         19              
+// RBDrive              motor         17              
+// LeftIntake           motor         9               
+// RightIntake          motor         13              
 // Arm                  motor         18              
-// Inertial9            inertial      9               
+// Inertial8            inertial      8               
 // OdomForward          rotation      20              
 // OdomSideways         rotation      21              
 // Controller1          controller                    
 // Optical              optical       11              
-// Expander17           triport       17              
+// Expander7            triport       7               
 // MogoMech             digital_out   F               
 // ---- END VEXCODE CONFIGURED DEVICES ----
-// ---- START VEXCODE CONFIGURED DEVICES ----
-// Robot Configuration:
-// [Name]               [Type]        [Port(s)]
-// LFDrive              motor         1               
-// LTDrive              motor         3               
-// LBDrive              motor         2               
-// RFDrive              motor         13              
-// RTDrive              motor         16              
-// RBDrive              motor         14              
-// LeftIntake           motor         7               
-// RightIntake          motor         12              
-// Arm                  motor         18              
-// Inertial9            inertial      9               
-// OdomForward          rotation      20              
-// OdomSideways         rotation      21              
-// Controller1          controller                    
-// Optical              optical       11              
-// Expander17           triport       17              
-// MogoMech             digital_out   F               
-// ---- END VEXCODE CONFIGURED DEVICES ----
-// ---- START VEXCODE CONFIGURED DEVICES ----
-// Robot Configuration:
-// [Name]               [Type]        [Port(s)]
-// LFDrive              motor         1               
-// LTDrive              motor         3               
-// LBDrive              motor         2               
-// RFDrive              motor         13              
-// RTDrive              motor         16              
-// RBDrive              motor         14              
-// LeftIntake           motor         7               
-// RightIntake          motor         12              
-// Arm                  motor         18              
-// Inertial9            inertial      9               
-// OdomForward          rotation      20              
-// OdomSideways         rotation      21              
-// Controller1          controller                    
-// Optical              optical       11              
-// Expander17           triport       17              
-// ---- END VEXCODE CONFIGURED DEVICES ----
-// ---- START VEXCODE CONFIGURED DEVICES ----
-// Robot Configuration:
-// [Name]               [Type]        [Port(s)]
-// LFDrive              motor         1               
-// LTDrive              motor         3               
-// LBDrive              motor         2               
-// RFDrive              motor         13              
-// RTDrive              motor         16              
-// RBDrive              motor         14              
-// LeftIntake           motor         7               
-// RightIntake          motor         12              
-// Arm                  motor         18              
-// Inertial9            inertial      9               
-// OdomForward          rotation      20              
-// OdomSideways         rotation      21              
-// Controller1          controller                    
-// Optical              optical       11              
-// Expander17           triport       17              
-// ---- END VEXCODE CONFIGURED DEVICES ----
-// ---- START VEXCODE CONFIGURED DEVICES ----
-// Robot Configuration:
-// [Name]               [Type]        [Port(s)]
-// LFDrive              motor         1               
-// LTDrive              motor         3               
-// LBDrive              motor         2               
-// RFDrive              motor         13              
-// RTDrive              motor         15              
-// RBDrive              motor         14              
-// LeftIntake           motor         7               
-// RightIntake          motor         12              
-// Arm                  motor         18              
-// Inertial9            inertial      9               
-// OdomForward          rotation      20              
-// OdomSideways         rotation      21              
-// Controller1          controller                    
-// Optical              optical       11              
-// Expander17           triport       17              
-// ---- END VEXCODE CONFIGURED DEVICES ----
-// ---- START VEXCODE CONFIGURED DEVICES ----
-// Robot Configuration:
-// [Name]               [Type]        [Port(s)]
-// LFDrive              motor         1               
-// LTDrive              motor         3               
-// LBDrive              motor         2               
-// RFDrive              motor         13              
-// RTDrive              motor         15              
-// RBDrive              motor         14              
-// LeftIntake           motor         7               
-// RightIntake          motor         12              
-// Arm                  motor         16              
-// Inertial9            inertial      9               
-// OdomForward          rotation      20              
-// OdomSideways         rotation      21              
-// Controller1          controller                    
-// Optical              optical       11              
-// Expander17           triport       17              
-// ---- END VEXCODE CONFIGURED DEVICES ----
-// ---- START VEXCODE CONFIGURED DEVICES ----
-// Robot Configuration:
-// [Name]               [Type]        [Port(s)]
-// LFDrive              motor         1               
-// LTDrive              motor         3               
-// LBDrive              motor         2               
-// RFDrive              motor         13              
-// RTDrive              motor         15              
-// RBDrive              motor         14              
-// LeftIntake           motor         7               
-// RightIntake          motor         12              
-// Arm                  motor         16              
-// Inertial9            inertial      9               
-// OdomForward          rotation      20              
-// OdomSideways         rotation      21              
-// Controller1          controller                    
-// Optical              optical       11              
-// Expander17           triport       17              
-// ---- END VEXCODE CONFIGURED DEVICES ----
-// ---- START VEXCODE CONFIGURED DEVICES ----
-// Robot Configuration:
-// [Name]               [Type]        [Port(s)]
-// LFDrive              motor         1               
-// LTDrive              motor         3               
-// LBDrive              motor         2               
-// RFDrive              motor         13              
-// RTDrive              motor         15              
-// RBDrive              motor         14              
-// LeftIntake           motor         7               
-// RightIntake          motor         12              
-// Arm                  motor         16              
-// Inertial9            inertial      9               
-// OdomForward          rotation      20              
-// OdomSideways         rotation      21              
-// Controller1          controller                    
-// Optical              optical       11              
-// Expander17           triport       17              
-// ---- END VEXCODE CONFIGURED DEVICES ----
-// ---- START VEXCODE CONFIGURED DEVICES ----
-// Robot Configuration:
-// [Name]               [Type]        [Port(s)]
-// LFDrive              motor         1               
-// LTDrive              motor         3               
-// LBDrive              motor         2               
-// RFDrive              motor         13              
-// RTDrive              motor         15              
-// RBDrive              motor         14              
-// LeftIntake           motor         7               
-// RightIntake          motor         12              
-// Arm                  motor         16              
-// Inertial9            inertial      9               
-// OdomForward          rotation      20              
-// OdomSideways         rotation      21              
-// Controller1          controller                    
-// Optical              optical       11              
-// Expander17           triport       17              
-// ---- END VEXCODE CONFIGURED DEVICES ----
-// ---- START VEXCODE CONFIGURED DEVICES ----
-// Robot Configuration:
-// [Name]               [Type]        [Port(s)]
-// LFDrive              motor         1               
-// LTDrive              motor         3               
-// LBDrive              motor         2               
-// RFDrive              motor         13              
-// RTDrive              motor         15              
-// RBDrive              motor         14              
-// LeftIntake           motor         7               
-// RightIntake          motor         12              
-// Arm                  motor         16              
-// Inertial9            inertial      9               
-// OdomForward          rotation      20              
-// OdomSideways         rotation      21              
-// Controller1          controller                    
-// Optical              optical       11              
-// Expander17           triport       17              
-// ---- END VEXCODE CONFIGURED DEVICES ----
-// ---- START VEXCODE CONFIGURED DEVICES ----
-// Robot Configuration:
-// [Name]               [Type]        [Port(s)]
-// LFDrive              motor         1               
-// LTDrive              motor         3               
-// LBDrive              motor         4               
-// RFDrive              motor         13              
-// RTDrive              motor         15              
-// RBDrive              motor         14              
-// LeftIntake           motor         7               
-// RightIntake          motor         12              
-// Arm                  motor         16              
-// Inertial9            inertial      9               
-// OdomForward          rotation      20              
-// OdomSideways         rotation      21              
-// Controller1          controller                    
-// Optical              optical       11              
-// Expander17           triport       17              
-// ---- END VEXCODE CONFIGURED DEVICES ----
-// ---- START VEXCODE CONFIGURED DEVICES ----
-// Robot Configuration:
-// [Name]               [Type]        [Port(s)]
-// LFDrive              motor         1               
-// LTDrive              motor         2               
-// LBDrive              motor         4               
-// RFDrive              motor         13              
-// RTDrive              motor         15              
-// RBDrive              motor         14              
-// LeftIntake           motor         7               
-// RightIntake          motor         12              
-// Arm                  motor         16              
-// Inertial9            inertial      9               
-// OdomForward          rotation      20              
-// OdomSideways         rotation      21              
-// Controller1          controller                    
-// Optical              optical       11              
-// Expander17           triport       17              
-// ---- END VEXCODE CONFIGURED DEVICES ----
-// ---- START VEXCODE CONFIGURED DEVICES ----
-// Robot Configuration:
-// [Name]               [Type]        [Port(s)]
-// LFDrive              motor         1               
-// LTDrive              motor         2               
-// LBDrive              motor         3               
-// RFDrive              motor         13              
-// RTDrive              motor         15              
-// RBDrive              motor         14              
-// LeftIntake           motor         7               
-// RightIntake          motor         12              
-// Arm                  motor         16              
-// Inertial9            inertial      9               
-// OdomForward          rotation      20              
-// OdomSideways         rotation      21              
-// Controller1          controller                    
-// Optical              optical       11              
-// Expander17           triport       17              
-// ---- END VEXCODE CONFIGURED DEVICES ----
-// ---- START VEXCODE CONFIGURED DEVICES ----
-// Robot Configuration:
-// [Name]               [Type]        [Port(s)]
-// LFDrive              motor         1               
-// LTDrive              motor         2               
-// LBDrive              motor         3               
-// RFDrive              motor         13              
-// RTDrive              motor         15              
-// RBDrive              motor         14              
-// LeftIntake           motor         7               
-// RightIntake          motor         12              
-// Arm                  motor         16              
-// Inertial9            inertial      9               
-// OdomForward          rotation      20              
-// OdomSideways         rotation      21              
-// Controller1          controller                    
-// Optical              optical       11              
-// Expander17           triport       17              
-// ---- END VEXCODE CONFIGURED DEVICES ----
-// ---- START VEXCODE CONFIGURED DEVICES ----
-// Robot Configuration:
-// [Name]               [Type]        [Port(s)]
-// LFDrive              motor         1               
-// LTDrive              motor         2               
-// LBDrive              motor         3               
-// RFDrive              motor         13              
-// RTDrive              motor         15              
-// RBDrive              motor         14              
-// LeftIntake           motor         7               
-// RightIntake          motor         12              
-// Arm                  motor         16              
-// Inertial9            inertial      9               
-// OdomForward          rotation      20              
-// OdomSideways         rotation      21              
-// Controller1          controller                    
-// Optical              optical       11              
-// Expander17           triport       17              
-// ---- END VEXCODE CONFIGURED DEVICES ----
-// ---- START VEXCODE CONFIGURED DEVICES ----
-// Robot Configuration:
-// [Name]               [Type]        [Port(s)]
-// LFDrive              motor         1               
-// LTDrive              motor         2               
-// LBDrive              motor         3               
-// RFDrive              motor         13              
-// RTDrive              motor         15              
-// RBDrive              motor         14              
-// LeftIntake           motor         7               
-// RightIntake          motor         12              
-// Arm                  motor         16              
-// Inertial9            inertial      9               
-// OdomForward          rotation      20              
-// OdomSideways         rotation      21              
-// Controller1          controller                    
-// Optical              optical       11              
-// Expander17           triport       17              
-// ---- END VEXCODE CONFIGURED DEVICES ----
-// ---- START VEXCODE CONFIGURED DEVICES ----
-// Robot Configuration:
-// [Name]               [Type]        [Port(s)]
-// LFDrive              motor         1               
-// LTDrive              motor         2               
-// LBDrive              motor         3               
-// RFDrive              motor         13              
-// RTDrive              motor         15              
-// RBDrive              motor         14              
-// LeftIntake           motor         7               
-// RightIntake          motor         12              
-// Arm                  motor         16              
-// Inertial9            inertial      9               
-// OdomForward          rotation      20              
-// OdomSideways         rotation      21              
-// Controller1          controller                    
-// Optical              optical       11              
-// Expander17           triport       17              
-// ---- END VEXCODE CONFIGURED DEVICES ----
-// ---- START VEXCODE CONFIGURED DEVICES ----
-// Robot Configuration:
-// [Name]               [Type]        [Port(s)]
-// LFDrive              motor         1               
-// LTDrive              motor         2               
-// LBDrive              motor         3               
-// RFDrive              motor         13              
-// RTDrive              motor         15              
-// RBDrive              motor         14              
-// LeftIntake           motor         7               
-// RightIntake          motor         12              
-// Arm                  motor         16              
-// Inertial9            inertial      9               
-// OdomForward          rotation      20              
-// OdomSideways         rotation      21              
-// Controller1          controller                    
-// Optical              optical       11              
-// Expander17           triport       17              
-// ---- END VEXCODE CONFIGURED DEVICES ----
+
 #include "vex.h"
 #include <string>
 #include <iostream>
@@ -439,7 +437,7 @@ Drive chassis(
 
     // Specify the PORT NUMBER of your inertial sensor, in PORT format (i.e.
     // "PORT1", not simply "1"):
-    PORT10,
+    PORT8,
 
     // Input your wheel diameter. (4" omnis are actually closer to 4.125"):
     2.75,
@@ -491,7 +489,7 @@ Drive chassis(
     // a tracker on the right side of the robot, negative is left.) For a zero
     // tracker tank drive with odom, put the positive distance from the center of
     // the robot to the right side of the drive. This distance is in inches:
-    -2,
+    -1.25,
 
     // Input the Sideways Tracker Port, following the same steps as the Forward
     // Tracker Port:
@@ -502,7 +500,7 @@ Drive chassis(
 
     // Sideways tracker center distance (positive distance is behind the center
     // of the robot, negative is in front):
-    5.5
+    -0.75
 
 );
 bool ispreauto;
@@ -597,7 +595,7 @@ int controllerScreenTask() {
     sleep(50);
 
     Controller1.Screen.setCursor(1, 1);
-    Controller1.Screen.print("G: %3.2f", Inertial9.rotation());
+    Controller1.Screen.print("G: %3.2f", Inertial8.rotation());
     Controller1.Screen.setCursor(1, 12);
     Controller1.Screen.print("A: %1.0f", armState);
     // if (sortingColor) {
@@ -664,7 +662,7 @@ int sensorsTask() {
     task::sleep(5);
 
     // GET gyro1 VALUE
-    gyro1 = Inertial9.rotation(deg);
+    gyro1 = Inertial8.rotation(deg);
 
     // Get optical value
     ringDetected = Optical.isNearObject();
@@ -698,21 +696,21 @@ int sortingTask() {
       pausedForRed = true;
       originalIntakeSpeed = intakeSpeed;
       LeftIntake.resetPosition();
-      while (LeftIntake.position(degrees) < 200) {
+      while (LeftIntake.position(degrees) < 205) {
         sleep(1);
       }
       intakeSpeed = 0; 
-      sleep(200); 
+      sleep(100); 
       intakeSpeed = originalIntakeSpeed; 
     } else if (sortingColor == "blue" && blueDetected && intakeRunning && !pausedForBlue) {
       pausedForBlue = true;
       originalIntakeSpeed = intakeSpeed;
       LeftIntake.resetPosition();
-      while (LeftIntake.position(degrees) < 200) {
+      while (LeftIntake.position(degrees) < 205) {
         sleep(1);
       }
       intakeSpeed = 0;
-      sleep(200); 
+      sleep(100); 
       intakeSpeed = originalIntakeSpeed; 
     }
 
@@ -773,11 +771,17 @@ void buttonRup_released() { intakeSpeed = 0; }
 
 void buttonRdown_released() { intakeSpeed = 0; }
 
-void buttonUP_pressed() {}
+void buttonUP_pressed() {
+  if (sortingColor == "red") {
+    sortingColor = "blue";
+  } else if (sortingColor == "blue") {
+    sortingColor = "red";
+  }
+}
 
-void buttonDOWN_pressed() {}
+void buttonDOWN_pressed() {HangMech = !HangMech;}
 
-void buttonLEFT_pressed() {}
+void buttonLEFT_pressed() {Doinker = !Doinker;}
 
 void buttonRIGHT_pressed() {}
 
