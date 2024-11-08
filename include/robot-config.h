@@ -17,6 +17,8 @@ extern rotation OdomForward;
 extern rotation OdomSideways;
 extern controller Controller1;
 extern optical Optical;
+extern triport Expander17;
+extern digital_out MogoMech;
 
 /**
  * Used to initialize code/tasks/devices added using tools in VEXcode Pro.
