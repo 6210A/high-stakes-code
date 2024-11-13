@@ -1,94 +1,94 @@
 // ---- START VEXCODE CONFIGURED DEVICES ----
 // Robot Configuration:
 // [Name]               [Type]        [Port(s)]
-// LFDrive              motor         1               
-// LTDrive              motor         3               
-// LBDrive              motor         2               
-// RFDrive              motor         19              
-// RTDrive              motor         14              
-// RBDrive              motor         15              
-// LeftIntake           motor         9               
-// RightIntake          motor         13              
-// Arm                  motor         18              
-// Inertial8            inertial      8               
-// OdomForward          rotation      20              
-// OdomSideways         rotation      21              
-// Controller1          controller                    
-// Optical              optical       11              
-// Expander17           triport       17              
-// MogoMech             digital_out   F               
-// Doinker              digital_out   E               
-// HangMech             digital_out   D               
-// IntakeLift           digital_out   B               
+// LFDrive              motor         1
+// LTDrive              motor         3
+// LBDrive              motor         2
+// RFDrive              motor         19
+// RTDrive              motor         14
+// RBDrive              motor         15
+// LeftIntake           motor         9
+// RightIntake          motor         13
+// Arm                  motor         18
+// Inertial8            inertial      8
+// OdomForward          rotation      20
+// OdomSideways         rotation      21
+// Controller1          controller
+// Optical              optical       11
+// Expander17           triport       17
+// MogoMech             digital_out   F
+// Doinker              digital_out   E
+// HangMech             digital_out   D
+// IntakeLift           digital_out   B
 // ---- END VEXCODE CONFIGURED DEVICES ----
 // ---- START VEXCODE CONFIGURED DEVICES ----
 // Robot Configuration:
 // [Name]               [Type]        [Port(s)]
-// LFDrive              motor         1               
-// LTDrive              motor         3               
-// LBDrive              motor         2               
-// RFDrive              motor         19              
-// RTDrive              motor         14              
-// RBDrive              motor         15              
-// LeftIntake           motor         9               
-// RightIntake          motor         16              
-// Arm                  motor         18              
-// Inertial8            inertial      8               
-// OdomForward          rotation      20              
-// OdomSideways         rotation      21              
-// Controller1          controller                    
-// Optical              optical       11              
-// Expander17           triport       17              
-// MogoMech             digital_out   F               
-// Doinker              digital_out   E               
-// HangMech             digital_out   D               
-// IntakeLift           digital_out   B               
+// LFDrive              motor         1
+// LTDrive              motor         3
+// LBDrive              motor         2
+// RFDrive              motor         19
+// RTDrive              motor         14
+// RBDrive              motor         15
+// LeftIntake           motor         9
+// RightIntake          motor         16
+// Arm                  motor         18
+// Inertial8            inertial      8
+// OdomForward          rotation      20
+// OdomSideways         rotation      21
+// Controller1          controller
+// Optical              optical       11
+// Expander17           triport       17
+// MogoMech             digital_out   F
+// Doinker              digital_out   E
+// HangMech             digital_out   D
+// IntakeLift           digital_out   B
 // ---- END VEXCODE CONFIGURED DEVICES ----
 // ---- START VEXCODE CONFIGURED DEVICES ----
 // Robot Configuration:
 // [Name]               [Type]        [Port(s)]
-// LFDrive              motor         1               
-// LTDrive              motor         3               
-// LBDrive              motor         2               
-// RFDrive              motor         19              
-// RTDrive              motor         14              
-// RBDrive              motor         15              
-// LeftIntake           motor         9               
-// RightIntake          motor         13              
-// Arm                  motor         18              
-// Inertial8            inertial      8               
-// OdomForward          rotation      20              
-// OdomSideways         rotation      21              
-// Controller1          controller                    
-// Optical              optical       11              
-// Expander17           triport       17              
-// MogoMech             digital_out   F               
-// Doinker              digital_out   E               
-// HangMech             digital_out   D               
-// IntakeLift           digital_out   B               
+// LFDrive              motor         1
+// LTDrive              motor         3
+// LBDrive              motor         2
+// RFDrive              motor         19
+// RTDrive              motor         14
+// RBDrive              motor         15
+// LeftIntake           motor         9
+// RightIntake          motor         13
+// Arm                  motor         18
+// Inertial8            inertial      8
+// OdomForward          rotation      20
+// OdomSideways         rotation      21
+// Controller1          controller
+// Optical              optical       11
+// Expander17           triport       17
+// MogoMech             digital_out   F
+// Doinker              digital_out   E
+// HangMech             digital_out   D
+// IntakeLift           digital_out   B
 // ---- END VEXCODE CONFIGURED DEVICES ----
 // ---- START VEXCODE CONFIGURED DEVICES ----
 // Robot Configuration:
 // [Name]               [Type]        [Port(s)]
-// LFDrive              motor         1               
-// LTDrive              motor         3               
-// LBDrive              motor         2               
-// RFDrive              motor         19              
-// RTDrive              motor         14              
-// RBDrive              motor         15              
-// LeftIntake           motor         9               
-// RightIntake          motor         16              
-// Arm                  motor         18              
-// Inertial8            inertial      8               
-// OdomForward          rotation      20              
-// OdomSideways         rotation      21              
-// Controller1          controller                    
-// Optical              optical       11              
-// Expander17           triport       17              
-// MogoMech             digital_out   F               
-// Doinker              digital_out   E               
-// HangMech             digital_out   D               
-// IntakeLift           digital_out   B               
+// LFDrive              motor         1
+// LTDrive              motor         3
+// LBDrive              motor         2
+// RFDrive              motor         19
+// RTDrive              motor         14
+// RBDrive              motor         15
+// LeftIntake           motor         9
+// RightIntake          motor         16
+// Arm                  motor         18
+// Inertial8            inertial      8
+// OdomForward          rotation      20
+// OdomSideways         rotation      21
+// Controller1          controller
+// Optical              optical       11
+// Expander17           triport       17
+// MogoMech             digital_out   F
+// Doinker              digital_out   E
+// HangMech             digital_out   D
+// IntakeLift           digital_out   B
 // ---- END VEXCODE CONFIGURED DEVICES ----
 #include "vex.h"
 #include <iostream>
@@ -96,7 +96,7 @@
 
 using namespace vex;
 competition Competition;
-
+Func func;
 /*---------------------------------------------------------------------------*/
 /*                             VEXcode Config                                */
 /*                                                                           */
@@ -140,10 +140,10 @@ Drive chassis(
     // sidebar configurer, they don't have to be "Motor1" and "Motor2".
 
     // Left Motors:
-    motor_group(LFDrive,LTDrive,LBDrive),
+    motor_group(LFDrive, LTDrive, LBDrive),
 
     // Right Motors:
-    motor_group(RFDrive,RTDrive,RBDrive),
+    motor_group(RFDrive, RTDrive, RBDrive),
 
     // Specify the PORT NUMBER of your inertial sensor, in PORT format (i.e.
     // "PORT1", not simply "1"):
@@ -219,6 +219,7 @@ bool auto_started = false;
 
 float armGoal = 1;
 float armState = 0;
+bool manualArm = false;
 
 bool driveHold = false;
 int driveTorque = 100;
@@ -231,7 +232,6 @@ int axis2;
 int axis3;
 int axis4;
 
-int intakeSpeed = 0;
 double hookLocation;
 bool intakeRunning;
 int originalIntakeSpeed;
@@ -457,9 +457,9 @@ int driveTask() {
 int intakeControlTask() {
   while (1) {
     sleep(5);
-    LeftIntake.setVelocity(intakeSpeed, pct);
-    RightIntake.setVelocity(intakeSpeed, pct);
-    if (intakeSpeed > 0) {
+    LeftIntake.setVelocity(func.intakeSpeed, pct);
+    RightIntake.setVelocity(func.intakeSpeed, pct);
+    if (func.intakeSpeed > 0) {
       intakeRunning = true;
     } else {
       intakeRunning = false;
@@ -476,33 +476,33 @@ int sortingTask() {
     if (sortingColor == "red" && redDetected && intakeRunning &&
         !pausedForRed) {
       pausedForRed = true;
-      if (intakeSpeed != 0) {
-        originalIntakeSpeed = intakeSpeed;
+      if (func.intakeSpeed != 0) {
+        originalIntakeSpeed = func.intakeSpeed;
       } else {
-        intakeSpeed = 100;
+        func.intakeSpeed = 100;
       }
       LeftIntake.resetPosition();
       while (LeftIntake.position(degrees) < 205) {
         sleep(1);
       }
-      intakeSpeed = 0;
+      func.intakeSpeed = 0;
       sleep(100);
-      intakeSpeed = originalIntakeSpeed;
+      func.intakeSpeed = originalIntakeSpeed;
     } else if (sortingColor == "blue" && blueDetected && intakeRunning &&
                !pausedForBlue) {
       pausedForBlue = true;
-      if (intakeSpeed != 0) {
-        originalIntakeSpeed = intakeSpeed;
+      if (func.intakeSpeed != 0) {
+        originalIntakeSpeed = func.intakeSpeed;
       } else {
-        intakeSpeed = 100;
+        func.intakeSpeed = 100;
       }
       LeftIntake.resetPosition();
       while (LeftIntake.position(degrees) < 205) {
         sleep(1);
       }
-      intakeSpeed = 0;
+      func.intakeSpeed = 0;
       sleep(100);
-      intakeSpeed = originalIntakeSpeed;
+      func.intakeSpeed = originalIntakeSpeed;
     }
 
     if (!redDetected) {
@@ -523,7 +523,6 @@ int armStatesTask() {
 
       if (armState == 0) {
         armGoal = 0;
-        sleep(100);
         armGoal = 4;
       }
       if (armState == 1) {
@@ -536,7 +535,7 @@ int armStatesTask() {
   }
 }
 
-void buttonLdown_pressed() {
+void buttonLup_pressed() {
   if (armState < 2) {
     armState += 1;
   } else {
@@ -544,7 +543,7 @@ void buttonLdown_pressed() {
   }
 }
 
-void buttonLup_pressed() {
+void buttonLdown_pressed() {
   if (armState > 0) {
     armState -= 1;
   } else {
@@ -556,13 +555,13 @@ void buttonLup_released() {}
 
 void buttonLdown_released() {}
 
-void buttonRup_pressed() { intakeSpeed = 100; }
+void buttonRup_pressed() { func.intakeSpeed = 100; }
 
-void buttonRdown_pressed() { intakeSpeed = -100; }
+void buttonRdown_pressed() { func.intakeSpeed = -100; }
 
-void buttonRup_released() { intakeSpeed = 0; }
+void buttonRup_released() { func.intakeSpeed = 0; }
 
-void buttonRdown_released() { intakeSpeed = 0; }
+void buttonRdown_released() { func.intakeSpeed = 0; }
 
 void buttonUP_pressed() {
   if (sortingColor == "red") {
@@ -572,15 +571,19 @@ void buttonUP_pressed() {
   }
 }
 
-void buttonDOWN_pressed() { HangMech = !HangMech; }
+void buttonDOWN_pressed() {
+  Arm.setVelocity(-70, pct);
+  while (Arm.velocity(pct) > 1) {
+    sleep(1);
+  }
+  Arm.setPosition(0, deg);
+}
 
 void buttonLEFT_pressed() { Doinker = !Doinker; }
 
-void buttonRIGHT_pressed() {}
+void buttonRIGHT_pressed() { HangMech = !HangMech; }
 
 void buttonX_pressed() {}
-
-
 
 void buttonY_pressed() { MogoMech = !MogoMech; }
 
@@ -609,10 +612,10 @@ void autonomous(void) {
   auto_started = true;
   switch (current_auton_selection) {
   case 0:
-    drive_test();
+    autonBack();
     break;
   case 1:
-    drive_test();
+    autonBack();
     break;
   case 2:
     turn_test();
@@ -635,7 +638,7 @@ void autonomous(void) {
   }
 }
 
-void buttonA_pressed() {autonomous();}
+void buttonA_pressed() { autonomous(); }
 
 void usercontrol(void) {
   while (1) {
@@ -670,7 +673,7 @@ int main() {
   // task taskControl(controlTask);
   task taskIntakeControl(intakeControlTask);
   task taskSensors(sensorsTask);
-  task taskSorting(sortingTask);
+  // task taskSorting(sortingTask);
   task taskArmStates(armStatesTask);
 
   Controller1.ButtonL1.pressed(buttonLup_pressed);
