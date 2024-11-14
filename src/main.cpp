@@ -611,10 +611,12 @@ void buttonRup_released2() {}
 void autonomous(void) {
   auto_started = true;
   switch (current_auton_selection) {
-  case 0:
+  case 0: //Red
+
     autonBack();
     break;
-  case 1:
+  case 1: //Blue
+
     autonBack();
     break;
   case 2:
