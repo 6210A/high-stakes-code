@@ -214,7 +214,7 @@ Drive chassis(
 
 );
 bool ispreauto;
-int current_auton_selection = 0;
+int current_auton_selection = 2;
 bool auto_started = false;
 
 float armGoal = 1;
@@ -274,13 +274,13 @@ void pre_auton() {
     Brain.Screen.printAt(5, 100, "Selected Auton:");
     switch (current_auton_selection) {
     case 0:
-      Brain.Screen.printAt(5, 120, "Auton 1");
+      Brain.Screen.printAt(5, 120, "Blue Left No WP");
       break;
     case 1:
-      Brain.Screen.printAt(5, 120, "Auton 2");
+      Brain.Screen.printAt(5, 120, "Red Right No WP");
       break;
     case 2:
-      Brain.Screen.printAt(5, 120, "Auton 3");
+      Brain.Screen.printAt(5, 120, "Blue Right WP");
       break;
     case 3:
       Brain.Screen.printAt(5, 120, "Auton 4");
@@ -583,7 +583,7 @@ void buttonLEFT_pressed() { Doinker = !Doinker; }
 
 void buttonRIGHT_pressed() { HangMech = !HangMech; }
 
-void buttonX_pressed() {}
+void buttonX_pressed() {IntakeLift = !IntakeLift;}
 
 void buttonY_pressed() { MogoMech = !MogoMech; }
 
@@ -611,19 +611,17 @@ void buttonRup_released2() {}
 void autonomous(void) {
   auto_started = true;
   switch (current_auton_selection) {
-  case 0: //Red
-
-    autonBack();
+  case 0:
+    blueLeftNoWP();
     break;
-  case 1: //Blue
-
-    autonBack();
+  case 1:
+    redRightNoWP();
     break;
   case 2:
-    turn_test();
+    blueRightWP();
     break;
   case 3:
-    swing_test();
+    redLeftWP();
     break;
   case 4:
     full_test();
