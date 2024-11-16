@@ -25,8 +25,9 @@ controller Controller1 = controller(primary);
 optical Optical = optical(PORT11);
 digital_out MogoMech = digital_out(Expander17.F);
 digital_out Doinker = digital_out(Expander17.E);
-digital_out HangMech = digital_out(Expander17.D);
+digital_out HangMech = digital_out(Expander17.A);
 digital_out IntakeLift = digital_out(Expander17.B);
+rotation Rotation16 = rotation(PORT16, false);
 
 // VEXcode generated functions
 // define variable for remote controller enable/disable

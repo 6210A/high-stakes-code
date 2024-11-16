@@ -22,6 +22,7 @@ extern digital_out MogoMech;
 extern digital_out Doinker;
 extern digital_out HangMech;
 extern digital_out IntakeLift;
+extern rotation Rotation16;
 
 /**
  * Used to initialize code/tasks/devices added using tools in VEXcode Pro.
