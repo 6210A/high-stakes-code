@@ -12,9 +12,8 @@ void default_constants() {
   // Each constant set is in the form of (maxVoltage, kP, kI, kD, startI).
   chassis.set_drive_constants(10, 1.5, 0, 10, 0);
   chassis.set_heading_constants(6, .4, 0, 1, 0);
-  chassis.set_turn_constants(12, .4, .03, 3, 15);
-  chassis.set_swing_constants(12, .3, .001, 2, 15);
-
+  chassis.set_turn_constants(6, .4, .03, 3, 15);
+  chassis.set_swing_constants(10, .3, .001, 2, 15);
   // Each exit condition set is in the form of (settle_error, settle_time,
   // timeout).
   chassis.set_drive_exit_conditions(1.5, 300, 5000);
@@ -154,7 +153,7 @@ void redLeftNoWP() {
   func.intakeSpeed = 0;
   chassis.turn_to_angle(270);
   func.intakeSpeed = 100;
-  chassis.drive_distance(8, 270);
+  chassis.drive_distance(6, 270);
   task::sleep(150);
   func.intakeSpeed = 0;
   chassis.turn_to_angle(360);
@@ -207,123 +206,151 @@ void blueRightNoWP() {
   chassis.drive_distance(20, -445);
 }
 
-void redLeftWP(){};
-
-void blueRightWP() {
-  // func.intakeSpeed = 100;
-  chassis.set_coordinates(0, 0, -61);
+void redLeftWP() {
+  chassis.set_coordinates(0, 0, -90);
   default_constants();
-  chassis.turn_max_voltage = 6;
   MogoMech = true;
-  func.intakeSpeed = 20;
-  chassis.drive_distance(1);
-  task::sleep(100);
-  chassis.turn_to_angle(15);
+  //chassis.right_swing_to_angle(-1);
+  chassis.drive_distance(-5.5);
+  chassis.turn_to_angle(0);
+  chassis.drive_distance(-2);
+  task::sleep(50);
+  func.intakeSpeed = 100;
+  task::sleep(200);
   func.intakeSpeed = 0;
-  chassis.turn_to_angle(37);
-  chassis.turn_max_voltage = 9;
-  chassis.turn_max_voltage = 11;
-  chassis.drive_distance(-6, 37);
+  chassis.turn_to_angle(140);
+  MogoMech = false;
+  chassis.drive_distance(-15);
+  MogoMech = true;
+  chassis.turn_to_angle(-90);
+  func.intakeSpeed = 100;
+  chassis.drive_distance(7);
+  task::sleep(600);
   func.intakeSpeed = 0;
   chassis.turn_to_angle(0);
-  func.intakeSpeed = -100;
-  task::sleep(100);
-  func.intakeSpeed = 0;
-  chassis.drive_distance(-2.5, 0);
   func.intakeSpeed = 100;
-  task::sleep(300);
-  func.intakeSpeed = 0;
-  chassis.drive_distance(4, 0);
-  chassis.turn_to_angle(-140);
-  MogoMech = false;
-  chassis.drive_max_voltage = 8;
-  chassis.drive_distance(-16);
-  MogoMech = true;
-  task::sleep(500);
-  chassis.turn_to_angle(93);
-  func.intakeSpeed = 100;
-  chassis.drive_max_voltage = 11;
-  chassis.drive_distance(10);
-  chassis.turn_to_angle(260);
-  chassis.drive_distance(15);
-
-  // chassis.drive_distance(-44, 160);
-  // MogoMech = true;
-  // task::sleep(50);
-  // chassis.drive_distance(2, 160);
-  // func.intakeSpeed = 100;
-  // task::sleep(300);
-  // func.intakeSpeed = 0;
-  // chassis.turn_to_angle(-90);
-  // func.intakeSpeed = 100;
-  // chassis.drive_distance(18, -90);
-  // func.intakeSpeed = 100;*/
+  chassis.drive_distance(5);
+  task::sleep(200);
+  chassis.drive_distance(-3);
+  chassis.turn_to_angle(-20);
+  chassis.drive_distance(5);
+  task::sleep(250);
+  chassis.drive_distance(-5);
+  chassis.turn_to_angle(90);
+  chassis.drive_max_voltage = 6;
+  chassis.drive_distance(50);
 };
 
-void blueGoalRush() {
+void blueRightWP() {
+chassis.set_coordinates(0, 0, 90);
+  default_constants();
+  MogoMech = true;
+  //chassis.right_swing_to_angle(-1);
+  chassis.drive_distance(-4.5);
+  chassis.turn_to_angle(0);
+  chassis.drive_distance(-2);
+  task::sleep(50);
+  func.intakeSpeed = 100;
+  task::sleep(200);
+  func.intakeSpeed = 0;
+  chassis.turn_to_angle(-140);
+  MogoMech = false;
+  chassis.drive_distance(-14);
+  MogoMech = true;
+  chassis.turn_to_angle(90);
+  func.intakeSpeed = 100;
+  chassis.drive_distance(8);
+  task::sleep(600);
+  func.intakeSpeed = 0;
+  chassis.turn_to_angle(0);
+  func.intakeSpeed = 100;
+  chassis.drive_distance(6);
+  task::sleep(200);
+  chassis.drive_distance(-3);
+  chassis.turn_to_angle(25);
+  chassis.drive_distance(5);
+  task::sleep(250);
+  chassis.drive_distance(-5);
+  chassis.turn_to_angle(-90);
+  chassis.drive_max_voltage = 6;
+  chassis.drive_distance(12);
+  func.intakeSpeed = 0;
+};
+
+void redGoalRush() {
+  //red
   chassis.set_coordinates(0, 0, 180);
   default_constants();
   chassis.drive_max_voltage = 11;
-  chassis.drive_distance(-10);
-  chassis.turn_to_angle(153);
   chassis.drive_distance(-9);
+  chassis.turn_to_angle(153);
+  chassis.drive_distance(-8.5);
   MogoMech = true;
-  task::sleep(250);
+  task::sleep(350);
   chassis.turn_to_angle(195);
   func.intakeSpeed = 100;
-  chassis.drive_distance(3.5);
+  chassis.drive_distance(4.5);
   task::sleep(300);
   MogoMech = false;
   task::sleep(150);
   func.intakeSpeed = 0;
-  chassis.turn_to_angle(70);
+  chassis.turn_to_angle(73);
   chassis.drive_distance(-9);
   MogoMech = true;
   task::sleep(200);
   chassis.turn_max_voltage = 6;
-  chassis.turn_to_angle(230);
+  chassis.turn_to_angle(90);
+  func.intakeSpeed = 100;
+  chassis.drive_distance(8);
+  task::sleep(2000);
+  func.intakeSpeed = 0;
   IntakeLift = true;
   func.intakeSpeed = 100;
   chassis.drive_distance(12);
+  IntakeLift = false;
   task::sleep(150);
   chassis.drive_distance(-1);
   func.intakeSpeed = 0;
   chassis.turn_to_angle(0);
   func.intakeSpeed = 100;
   task::sleep(400);
-  chassis.drive_distance(6);
+  chassis.drive_distance(7);
 }
 
-void redGoalRush() {
+void blueGoalRush() {
+  //blue
   chassis.set_coordinates(0, 0, -180);
   default_constants();
   chassis.drive_max_voltage = 11;
-  chassis.drive_distance(-10);
+  chassis.drive_distance(-8.5);
   chassis.turn_to_angle(-153);
   chassis.drive_distance(-9);
   MogoMech = true;
   task::sleep(250);
   chassis.turn_to_angle(-195);
   func.intakeSpeed = 100;
-  chassis.drive_distance(3.5);
-  task::sleep(300);
+  chassis.drive_distance(4);
+  task::sleep(250);
   MogoMech = false;
   task::sleep(150);
   func.intakeSpeed = 0;
-  chassis.turn_to_angle(-70);
-  chassis.drive_distance(-9);
+  chassis.turn_to_angle(-78);
+  chassis.drive_distance(-10);
   MogoMech = true;
   task::sleep(200);
   chassis.turn_max_voltage = 6;
-  chassis.turn_to_angle(-230);
+  chassis.turn_to_angle(135);
+  chassis.drive_distance(10);
+  chassis.turn_to_angle(-220);
   IntakeLift = true;
   func.intakeSpeed = 100;
-  chassis.drive_distance(12);
+  chassis.drive_distance(11);
+  IntakeLift = false;
   task::sleep(150);
   chassis.drive_distance(-1);
   func.intakeSpeed = 0;
   chassis.turn_to_angle(0);
   func.intakeSpeed = 100;
   task::sleep(400);
-  chassis.drive_distance(6);
+  chassis.drive_distance(8);
 }
