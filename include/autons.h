@@ -20,3 +20,5 @@ void blueRightWP();
 void redLeftWP();
 void blueGoalRush();
 void redGoalRush();
+void blueLeftWP();
+void redRightWP();

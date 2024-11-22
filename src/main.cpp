@@ -184,10 +184,10 @@ void pre_auton() {
     Brain.Screen.printAt(5, 100, "Selected Auton:");
     switch (current_auton_selection) {
     case 0:
-      Brain.Screen.printAt(5, 120, "Red Left No WP");
+      Brain.Screen.printAt(5, 120, "Red Back No WP");
       break;
     case 1:
-      Brain.Screen.printAt(5, 120, "Blue Right No WP");
+      Brain.Screen.printAt(5, 120, "Blue Back No WP");
       break;
     case 2:
       Brain.Screen.printAt(5, 120, "Red Goal Rush");
@@ -196,16 +196,16 @@ void pre_auton() {
       Brain.Screen.printAt(5, 120, "Blue Goal Rush");
       break;
     case 4:
-      Brain.Screen.printAt(5, 120, "Auton 5");
+      Brain.Screen.printAt(5, 120, "Red Back WP");
       break;
     case 5:
-      Brain.Screen.printAt(5, 120, "Auton 6");
+      Brain.Screen.printAt(5, 120, "Blue Back WP");
       break;
     case 6:
-      Brain.Screen.printAt(5, 120, "Auton 7");
+      Brain.Screen.printAt(5, 120, "Red Front No WP");
       break;
     case 7:
-      Brain.Screen.printAt(5, 120, "Auton 8");
+      Brain.Screen.printAt(5, 120, "Blue Front No WP");
       break;
     }
     if (Brain.Screen.pressing()) {
@@ -226,7 +226,7 @@ int controllerScreenTask() {
 
     Controller1.Screen.setCursor(1, 1);
     Controller1.Screen.print("G: %3.2f", Inertial8.rotation());
-    Controller1.Screen.setCursor(1, 12);
+    Controller1.Screen.setCursor(1, 13);
     Controller1.Screen.print("A: %1.0f", armState);
     if (sortingColor == "red") {
       Controller1.Screen.print("B in");
@@ -377,56 +377,52 @@ int intakeControlTask() {
   }
 }
 
-// int sortingTask() {
-//   bool pausedForRed = false;
-//   bool pausedForBlue = false;
+int sortingTask() {
+  bool pausedForRed = false;
+  bool pausedForBlue = false;
 
-//   while (1) {
-//     sleep(5);
-//     if (sortingColor == "red" && redDetected && intakeRunning &&
-//         !pausedForRed) {
-//       pausedForRed = true;
-//       if (func.intakeSpeed != 0) {
-//         originalIntakeSpeed = func.intakeSpeed;
-//       } else {
-//         func.intakeSpeed = 100;
-//       }
-//       LeftIntake.resetPosition();
-//       while (LeftIntake.position(degrees) < 205) {
-//         sleep(1);
-//       }
-//       func.intakeSpeed = 0;
-//       sleep(100);
-//       func.intakeSpeed = originalIntakeSpeed;
-//     } else if (sortingColor == "blue" && blueDetected && intakeRunning &&
-//                !pausedForBlue) {
-//       pausedForBlue = true;
-//       if (func.intakeSpeed != 0) {
-//         originalIntakeSpeed = func.intakeSpeed;
-//       } else {
-//         func.intakeSpeed = 100;
-//       }
-//       LeftIntake.resetPosition();
-//       while (LeftIntake.position(degrees) < 205) {
-//         sleep(1);
-//       }
-//       func.intakeSpeed = 0;
-//       sleep(100);
-//       func.intakeSpeed = originalIntakeSpeed;
-//     }
+  while (1) {
+    sleep(5);
+    if (auto_started) {
+      if (sortingColor == "red" && redDetected && intakeRunning &&
+          !pausedForRed) {
+        pausedForRed = true;
+        if (func.intakeSpeed != 0) {
+          originalIntakeSpeed = func.intakeSpeed;
+        } else {
+          func.intakeSpeed = 100;
+        }
+        sleep(271);
+        func.intakeSpeed = 0;
+        sleep(200);
+        func.intakeSpeed = originalIntakeSpeed;
+      } else if (sortingColor == "blue" && blueDetected && intakeRunning &&
+                 !pausedForBlue) {
+        pausedForBlue = true;
+        if (func.intakeSpeed != 0) {
+          originalIntakeSpeed = func.intakeSpeed;
+        } else {
+          func.intakeSpeed = 100;
+        }
+        sleep(271);
+        func.intakeSpeed = 0;
+        sleep(200);
+        func.intakeSpeed = originalIntakeSpeed;
+      }
 
-//     if (!redDetected) {
-//       pausedForRed = false;
-//     }
-//     if (!blueDetected) {
-//       pausedForBlue = false;
-//     }
-//   }
-// }
+      if (!redDetected) {
+        pausedForRed = false;
+      }
+      if (!blueDetected) {
+        pausedForBlue = false;
+      }
+    }
+  }
+}
 
 int armStatesTask() {
   Arm.setStopping(hold);
-  bool outakeHappened = false; 
+  bool outakeHappened = false;
 
   while (1) {
     sleep(20);
@@ -451,7 +447,6 @@ int armStatesTask() {
     }
   }
 }
-
 
 void buttonLup_pressed() {
   if (armState < 2) {
@@ -501,7 +496,7 @@ void buttonLEFT_pressed() { Doinker = !Doinker; }
 
 void buttonRIGHT_pressed() { HangMech = !HangMech; }
 
-void buttonX_pressed() {IntakeLift = !IntakeLift;}
+void buttonX_pressed() { IntakeLift = !IntakeLift; }
 
 void buttonY_pressed() { MogoMech = !MogoMech; }
 
@@ -530,33 +525,42 @@ void autonomous(void) {
   auto_started = true;
   switch (current_auton_selection) {
   case 0:
+    sortingColor = "blue";
     redLeftNoWP();
     break;
   case 1:
+    sortingColor = "red";
     blueRightNoWP();
     break;
   case 2:
+    sortingColor = "blue";
     redGoalRush();
     break;
   case 3:
+    sortingColor = "red";
     blueGoalRush();
     break;
   case 4:
+    sortingColor = "blue";
     redLeftWP();
     break;
   case 5:
+    sortingColor = "red";
     blueRightWP();
     break;
   case 6:
-    tank_odom_test();
+    sortingColor = "blue";
+    redRightWP();
     break;
   case 7:
-    holonomic_odom_test();
+    sortingColor = "red";
+    blueLeftWP();
     break;
   }
 }
 
-void buttonA_pressed() { autonomous(); }
+void buttonA_pressed() { autonomous();
+}
 
 void usercontrol(void) {
   while (1) {
@@ -575,6 +579,7 @@ void usercontrol(void) {
 
     wait(20, msec); // Sleep the task for a short amount of time to
                     // prevent wasted resources.
+    auto_started = false;
   }
 }
 
@@ -591,7 +596,7 @@ int main() {
   // task taskControl(controlTask);
   task taskIntakeControl(intakeControlTask);
   task taskSensors(sensorsTask);
-  // task taskSorting(sortingTask);
+  task taskSorting(sortingTask);
   task taskArmStates(armStatesTask);
 
   Controller1.ButtonL1.pressed(buttonLup_pressed);
