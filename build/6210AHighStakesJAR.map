@@ -3024,38 +3024,37 @@ Linker script and memory map
                 0x038016b4      0x17c build/src/autons.o
                 0x038016b4                redLeftNoWP()
  .text._Z13blueRightNoWPv
-                0x03801830      0x1a4 build/src/autons.o
+                0x03801830      0x1a0 build/src/autons.o
                 0x03801830                blueRightNoWP()
  .text._Z9redLeftWPv
-                0x038019d4      0x1a0 build/src/autons.o
-                0x038019d4                redLeftWP()
+                0x038019d0      0x1a8 build/src/autons.o
+                0x038019d0                redLeftWP()
  .text._Z11blueRightWPv
-                0x03801b74      0x19c build/src/autons.o
-                0x03801b74                blueRightWP()
+                0x03801b78      0x19c build/src/autons.o
+                0x03801b78                blueRightWP()
  .text._Z11redGoalRushv
-                0x03801d10      0x1c0 build/src/autons.o
-                0x03801d10                redGoalRush()
+                0x03801d14      0x1c0 build/src/autons.o
+                0x03801d14                redGoalRush()
  .text._Z12blueGoalRushv
-                0x03801ed0      0x19c build/src/autons.o
-                0x03801ed0                blueGoalRush()
+                0x03801ed4      0x19c build/src/autons.o
+                0x03801ed4                blueGoalRush()
  .text._Z10redRightWPv
-                0x0380206c        0x4 build/src/autons.o
-                0x0380206c                redRightWP()
+                0x03802070        0x4 build/src/autons.o
+                0x03802070                redRightWP()
  .text._Z10blueLeftWPv
-                0x03802070       0xec build/src/autons.o
-                0x03802070                blueLeftWP()
+                0x03802074       0xec build/src/autons.o
+                0x03802074                blueLeftWP()
  .text._Z11vexcodeInitv
-                0x0380215c        0x4 build/src/robot-config.o
-                0x0380215c                vexcodeInit()
+                0x03802160        0x4 build/src/robot-config.o
+                0x03802160                vexcodeInit()
  .text._GLOBAL__sub_I_robot_config.cpp
-                0x03802160      0x418 build/src/robot-config.o
+                0x03802164      0x418 build/src/robot-config.o
  .text._Z15reduce_0_to_360f
-                0x03802578       0x7c build/src/JAR-Template/util.o
-                0x03802578                reduce_0_to_360(float)
+                0x0380257c       0x7c build/src/JAR-Template/util.o
+                0x0380257c                reduce_0_to_360(float)
  .text._Z26reduce_negative_180_to_180f
-                0x038025f4       0x90 build/src/JAR-Template/util.o
-                0x038025f4                reduce_negative_180_to_180(float)
- *fill*         0x03802684        0x4 
+                0x038025f8       0x90 build/src/JAR-Template/util.o
+                0x038025f8                reduce_negative_180_to_180(float)
  .text._Z6to_radf
                 0x03802688       0x28 build/src/JAR-Template/util.o
                 0x03802688                to_rad(float)
