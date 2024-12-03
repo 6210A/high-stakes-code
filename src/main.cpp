@@ -122,11 +122,10 @@ Drive chassis(
 
 );
 bool ispreauto;
-int current_auton_selection = 5;
+int current_auton_selection = 8;
 bool auto_started = false;
 
 float armGoal = 1;
-float armState = 0;
 bool manualArm = false;
 
 bool driveHold = false;
@@ -207,12 +206,15 @@ void pre_auton() {
     case 7:
       Brain.Screen.printAt(5, 120, "Blue Front No WP");
       break;
+    case 8:
+      Brain.Screen.printAt(5, 120, "Skills Auton");
+      break;
     }
     if (Brain.Screen.pressing()) {
       while (Brain.Screen.pressing()) {
       }
       current_auton_selection++;
-    } else if (current_auton_selection == 8) {
+    } else if (current_auton_selection == 9) {
       current_auton_selection = 0;
     }
     task::sleep(10);
@@ -227,7 +229,7 @@ int controllerScreenTask() {
     Controller1.Screen.setCursor(1, 1);
     Controller1.Screen.print("G: %3.2f", Inertial8.rotation());
     Controller1.Screen.setCursor(1, 13);
-    Controller1.Screen.print("A: %1.0f", armState);
+    Controller1.Screen.print("A: %1.0f", func.armState);
     if (sortingColor == "red") {
       Controller1.Screen.print("B in");
     } else if (sortingColor == "blue") {
@@ -429,15 +431,15 @@ int armStatesTask() {
     if (!ispreauto) {
       Arm.setVelocity(((armGoal * 4) - Rotation16.position(deg)), pct);
 
-      if (armState == 0) {
+      if (func.armState == 0) {
         armGoal = 1;
         outakeHappened = false;
       }
-      if (armState == 1) {
+      if (func.armState == 1) {
         armGoal = 5;
         outakeHappened = false;
       }
-      if (armState == 2 && !outakeHappened) {
+      if (func.armState == 2 && !outakeHappened) {
         func.intakeSpeed = -100;
         task::sleep(100);
         func.intakeSpeed = 0;
@@ -449,18 +451,18 @@ int armStatesTask() {
 }
 
 void buttonLup_pressed() {
-  if (armState < 2) {
-    armState += 1;
+  if (func.armState < 2) {
+    func.armState += 1;
   } else {
-    armState = 2;
+    func.armState = 2;
   }
 }
 
 void buttonLdown_pressed() {
-  if (armState > 0) {
-    armState -= 1;
+  if (func.armState > 0) {
+    func.armState -= 1;
   } else {
-    armState = 0;
+    func.armState = 0;
   }
 }
 
@@ -556,11 +558,14 @@ void autonomous(void) {
     sortingColor = "red";
     blueLeftWP();
     break;
+  case 8:
+    sortingColor = "blue";
+    skillsAuton();
+    break;
   }
 }
 
-void buttonA_pressed() { autonomous();
-}
+void buttonA_pressed() { autonomous(); }
 
 void usercontrol(void) {
   while (1) {

@@ -22,3 +22,4 @@ void blueGoalRush();
 void redGoalRush();
 void blueLeftWP();
 void redRightWP();
+void skillsAuton();

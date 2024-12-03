@@ -6,6 +6,6 @@ class Func {
   Func();
   int headMod;
   int intakeSpeed = 0;
-  float armState;
+  float armState = 0;
 };
 extern Func func;
