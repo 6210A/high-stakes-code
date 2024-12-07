@@ -122,7 +122,7 @@ Drive chassis(
 
 );
 bool ispreauto;
-int current_auton_selection = 8;
+int current_auton_selection = 4;
 bool auto_started = false;
 
 float armGoal = 1;
@@ -496,13 +496,20 @@ void buttonDOWN_pressed() {
 
 void buttonLEFT_pressed() { Doinker = !Doinker; }
 
-void buttonRIGHT_pressed() { HangMech = !HangMech; }
+void buttonRIGHT_pressed() {
+  HangMech = !HangMech;
+  func.armState = 2;
+}
 
 void buttonX_pressed() { IntakeLift = !IntakeLift; }
 
 void buttonY_pressed() { MogoMech = !MogoMech; }
 
-void buttonB_pressed() {}
+void buttonB_pressed() {
+  func.intakeSpeed = 100;
+  task::sleep(50);
+  func.intakeSpeed = 0;
+}
 
 void buttonLup_pressed2() {}
 
