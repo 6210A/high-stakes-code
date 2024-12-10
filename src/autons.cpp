@@ -272,12 +272,12 @@ void redGoalRush() {
   chassis.set_coordinates(0, 0, 180);
   default_constants();
   chassis.drive_max_voltage = 11;
-  chassis.drive_distance(-9);
+  chassis.drive_distance(-9.5);
   chassis.turn_to_angle(153);
-  chassis.drive_distance(-8.5);
+  chassis.drive_distance(-8);
   MogoMech = true;
   task::sleep(350);
-  chassis.turn_to_angle(180);
+  chassis.turn_to_angle(185);
   func.intakeSpeed = 100;
   chassis.drive_distance(5);
   task::sleep(500);
@@ -316,12 +316,14 @@ void blueGoalRush() {
   // blue
   chassis.set_coordinates(0, 0, -180);
   default_constants();
+  //
   chassis.drive_max_voltage = 11;
   chassis.drive_distance(-10);
   chassis.turn_to_angle(-153);
   chassis.drive_distance(-7.75);
   MogoMech = true;
   task::sleep(250);
+ // chassis.drive_max_voltage = 11;
   chassis.turn_to_angle(-195);
   func.intakeSpeed = 100;
   chassis.drive_distance(5);
@@ -342,9 +344,12 @@ void blueGoalRush() {
   IntakeLift = false;
   task::sleep(300);
   chassis.drive_distance(-1);
-  chassis.turn_to_angle(0);
-  task::sleep(400);
-  chassis.drive_distance(8);
+  // chassis.turn_to_angle(0);
+  // task::sleep(400);
+  // chassis.drive_distance(8);
+  // elims
+  // chassis.turn_to_angle(-110);
+  //
 }
 
 void redRightWP() {}
@@ -409,17 +414,18 @@ void skillsAuton() {
   chassis.drive_distance(3.75);
   func.armState = 1;
   chassis.turn_to_angle(0);
-  chassis.drive_distance(16.75);
+  chassis.drive_distance(16.5);
   chassis.turn_to_angle(90);
   func.intakeSpeed = 0;
-  chassis.drive_distance(2.6);
+  chassis.drive_distance(2.65);
   func.armState = 2;
-  func.intakeSpeed = -50;
+  func.intakeSpeed = -100;
   task::sleep(800);
   func.intakeSpeed = 0;
   func.armState = 0;
   task::sleep(50);
   chassis.turn_to_angle(-25);
+  task::sleep(300);
   func.intakeSpeed = 30;
   chassis.drive_distance(10);
   chassis.turn_to_angle(-90);
@@ -449,11 +455,11 @@ void skillsAuton() {
   chassis.drive_distance(7);
   func.intakeSpeed = 27;
   chassis.turn_to_angle(53);
-  chassis.drive_distance(24);
+  chassis.drive_distance(23);
   chassis.turn_to_angle(180);
   func.intakeSpeed = 0;
   MogoMech = true;
-  chassis.drive_distance(-4);
+  chassis.drive_distance(-2);
   task::sleep(50);
   func.intakeSpeed = 100;
   task::sleep(200);
@@ -462,7 +468,7 @@ void skillsAuton() {
   chassis.turn_to_angle(-90);
   chassis.drive_distance(20);
   chassis.turn_to_angle(90);
-  chassis.drive_distance(37);
+  chassis.drive_distance(555);
 }
 
 void red2On1() {

@@ -122,7 +122,7 @@ Drive chassis(
 
 );
 bool ispreauto;
-int current_auton_selection = 4;
+int current_auton_selection = 2;
 bool auto_started = false;
 
 float armGoal = 1;
@@ -507,7 +507,7 @@ void buttonY_pressed() { MogoMech = !MogoMech; }
 
 void buttonB_pressed() {
   func.intakeSpeed = 100;
-  task::sleep(50);
+  task::sleep(200);
   func.intakeSpeed = 0;
 }
 
