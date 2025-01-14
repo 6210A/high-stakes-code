@@ -1,3 +1,25 @@
+// ---- START VEXCODE CONFIGURED DEVICES ----
+// Robot Configuration:
+// [Name]               [Type]        [Port(s)]
+// LBackDrive           motor         15              
+// LTopDrive            motor         14              
+// LBottomDrive         motor         16              
+// RTopDrive            motor         12              
+// RBottomDrive         motor         13              
+// IntakeFull           motor         4               
+// IntakeHalf           motor         3               
+// Arm                  motor         1               
+// Inertial8            inertial      8               
+// OdomForward          rotation      20              
+// OdomSideways         rotation      21              
+// Controller1          controller                    
+// Optical              optical       5               
+// MogoMech             digital_out   A               
+// Doinker              digital_out   B               
+// IntakeLift           digital_out   C               
+// Rotation2            rotation      2               
+// RBackDrive           motor         11              
+// ---- END VEXCODE CONFIGURED DEVICES ----
 #include "vex.h"
 #include <iostream>
 #include <string>
@@ -48,28 +70,28 @@ Drive chassis(
     // sidebar configurer, they don't have to be "Motor1" and "Motor2".
 
     // Left Motors:
-    motor_group(LFDrive, LTDrive, LBDrive),
+    motor_group(LTopDrive, LBottomDrive, LBackDrive),
 
     // Right Motors:
-    motor_group(RFDrive, RTDrive, RBDrive),
+    motor_group(RTopDrive, RBottomDrive, RBackDrive),
 
     // Specify the PORT NUMBER of your inertial sensor, in PORT format (i.e.
     // "PORT1", not simply "1"):
-    PORT8,
+    PORT7,
 
     // Input your wheel diameter. (4" omnis are actually closer to 4.125"):
-    2.75,
+    3.25,
 
     // External ratio, must be in decimal, in the format of input teeth/output
     // teeth. If your motor has an 84-tooth gear and your wheel has a 60-tooth
     // gear, this value will be 1.4. If the motor drives the wheel directly,
     // this value is 1:
-    0.8,
+    0.75,
 
     // Gyro scale, this is what your gyro reads when you spin the robot 360
     // degrees. For most cases 360 will do fine here, but this scale factor can
     // be very helpful when precision is necessary.
-    358,
+    360,
 
     /*---------------------------------------------------------------------------*/
     /*                                  PAUSE! */
@@ -159,8 +181,8 @@ void pre_auton() {
   vexcodeInit();
   ispreauto = true;
   default_constants();
-  LeftIntake.spin(fwd);
-  RightIntake.spin(fwd);
+  IntakeFull.spin(fwd);
+  IntakeHalf.spin(fwd);
   Arm.spin(fwd);
   Arm.setVelocity(-70, pct);
   sleep(100);
@@ -169,9 +191,8 @@ void pre_auton() {
   }
   Arm.setVelocity(0, pct);
   Arm.setPosition(0, deg);
-  Rotation16.setPosition(0, deg);
+  Rotation2.setPosition(0, deg);
   MogoMech = false;
-  HangMech = false;
   ispreauto = false;
 
   while (!auto_started) {
@@ -253,35 +274,35 @@ int controllerScreenTask() {
 
     Controller1.Screen.setCursor(3, 1);
     Controller1.Screen.print("%1.0f ",
-                             LFDrive.temperature(fahrenheit) / 10 - 5);
+                             LTopDrive.temperature(fahrenheit) / 10 - 5);
 
     Controller1.Screen.setCursor(3, 3);
     Controller1.Screen.print("%1.0f ",
-                             RFDrive.temperature(fahrenheit) / 10 - 5);
+                             RTopDrive.temperature(fahrenheit) / 10 - 5);
 
     Controller1.Screen.setCursor(3, 5);
     Controller1.Screen.print("%1.0f ",
-                             LTDrive.temperature(fahrenheit) / 10 - 5);
+                             LBottomDrive.temperature(fahrenheit) / 10 - 5);
 
     Controller1.Screen.setCursor(3, 7);
     Controller1.Screen.print("%1.0f ",
-                             RTDrive.temperature(fahrenheit) / 10 - 5);
+                             RBottomDrive.temperature(fahrenheit) / 10 - 5);
 
     Controller1.Screen.setCursor(3, 9);
     Controller1.Screen.print("%1.0f ",
-                             LBDrive.temperature(fahrenheit) / 10 - 5);
+                             LBackDrive.temperature(fahrenheit) / 10 - 5);
 
     Controller1.Screen.setCursor(3, 11);
     Controller1.Screen.print("%1.0f ",
-                             RBDrive.temperature(fahrenheit) / 10 - 5);
+                             RBackDrive.temperature(fahrenheit) / 10 - 5);
 
     Controller1.Screen.setCursor(3, 15);
     Controller1.Screen.print("%1.0f ",
-                             LeftIntake.temperature(fahrenheit) / 10 - 5);
+                             IntakeFull.temperature(fahrenheit) / 10 - 5);
 
     Controller1.Screen.setCursor(3, 17);
     Controller1.Screen.print("%1.0f ",
-                             RightIntake.temperature(fahrenheit) / 10 - 5);
+                             IntakeHalf.temperature(fahrenheit) / 10 - 5);
     Controller1.Screen.setCursor(3, 19);
     Controller1.Screen.print("%1.0f ", Arm.temperature(fahrenheit) / 10 - 5);
   }
@@ -333,34 +354,34 @@ int controlTask() {
 int driveTask() {
   while (1) {
     if (driveHold) {
-      LFDrive.setStopping(hold);
-      LBDrive.setStopping(hold);
-      RBDrive.setStopping(hold);
-      RFDrive.setStopping(hold);
-      LTDrive.setStopping(hold);
-      RTDrive.setStopping(hold);
+      LTopDrive.setStopping(hold);
+      LBackDrive.setStopping(hold);
+      RBackDrive.setStopping(hold);
+      RTopDrive.setStopping(hold);
+      LBottomDrive.setStopping(hold);
+      RBottomDrive.setStopping(hold);
     } else {
-      LFDrive.setStopping(coast);
-      LBDrive.setStopping(coast);
-      RBDrive.setStopping(coast);
-      RFDrive.setStopping(coast);
-      LTDrive.setStopping(coast);
-      RTDrive.setStopping(coast);
+      LTopDrive.setStopping(coast);
+      LBackDrive.setStopping(coast);
+      RBackDrive.setStopping(coast);
+      RTopDrive.setStopping(coast);
+      LBottomDrive.setStopping(coast);
+      RBottomDrive.setStopping(coast);
     }
 
-    LFDrive.setMaxTorque(driveTorque, pct);
-    LBDrive.setMaxTorque(driveTorque, pct);
-    RFDrive.setMaxTorque(driveTorque, pct);
-    RBDrive.setMaxTorque(driveTorque, pct);
-    LTDrive.setMaxTorque(driveTorque, pct);
-    RTDrive.setMaxTorque(driveTorque, pct);
+    LTopDrive.setMaxTorque(driveTorque, pct);
+    LBackDrive.setMaxTorque(driveTorque, pct);
+    RTopDrive.setMaxTorque(driveTorque, pct);
+    RBackDrive.setMaxTorque(driveTorque, pct);
+    LBottomDrive.setMaxTorque(driveTorque, pct);
+    RBottomDrive.setMaxTorque(driveTorque, pct);
 
-    LFDrive.spin(fwd, leftSpeed, pct);
-    LBDrive.spin(fwd, leftSpeed, pct);
-    LTDrive.spin(fwd, leftSpeed, pct);
-    RFDrive.spin(fwd, rightSpeed, pct);
-    RBDrive.spin(fwd, rightSpeed, pct);
-    RTDrive.spin(fwd, rightSpeed, pct);
+    LTopDrive.spin(fwd, leftSpeed, pct);
+    LBackDrive.spin(fwd, leftSpeed, pct);
+    LBottomDrive.spin(fwd, leftSpeed, pct);
+    RTopDrive.spin(fwd, rightSpeed, pct);
+    RBackDrive.spin(fwd, rightSpeed, pct);
+    RBottomDrive.spin(fwd, rightSpeed, pct);
 
     sleep(6);
   }
@@ -369,9 +390,9 @@ int driveTask() {
 int intakeControlTask() {
   while (1) {
     sleep(5);
-    LeftIntake.setVelocity(func.intakeSpeed, pct);
-    RightIntake.setVelocity(func.intakeSpeed, pct);
-    if (func.intakeSpeed > 0) {
+    IntakeFull.setVelocity(func.conveyorSpeed, pct);
+    IntakeHalf.setVelocity(func.rollerSpeed, pct);
+    if (func.conveyorSpeed > 0 || func.rollerSpeed > 0) {
       intakeRunning = true;
     } else {
       intakeRunning = false;
@@ -385,31 +406,30 @@ int sortingTask() {
 
   while (1) {
     sleep(5);
-    if (auto_started) {
       if (sortingColor == "red" && redDetected && intakeRunning &&
           !pausedForRed) {
         pausedForRed = true;
-        if (func.intakeSpeed != 0) {
-          originalIntakeSpeed = func.intakeSpeed;
+        if (func.conveyorSpeed != 0) {
+          originalIntakeSpeed = func.conveyorSpeed;
         } else {
-          func.intakeSpeed = 100;
+          func.conveyorSpeed = 100;
         }
-        sleep(271);
-        func.intakeSpeed = 0;
+        sleep(145);
+        func.conveyorSpeed = 0;
         sleep(200);
-        func.intakeSpeed = originalIntakeSpeed;
+        func.conveyorSpeed = originalIntakeSpeed;
       } else if (sortingColor == "blue" && blueDetected && intakeRunning &&
                  !pausedForBlue) {
         pausedForBlue = true;
-        if (func.intakeSpeed != 0) {
-          originalIntakeSpeed = func.intakeSpeed;
+        if (func.conveyorSpeed != 0) {
+          originalIntakeSpeed = func.conveyorSpeed;
         } else {
-          func.intakeSpeed = 100;
+          func.conveyorSpeed = 100;
         }
-        sleep(271);
-        func.intakeSpeed = 0;
+        sleep(145);
+        func.conveyorSpeed = 0;
         sleep(200);
-        func.intakeSpeed = originalIntakeSpeed;
+        func.conveyorSpeed = originalIntakeSpeed;
       }
 
       if (!redDetected) {
@@ -419,7 +439,6 @@ int sortingTask() {
         pausedForBlue = false;
       }
     }
-  }
 }
 
 int armStatesTask() {
@@ -429,21 +448,21 @@ int armStatesTask() {
   while (1) {
     sleep(20);
     if (!ispreauto) {
-      Arm.setVelocity(((armGoal * 4) - Rotation16.position(deg)), pct);
+      Arm.setVelocity((armGoal - Rotation2.position(deg)) * 1.75, pct);
 
       if (func.armState == 0) {
         armGoal = 1;
         outakeHappened = false;
       }
       if (func.armState == 1) {
-        armGoal = 5;
+        armGoal = 24;
         outakeHappened = false;
       }
       if (func.armState == 2 && !outakeHappened) {
-        func.intakeSpeed = -100;
+        func.conveyorSpeed = -100;
         task::sleep(100);
-        func.intakeSpeed = 0;
-        armGoal = 33;
+        func.conveyorSpeed = 0;
+        armGoal = 138;
         outakeHappened = true;
       }
     }
@@ -470,13 +489,19 @@ void buttonLup_released() {}
 
 void buttonLdown_released() {}
 
-void buttonRup_pressed() { func.intakeSpeed = 100; }
+void buttonRup_pressed() { 
+  func.conveyorSpeed = 100;
+  func.rollerSpeed = 100; }
 
-void buttonRdown_pressed() { func.intakeSpeed = -100; }
+void buttonRdown_pressed() { 
+  func.conveyorSpeed = -100;
+  func.rollerSpeed = -100; }
 
-void buttonRup_released() { func.intakeSpeed = 0; }
+void buttonRup_released() { func.conveyorSpeed = 0;
+func.rollerSpeed = 0; }
 
-void buttonRdown_released() { func.intakeSpeed = 0; }
+void buttonRdown_released() { func.conveyorSpeed = 0;
+func.rollerSpeed = 0; }
 
 void buttonUP_pressed() {
   if (sortingColor == "red") {
@@ -497,8 +522,7 @@ void buttonDOWN_pressed() {
 void buttonLEFT_pressed() { Doinker = !Doinker; }
 
 void buttonRIGHT_pressed() {
-  HangMech = !HangMech;
-  func.armState = 2;
+
 }
 
 void buttonX_pressed() { IntakeLift = !IntakeLift; }
@@ -506,9 +530,9 @@ void buttonX_pressed() { IntakeLift = !IntakeLift; }
 void buttonY_pressed() { MogoMech = !MogoMech; }
 
 void buttonB_pressed() {
-  func.intakeSpeed = 100;
+  func.conveyorSpeed = 100; func.rollerSpeed = 100;
   task::sleep(200);
-  func.intakeSpeed = 0;
+  func.conveyorSpeed = 0; func.rollerSpeed = 0;
 }
 
 void buttonLup_pressed2() {}

@@ -8,26 +8,24 @@ using code = vision::code;
 brain  Brain;
 
 // VEXcode device constructors
-triport Expander17 = triport(PORT17);
-motor LFDrive = motor(PORT1, ratio18_1, true);
-motor LTDrive = motor(PORT3, ratio18_1, false);
-motor LBDrive = motor(PORT2, ratio18_1, true);
-motor RFDrive = motor(PORT19, ratio18_1, false);
-motor RTDrive = motor(PORT14, ratio18_1, false);
-motor RBDrive = motor(PORT15, ratio18_1, true);
-motor LeftIntake = motor(PORT9, ratio18_1, true);
-motor RightIntake = motor(PORT13, ratio18_1, false);
-motor Arm = motor(PORT18, ratio18_1, false);
+motor LBackDrive = motor(PORT15, ratio6_1, true);
+motor LTopDrive = motor(PORT14, ratio6_1, false);
+motor LBottomDrive = motor(PORT16, ratio6_1, true);
+motor RTopDrive = motor(PORT12, ratio6_1, true);
+motor RBottomDrive = motor(PORT13, ratio6_1, false);
+motor IntakeFull = motor(PORT4, ratio6_1, false);
+motor IntakeHalf = motor(PORT3, ratio18_1, false);
+motor Arm = motor(PORT1, ratio18_1, true);
 inertial Inertial8 = inertial(PORT8);
 rotation OdomForward = rotation(PORT20, false);
 rotation OdomSideways = rotation(PORT21, false);
 controller Controller1 = controller(primary);
-optical Optical = optical(PORT11);
-digital_out MogoMech = digital_out(Expander17.F);
-digital_out Doinker = digital_out(Expander17.E);
-digital_out HangMech = digital_out(Expander17.A);
-digital_out IntakeLift = digital_out(Expander17.B);
-rotation Rotation16 = rotation(PORT16, false);
+optical Optical = optical(PORT5);
+digital_out MogoMech = digital_out(Brain.ThreeWirePort.A);
+digital_out Doinker = digital_out(Brain.ThreeWirePort.B);
+digital_out IntakeLift = digital_out(Brain.ThreeWirePort.C);
+rotation Rotation2 = rotation(PORT2, true);
+motor RBackDrive = motor(PORT11, ratio6_1, false);
 
 // VEXcode generated functions
 // define variable for remote controller enable/disable

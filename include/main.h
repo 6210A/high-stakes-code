@@ -5,7 +5,8 @@ class Func {
   public:
   Func();
   int headMod;
-  int intakeSpeed = 0;
+  int conveyorSpeed = 0;
+  int rollerSpeed = 0;
   float armState = 0;
 };
 extern Func func;
