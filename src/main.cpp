@@ -144,7 +144,7 @@ Drive chassis(
 
 );
 bool ispreauto;
-int current_auton_selection = 2;
+int current_auton_selection = 4;
 bool auto_started = false;
 
 float armGoal = 1;
@@ -401,44 +401,46 @@ int intakeControlTask() {
 }
 
 int sortingTask() {
-  bool pausedForRed = false;
-  bool pausedForBlue = false;
+  // bool pausedForRed = false;
+  // bool pausedForBlue = false;
 
   while (1) {
     sleep(5);
-      if (sortingColor == "red" && redDetected && intakeRunning &&
-          !pausedForRed) {
-        pausedForRed = true;
-        if (func.conveyorSpeed != 0) {
-          originalIntakeSpeed = func.conveyorSpeed;
-        } else {
-          func.conveyorSpeed = 100;
-        }
-        sleep(145);
-        func.conveyorSpeed = 0;
-        sleep(200);
-        func.conveyorSpeed = originalIntakeSpeed;
-      } else if (sortingColor == "blue" && blueDetected && intakeRunning &&
-                 !pausedForBlue) {
-        pausedForBlue = true;
-        if (func.conveyorSpeed != 0) {
-          originalIntakeSpeed = func.conveyorSpeed;
-        } else {
-          func.conveyorSpeed = 100;
-        }
-        sleep(145);
-        func.conveyorSpeed = 0;
-        sleep(200);
-        func.conveyorSpeed = originalIntakeSpeed;
-      }
+    // while(auto_started) {
+    //   if (sortingColor == "red" && redDetected && intakeRunning &&
+    //       !pausedForRed) {
+    //     pausedForRed = true;
+    //     if (func.conveyorSpeed != 0) {
+    //       originalIntakeSpeed = func.conveyorSpeed;
+    //     } else {
+    //       func.conveyorSpeed = 100;
+    //     }
+    //     sleep(145);
+    //     func.conveyorSpeed = 0;
+    //     sleep(200);
+    //     func.conveyorSpeed = originalIntakeSpeed;
+    //   } else if (sortingColor == "blue" && blueDetected && intakeRunning &&
+    //              !pausedForBlue) {
+    //     pausedForBlue = true;
+    //     if (func.conveyorSpeed != 0) {
+    //       originalIntakeSpeed = func.conveyorSpeed;
+    //     } else {
+    //       func.conveyorSpeed = 100;
+    //     }
+    //     sleep(145);
+    //     func.conveyorSpeed = 0;
+    //     sleep(200);
+    //     func.conveyorSpeed = originalIntakeSpeed;
+    //   }
 
-      if (!redDetected) {
-        pausedForRed = false;
-      }
-      if (!blueDetected) {
-        pausedForBlue = false;
-      }
-    }
+    //   if (!redDetected) {
+    //     pausedForRed = false;
+    //   }
+    //   if (!blueDetected) {
+    //     pausedForBlue = false;
+    //   }
+    // }
+  }
 }
 
 int armStatesTask() {
@@ -504,11 +506,7 @@ void buttonRdown_released() { func.conveyorSpeed = 0;
 func.rollerSpeed = 0; }
 
 void buttonUP_pressed() {
-  if (sortingColor == "red") {
-    sortingColor = "blue";
-  } else if (sortingColor == "blue") {
-    sortingColor = "red";
-  }
+
 }
 
 void buttonDOWN_pressed() {
