@@ -1,24 +1,24 @@
 // ---- START VEXCODE CONFIGURED DEVICES ----
 // Robot Configuration:
 // [Name]               [Type]        [Port(s)]
-// LBackDrive           motor         15              
-// LTopDrive            motor         14              
-// LBottomDrive         motor         16              
-// RTopDrive            motor         12              
-// RBottomDrive         motor         13              
-// IntakeFull           motor         4               
-// IntakeHalf           motor         3               
-// Arm                  motor         1               
-// Inertial8            inertial      8               
-// OdomForward          rotation      20              
-// OdomSideways         rotation      21              
-// Controller1          controller                    
-// Optical              optical       5               
-// MogoMech             digital_out   A               
-// Doinker              digital_out   B               
-// IntakeLift           digital_out   C               
-// Rotation2            rotation      2               
-// RBackDrive           motor         11              
+// LBackDrive           motor         15
+// LTopDrive            motor         14
+// LBottomDrive         motor         16
+// RTopDrive            motor         12
+// RBottomDrive         motor         13
+// IntakeFull           motor         4
+// IntakeHalf           motor         3
+// Arm                  motor         1
+// Inertial8            inertial      8
+// OdomForward          rotation      20
+// OdomSideways         rotation      21
+// Controller1          controller
+// Optical              optical       5
+// MogoMech             digital_out   A
+// Doinker              digital_out   B
+// IntakeLift           digital_out   C
+// Rotation2            rotation      2
+// RBackDrive           motor         11
 // ---- END VEXCODE CONFIGURED DEVICES ----
 #include "vex.h"
 #include <iostream>
@@ -144,7 +144,7 @@ Drive chassis(
 
 );
 bool ispreauto;
-int current_auton_selection = 4;
+int current_auton_selection = 5;
 bool auto_started = false;
 
 float armGoal = 1;
@@ -472,42 +472,66 @@ int armStatesTask() {
 }
 
 void buttonLup_pressed() {
-  if (func.armState < 2) {
-    func.armState += 1;
+  if (Controller1.ButtonL2.pressing()) {
+    func.rollerSpeed = -100;
+    func.conveyorSpeed = 0;
   } else {
-    func.armState = 2;
+    if (func.armState < 2) {
+      func.armState += 1;
+    } else {
+      func.armState = 2;
+    }
   }
 }
 
 void buttonLdown_pressed() {
-  if (func.armState > 0) {
-    func.armState -= 1;
+  if (Controller1.ButtonL1.pressing()) {
+    func.rollerSpeed = -100;
+    func.conveyorSpeed = 0;
   } else {
-    func.armState = 0;
+    if (func.armState > 0) {
+      func.armState -= 1;
+    } else {
+      func.armState = 0;
+    }
   }
 }
 
-void buttonLup_released() {}
+void buttonLup_released() {func.rollerSpeed = 0;}
 
-void buttonLdown_released() {}
+void buttonLdown_released() {func.rollerSpeed = 0;}
 
-void buttonRup_pressed() { 
-  func.conveyorSpeed = 100;
-  func.rollerSpeed = 100; }
-
-void buttonRdown_pressed() { 
-  func.conveyorSpeed = -100;
-  func.rollerSpeed = -100; }
-
-void buttonRup_released() { func.conveyorSpeed = 0;
-func.rollerSpeed = 0; }
-
-void buttonRdown_released() { func.conveyorSpeed = 0;
-func.rollerSpeed = 0; }
-
-void buttonUP_pressed() {
-
+void buttonRup_pressed() {
+  if (Controller1.ButtonR2.pressing()) {
+    func.rollerSpeed = 100;
+    func.conveyorSpeed = 0;
+  } else {
+    func.conveyorSpeed = 100;
+    func.rollerSpeed = 100;
+  }
 }
+
+void buttonRdown_pressed() {
+  if (Controller1.ButtonR1.pressing()) {
+    func.rollerSpeed = 100;
+    func.conveyorSpeed = 0;
+  } else {
+    func.conveyorSpeed = -100;
+    func.rollerSpeed = -100;
+  }
+}
+
+void buttonRup_released() {
+  func.conveyorSpeed = 0;
+  func.rollerSpeed = 0;
+}
+
+void buttonRdown_released() {
+  func.conveyorSpeed = 0;
+  func.rollerSpeed = 0;
+}
+
+void buttonUP_pressed() {}
 
 void buttonDOWN_pressed() {
   Arm.setVelocity(-70, pct);
@@ -519,18 +543,18 @@ void buttonDOWN_pressed() {
 
 void buttonLEFT_pressed() { Doinker = !Doinker; }
 
-void buttonRIGHT_pressed() {
-
-}
+void buttonRIGHT_pressed() {}
 
 void buttonX_pressed() { IntakeLift = !IntakeLift; }
 
 void buttonY_pressed() { MogoMech = !MogoMech; }
 
 void buttonB_pressed() {
-  func.conveyorSpeed = 100; func.rollerSpeed = 100;
+  func.conveyorSpeed = 100;
+  func.rollerSpeed = 100;
   task::sleep(200);
-  func.conveyorSpeed = 0; func.rollerSpeed = 0;
+  func.conveyorSpeed = 0;
+  func.rollerSpeed = 0;
 }
 
 void buttonLup_pressed2() {}
@@ -573,11 +597,11 @@ void autonomous(void) {
     break;
   case 4:
     sortingColor = "blue";
-    redLeftWP();
+    redLeftWP2();
     break;
   case 5:
     sortingColor = "red";
-    blueRightWP();
+    blueRightWP2();
     break;
   case 6:
     sortingColor = "blue";

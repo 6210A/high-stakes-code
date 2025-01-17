@@ -12,7 +12,7 @@ void default_constants() {
   // Each constant set is in the form of (maxVoltage, kP, kI, kD, startI).
   chassis.set_drive_constants(10, 1.5, 0, 10, 0);
   chassis.set_heading_constants(6, .4, 0, 1, 0);
-  chassis.set_turn_constants(6, .4, .03, 3, 15);
+  chassis.set_turn_constants(6, .4, .03, 4, 15);
   chassis.set_swing_constants(10, .3, .001, 2, 15);
   // Each exit condition set is in the form of (settle_error, settle_time,
   // timeout).
@@ -195,6 +195,37 @@ void blueRightNoWP() {
   chassis.drive_distance(20, -445);
 }
 
+void redLeftWP2() {
+  chassis.set_coordinates(0, 0, 145);
+  default_constants();
+  chassis.set_drive_constants(11, 1.9, 0, 10, 0);
+  func.conveyorSpeed = -100;
+  task::sleep(150);
+  func.armState = 2;
+  task::sleep(1300);
+  func.armState = 0;
+  func.conveyorSpeed = 0;
+  chassis.turn_to_angle(161);
+  chassis.drive_distance(-25);
+  chassis.drive_max_voltage = 8;
+  chassis.drive_distance(-10);
+  MogoMech = true;
+  chassis.turn_to_angle(315);
+  func.conveyorSpeed = 100;
+  func.rollerSpeed = 100;
+  chassis.drive_distance(21);
+  chassis.turn_to_angle(275);
+  chassis.drive_distance(15);
+  task::sleep(200);
+  chassis.drive_distance(-17);
+  chassis.turn_to_angle(210);
+  chassis.drive_distance(13);
+  task::sleep(400);
+  chassis.turn_to_angle(80);
+  chassis.drive_max_voltage = 8;
+  chassis.drive_distance(30);
+}
+
 void redLeftWP() {
   chassis.set_coordinates(0, 0, -90);
   default_constants();
@@ -237,6 +268,37 @@ void redLeftWP() {
   chassis.drive_distance(2);
   func.conveyorSpeed = 0; func.rollerSpeed = 0;
 };
+
+void blueRightWP2() {
+  chassis.set_coordinates(0, 0, -145);
+  default_constants();
+  chassis.set_drive_constants(11, 1.9, 0, 10, 0);
+  func.conveyorSpeed = -100;
+  task::sleep(150);
+  func.armState = 2;
+  task::sleep(1300);
+  func.armState = 0;
+  func.conveyorSpeed = 0;
+  chassis.turn_to_angle(-161);
+  chassis.drive_distance(-25);
+  chassis.drive_max_voltage = 8;
+  chassis.drive_distance(-10);
+  MogoMech = true;
+  chassis.turn_to_angle(-315);
+  func.conveyorSpeed = 100;
+  func.rollerSpeed = 100;
+  chassis.drive_distance(21);
+  chassis.turn_to_angle(-275);
+  chassis.drive_distance(15);
+  task::sleep(200);
+  chassis.drive_distance(-17);
+  chassis.turn_to_angle(-210);
+  chassis.drive_distance(13);
+  task::sleep(400);
+  chassis.turn_to_angle(-80);
+  chassis.drive_max_voltage = 8;
+  chassis.drive_distance(30);
+}
 
 void blueRightWP() {
   chassis.set_coordinates(0, 0, 90);
