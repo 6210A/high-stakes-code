@@ -9,6 +9,226 @@
 // IntakeFull           motor         4
 // IntakeHalf           motor         3
 // Arm                  motor         1
+// Inertial8            inertial      7
+// OdomForward          rotation      20
+// OdomSideways         rotation      21
+// Controller1          controller
+// Optical              optical       5
+// MogoMech             digital_out   A
+// Doinker              digital_out   B
+// IntakeLift           digital_out   C
+// Rotation2            rotation      2
+// RBackDrive           motor         11
+// ---- END VEXCODE CONFIGURED DEVICES ----
+// ---- START VEXCODE CONFIGURED DEVICES ----
+// Robot Configuration:
+// [Name]               [Type]        [Port(s)]
+// LBackDrive           motor         15
+// LTopDrive            motor         14
+// LBottomDrive         motor         16
+// RTopDrive            motor         12
+// RBottomDrive         motor         13
+// IntakeFull           motor         4
+// IntakeHalf           motor         3
+// Arm                  motor         1
+// Inertial8            inertial      8
+// OdomForward          rotation      20
+// OdomSideways         rotation      21
+// Controller1          controller
+// Optical              optical       5
+// MogoMech             digital_out   A
+// Doinker              digital_out   B
+// IntakeLift           digital_out   C
+// Rotation2            rotation      2
+// RBackDrive           motor         11
+// ---- END VEXCODE CONFIGURED DEVICES ----
+// ---- START VEXCODE CONFIGURED DEVICES ----
+// Robot Configuration:
+// [Name]               [Type]        [Port(s)]
+// LBackDrive           motor         15
+// LTopDrive            motor         14
+// LBottomDrive         motor         16
+// RTopDrive            motor         12
+// RBottomDrive         motor         13
+// IntakeFull           motor         4
+// IntakeHalf           motor         3
+// Arm                  motor         1
+// Inertial8            inertial      9
+// OdomForward          rotation      20
+// OdomSideways         rotation      21
+// Controller1          controller
+// Optical              optical       5
+// MogoMech             digital_out   A
+// Doinker              digital_out   B
+// IntakeLift           digital_out   C
+// Rotation2            rotation      2
+// RBackDrive           motor         11
+// ---- END VEXCODE CONFIGURED DEVICES ----
+// ---- START VEXCODE CONFIGURED DEVICES ----
+// Robot Configuration:
+// [Name]               [Type]        [Port(s)]
+// LBackDrive           motor         15
+// LTopDrive            motor         14
+// LBottomDrive         motor         16
+// RTopDrive            motor         12
+// RBottomDrive         motor         13
+// IntakeFull           motor         4
+// IntakeHalf           motor         3
+// Arm                  motor         1
+// Inertial8            inertial      8
+// OdomForward          rotation      20
+// OdomSideways         rotation      21
+// Controller1          controller
+// Optical              optical       5
+// MogoMech             digital_out   A
+// Doinker              digital_out   B
+// IntakeLift           digital_out   C
+// Rotation2            rotation      2
+// RBackDrive           motor         11
+// ---- END VEXCODE CONFIGURED DEVICES ----
+// ---- START VEXCODE CONFIGURED DEVICES ----
+// Robot Configuration:
+// [Name]               [Type]        [Port(s)]
+// LBackDrive           motor         15
+// LTopDrive            motor         14
+// LBottomDrive         motor         16
+// RTopDrive            motor         12
+// RBottomDrive         motor         13
+// IntakeFull           motor         4
+// IntakeHalf           motor         3
+// Arm                  motor         1
+// Inertial8            inertial      8
+// OdomForward          rotation      20
+// OdomSideways         rotation      21
+// Controller1          controller
+// Optical              optical       5
+// MogoMech             digital_out   A
+// Doinker              digital_out   B
+// IntakeLift           digital_out   C
+// Rotation2            rotation      2
+// RBackDrive           motor         11
+// ---- END VEXCODE CONFIGURED DEVICES ----
+// ---- START VEXCODE CONFIGURED DEVICES ----
+// Robot Configuration:
+// [Name]               [Type]        [Port(s)]
+// LBackDrive           motor         15
+// LTopDrive            motor         14
+// LBottomDrive         motor         16
+// RTopDrive            motor         12
+// RBottomDrive         motor         13
+// IntakeFull           motor         4
+// IntakeHalf           motor         3
+// Arm                  motor         1
+// Inertial8            inertial      9
+// OdomForward          rotation      20
+// OdomSideways         rotation      21
+// Controller1          controller
+// Optical              optical       5
+// MogoMech             digital_out   A
+// Doinker              digital_out   B
+// IntakeLift           digital_out   C
+// Rotation2            rotation      2
+// RBackDrive           motor         11
+// ---- END VEXCODE CONFIGURED DEVICES ----
+// ---- START VEXCODE CONFIGURED DEVICES ----
+// Robot Configuration:
+// [Name]               [Type]        [Port(s)]
+// LBackDrive           motor         15
+// LTopDrive            motor         14
+// LBottomDrive         motor         16
+// RTopDrive            motor         12
+// RBottomDrive         motor         13
+// IntakeFull           motor         4
+// IntakeHalf           motor         3
+// Arm                  motor         1
+// Inertial8            inertial      8
+// OdomForward          rotation      20
+// OdomSideways         rotation      21
+// Controller1          controller
+// Optical              optical       5
+// MogoMech             digital_out   A
+// Doinker              digital_out   B
+// IntakeLift           digital_out   C
+// Rotation2            rotation      2
+// RBackDrive           motor         11
+// ---- END VEXCODE CONFIGURED DEVICES ----
+// ---- START VEXCODE CONFIGURED DEVICES ----
+// Robot Configuration:
+// [Name]               [Type]        [Port(s)]
+// LBackDrive           motor         15
+// LTopDrive            motor         14
+// LBottomDrive         motor         16
+// RTopDrive            motor         12
+// RBottomDrive         motor         13
+// IntakeFull           motor         4
+// IntakeHalf           motor         3
+// Arm                  motor         1
+// Inertial8            inertial      9
+// OdomForward          rotation      20
+// OdomSideways         rotation      21
+// Controller1          controller
+// Optical              optical       5
+// MogoMech             digital_out   A
+// Doinker              digital_out   B
+// IntakeLift           digital_out   C
+// Rotation2            rotation      2
+// RBackDrive           motor         11
+// ---- END VEXCODE CONFIGURED DEVICES ----
+// ---- START VEXCODE CONFIGURED DEVICES ----
+// Robot Configuration:
+// [Name]               [Type]        [Port(s)]
+// LBackDrive           motor         15
+// LTopDrive            motor         14
+// LBottomDrive         motor         16
+// RTopDrive            motor         12
+// RBottomDrive         motor         13
+// IntakeFull           motor         4
+// IntakeHalf           motor         3
+// Arm                  motor         1
+// Inertial9            inertial      9
+// OdomForward          rotation      20
+// OdomSideways         rotation      21
+// Controller1          controller
+// Optical              optical       5
+// MogoMech             digital_out   A
+// Doinker              digital_out   B
+// IntakeLift           digital_out   C
+// Rotation2            rotation      2
+// RBackDrive           motor         11
+// ---- END VEXCODE CONFIGURED DEVICES ----
+// ---- START VEXCODE CONFIGURED DEVICES ----
+// Robot Configuration:
+// [Name]               [Type]        [Port(s)]
+// LBackDrive           motor         15
+// LTopDrive            motor         14
+// LBottomDrive         motor         16
+// RTopDrive            motor         12
+// RBottomDrive         motor         13
+// IntakeFull           motor         4
+// IntakeHalf           motor         3
+// Arm                  motor         1
+// Inertial8            inertial      8
+// OdomForward          rotation      20
+// OdomSideways         rotation      21
+// Controller1          controller
+// Optical              optical       5
+// MogoMech             digital_out   A
+// Doinker              digital_out   B
+// IntakeLift           digital_out   C
+// Rotation2            rotation      2
+// RBackDrive           motor         11
+// ---- END VEXCODE CONFIGURED DEVICES ----
+// ---- START VEXCODE CONFIGURED DEVICES ----
+// Robot Configuration:
+// [Name]               [Type]        [Port(s)]
+// LBackDrive           motor         15
+// LTopDrive            motor         14
+// LBottomDrive         motor         16
+// RTopDrive            motor         12
+// RBottomDrive         motor         13
+// IntakeFull           motor         4
+// IntakeHalf           motor         3
+// Arm                  motor         1
 // Inertial8            inertial      8
 // OdomForward          rotation      20
 // OdomSideways         rotation      21
@@ -144,7 +364,7 @@ Drive chassis(
 
 );
 bool ispreauto;
-int current_auton_selection = 5;
+int current_auton_selection = 10;
 bool auto_started = false;
 
 float armGoal = 1;
@@ -204,38 +424,44 @@ void pre_auton() {
     Brain.Screen.printAt(5, 100, "Selected Auton:");
     switch (current_auton_selection) {
     case 0:
-      Brain.Screen.printAt(5, 120, "Red Back No WP");
+      Brain.Screen.printAt(8, 120, "Red Goal 4");
       break;
     case 1:
-      Brain.Screen.printAt(5, 120, "Blue Back No WP");
+      Brain.Screen.printAt(8, 120, "Blue Goal 4");
       break;
     case 2:
-      Brain.Screen.printAt(5, 120, "Red Goal Rush");
+      Brain.Screen.printAt(8, 120, "Red Goal Rush");
       break;
     case 3:
-      Brain.Screen.printAt(5, 120, "Blue Goal Rush");
+      Brain.Screen.printAt(8, 120, "Blue Goal Rush");
       break;
     case 4:
-      Brain.Screen.printAt(5, 120, "Red Back WP");
+      Brain.Screen.printAt(8, 120, "Red Back WP");
       break;
     case 5:
-      Brain.Screen.printAt(5, 120, "Blue Back WP");
+      Brain.Screen.printAt(8, 120, "Blue Back WP");
       break;
     case 6:
-      Brain.Screen.printAt(5, 120, "Red Front No WP");
+      Brain.Screen.printAt(8, 120, "Red Front No WP");
       break;
     case 7:
-      Brain.Screen.printAt(5, 120, "Blue Front No WP");
+      Brain.Screen.printAt(8, 120, "Blue Front No WP");
       break;
     case 8:
-      Brain.Screen.printAt(5, 120, "Skills Auton");
+      Brain.Screen.printAt(8, 120, "Skills Auton");
+      break;
+    case 9:
+      Brain.Screen.printAt(8, 120, "Red Goal WP");
+      break;
+    case 10:
+      Brain.Screen.printAt(8, 120, "Blue Goal WP");
       break;
     }
     if (Brain.Screen.pressing()) {
       while (Brain.Screen.pressing()) {
       }
       current_auton_selection++;
-    } else if (current_auton_selection == 9) {
+    } else if (current_auton_selection == 11) {
       current_auton_selection = 0;
     }
     task::sleep(10);
@@ -497,9 +723,9 @@ void buttonLdown_pressed() {
   }
 }
 
-void buttonLup_released() {func.rollerSpeed = 0;}
+void buttonLup_released() { func.rollerSpeed = 0; }
 
-void buttonLdown_released() {func.rollerSpeed = 0;}
+void buttonLdown_released() { func.rollerSpeed = 0; }
 
 void buttonRup_pressed() {
   if (Controller1.ButtonR2.pressing()) {
@@ -581,11 +807,12 @@ void autonomous(void) {
   switch (current_auton_selection) {
   case 0:
     sortingColor = "blue";
-    redLeftNoWP();
+    redGoal4();
+    // turn_test();
     break;
   case 1:
     sortingColor = "red";
-    blueRightNoWP();
+    blueGoal4();
     break;
   case 2:
     sortingColor = "blue";
@@ -614,6 +841,14 @@ void autonomous(void) {
   case 8:
     sortingColor = "blue";
     skillsAuton();
+    break;
+  case 9:
+  sortingColor = "blue";
+    redGoalWP3();
+    break;
+  case 10:
+    sortingColor = "red";
+    blueGoalWP3();
     break;
   }
 }
