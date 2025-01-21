@@ -424,37 +424,37 @@ void pre_auton() {
     Brain.Screen.printAt(5, 100, "Selected Auton:");
     switch (current_auton_selection) {
     case 0:
-      Brain.Screen.printAt(8, 120, "Red Goal 4");
+      Brain.Screen.printAt(8, 120, "________________________Red Goal 4");
       break;
     case 1:
-      Brain.Screen.printAt(8, 120, "Blue Goal 4");
+      Brain.Screen.printAt(8, 120, "________________________Blue Goal 4");
       break;
     case 2:
-      Brain.Screen.printAt(8, 120, "Red Goal Rush");
+      Brain.Screen.printAt(8, 120, "________________________Red Goal Rush");
       break;
     case 3:
-      Brain.Screen.printAt(8, 120, "Blue Goal Rush");
+      Brain.Screen.printAt(8, 120, "________________________Blue Goal Rush");
       break;
     case 4:
-      Brain.Screen.printAt(8, 120, "Red Back WP");
+      Brain.Screen.printAt(8, 120, "________________________Red Back WP");
       break;
     case 5:
-      Brain.Screen.printAt(8, 120, "Blue Back WP");
+      Brain.Screen.printAt(8, 120, "________________________Blue Back WP");
       break;
     case 6:
-      Brain.Screen.printAt(8, 120, "Red Front No WP");
+      Brain.Screen.printAt(8, 120, "________________________Red Front No WP");
       break;
     case 7:
-      Brain.Screen.printAt(8, 120, "Blue Front No WP");
+      Brain.Screen.printAt(8, 120, "________________________Blue Front No WP");
       break;
     case 8:
-      Brain.Screen.printAt(8, 120, "Skills Auton");
+      Brain.Screen.printAt(8, 120, "________________________Skills Auton");
       break;
     case 9:
-      Brain.Screen.printAt(8, 120, "Red Goal WP");
+      Brain.Screen.printAt(8, 120, "________________________Red Goal WP");
       break;
     case 10:
-      Brain.Screen.printAt(8, 120, "Blue Goal WP");
+      Brain.Screen.printAt(8, 120, "________________________Blue Goal WP");
       break;
     }
     if (Brain.Screen.pressing()) {

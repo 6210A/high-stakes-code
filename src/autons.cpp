@@ -166,7 +166,7 @@ void redGoal4() {
   chassis.drive_max_voltage = 8;
   chassis.drive_distance(31);
   chassis.drive_max_voltage = 12;
-  chassis.drive_distance(8);
+  chassis.drive_distance(5);
   task::sleep(400);
   chassis.drive_max_voltage = 6;
   chassis.drive_distance(-10);
@@ -286,12 +286,20 @@ void blueGoalWP3() {
   chassis.drive_distance(-11);
   chassis.turn_to_angle(-75);
   chassis.drive_distance(37);
+
+  chassis.turn_to_angle(200);
+  Doinker = true;
+  func.rollerSpeed = -100;
+  chassis.drive_distance(33);
+  chassis.heading_max_voltage = 12;
+  chassis.turn_to_angle(325);
+  /*
   task::sleep(250);
   chassis.turn_to_angle(83);
   chassis.drive_distance(15);
   func.conveyorSpeed = 0;
   func.rollerSpeed = 0;
-  chassis.drive_distance(20);
+  chassis.drive_distance(20);*/
 }
 
 void redLeftNoWP() {
@@ -375,11 +383,11 @@ void redLeftWP2() {
   chassis.turn_to_angle(315);
   func.conveyorSpeed = 100;
   func.rollerSpeed = 100;
-  chassis.drive_distance(21);
+  chassis.drive_distance(17);
   chassis.turn_to_angle(275);
   chassis.drive_distance(15);
   task::sleep(200);
-  chassis.drive_distance(-17);
+  chassis.drive_distance(-16);
   chassis.turn_to_angle(210);
   chassis.drive_distance(13);
   task::sleep(400);
@@ -507,8 +515,7 @@ void blueRightWP() {
 
 void redGoalRush() {
   chassis.set_coordinates(0, 0, 0);
-  default_constants();
-  chassis.drive_max_voltage = 12;
+  chassis.set_drive_constants(12, 2, 0, 15, 0);
   func.conveyorSpeed = -100;
   task::sleep(150);
   func.conveyorSpeed = 0;
@@ -517,7 +524,8 @@ void redGoalRush() {
   chassis.drive_distance(11, -20);
   Doinker = true;
   task::sleep(300);
-  chassis.drive_max_voltage = 10;
+  // default_constants();
+  chassis.drive_max_voltage = 8;
   chassis.drive_distance(-10, -10);
   Doinker = false;
   task::sleep(100);
@@ -548,14 +556,23 @@ void redGoalRush() {
   MogoMech = true;
   chassis.drive_max_voltage = 12;
   func.conveyorSpeed = 100;
-  IntakeLift = true;
+  chassis.turn_to_angle(135);
+  Doinker = true;
+  func.rollerSpeed = -100;
+  chassis.drive_distance(42); 
+  chassis.turn_to_angle(315);
+
+  //Get Ring From Stack
+  /*IntakeLift = true;
   func.rollerSpeed = 100;
   chassis.turn_to_angle(-135);
   chassis.drive_distance(25);
   IntakeLift = false;
   chassis.turn_to_angle(-35);
   chassis.drive_max_voltage = 8;
-  chassis.drive_distance(10);
+  chassis.drive_distance(10);*/
+
+
   /* chassis.turn_to_angle(153);
   chassis.drive_distance(-8);
   MogoMech = true;
@@ -597,43 +614,53 @@ void redGoalRush() {
 }
 
 void blueGoalRush() {
-  // blue
-  chassis.set_coordinates(0, 0, -180);
-  default_constants();
-  //
-  chassis.drive_max_voltage = 11;
-  chassis.drive_distance(-10);
-  chassis.turn_to_angle(-153);
-  chassis.drive_distance(-7.75);
-  MogoMech = true;
-  task::sleep(250);
- // chassis.drive_max_voltage = 11;
-  chassis.turn_to_angle(-195);
-  func.conveyorSpeed = 100; func.rollerSpeed = 100;
-  chassis.drive_distance(5);
-  task::sleep(1000);
-  MogoMech = false;
+  chassis.set_coordinates(0, 0, 0);
+  chassis.set_drive_constants(12, 2, 0, 15, 0);
+  func.conveyorSpeed = -100;
   task::sleep(150);
-  func.conveyorSpeed = 0; func.rollerSpeed = 0;
-  chassis.turn_to_angle(-83);
-  chassis.drive_distance(-10);
-  MogoMech = true;
-  task::sleep(200);
-  func.conveyorSpeed = 100; func.rollerSpeed = 100;
-  chassis.turn_max_voltage = 6;
-  chassis.turn_to_angle(135);
-  IntakeLift = true;
-  func.conveyorSpeed = 100; func.rollerSpeed = 100;
-  chassis.drive_distance(11);
-  IntakeLift = false;
+  func.conveyorSpeed = 0;
+  chassis.drive_distance(27);
+  chassis.turn_max_voltage = 10;
+  chassis.drive_distance(14, 75);
+  Doinker = true;
   task::sleep(300);
-  chassis.drive_distance(-1);
-  // chassis.turn_to_angle(0);
-  // task::sleep(400);
-  // chassis.drive_distance(8);
-  // elims
-  // chassis.turn_to_angle(-110);
-  //
+  // default_constants();
+  chassis.drive_max_voltage = 8;
+  chassis.drive_distance(-10, 10);
+  Doinker = false;
+  task::sleep(100);
+  chassis.drive_distance(-3, 10);
+  chassis.drive_max_voltage = 12;
+  chassis.drive_distance(-9, 0);
+  func.rollerSpeed = 100;
+  chassis.turn_to_angle(50);
+  chassis.drive_distance(10);
+  task::sleep(50);
+  chassis.turn_to_angle(175);
+  chassis.drive_distance(-11);
+  MogoMech = true;
+  func.conveyorSpeed = 80;
+  chassis.drive_distance(-3);
+  chassis.drive_distance(2);
+  func.conveyorSpeed = 0;
+  func.rollerSpeed = 0;
+  MogoMech = false;
+  task::sleep(100);
+  chassis.turn_max_voltage = 8;
+  chassis.drive_distance(24);
+  chassis.turn_to_angle(240);
+  chassis.turn_max_voltage = 11;
+  chassis.drive_distance(-22);
+  chassis.drive_max_voltage = 8;
+  chassis.drive_distance(-5);
+  MogoMech = true;
+  chassis.drive_max_voltage = 12;
+  func.conveyorSpeed = 100;
+  chassis.turn_to_angle(-135);
+  Doinker = true;
+  func.rollerSpeed = -100;
+  chassis.drive_distance(42); 
+  chassis.turn_to_angle(-315);
 }
 
 void redRightWP() {}
