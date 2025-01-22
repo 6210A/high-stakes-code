@@ -364,7 +364,7 @@ Drive chassis(
 
 );
 bool ispreauto;
-int current_auton_selection = 10;
+int current_auton_selection = 6;
 bool auto_started = false;
 
 float armGoal = 1;
@@ -424,10 +424,10 @@ void pre_auton() {
     Brain.Screen.printAt(5, 100, "Selected Auton:");
     switch (current_auton_selection) {
     case 0:
-      Brain.Screen.printAt(8, 120, "________________________Red Goal 4");
+      Brain.Screen.printAt(8, 120, "________________________Red Positive 4");
       break;
     case 1:
-      Brain.Screen.printAt(8, 120, "________________________Blue Goal 4");
+      Brain.Screen.printAt(8, 120, "________________________Blue Positive 4");
       break;
     case 2:
       Brain.Screen.printAt(8, 120, "________________________Red Goal Rush");
@@ -436,25 +436,25 @@ void pre_auton() {
       Brain.Screen.printAt(8, 120, "________________________Blue Goal Rush");
       break;
     case 4:
-      Brain.Screen.printAt(8, 120, "________________________Red Back WP");
+      Brain.Screen.printAt(8, 120, "________________________Red Negative WP");
       break;
     case 5:
-      Brain.Screen.printAt(8, 120, "________________________Blue Back WP");
+      Brain.Screen.printAt(8, 120, "________________________Blue Negative WP");
       break;
     case 6:
-      Brain.Screen.printAt(8, 120, "________________________Red Front No WP");
+      Brain.Screen.printAt(8, 120, "________________________Red Negative 6 Ring");
       break;
     case 7:
-      Brain.Screen.printAt(8, 120, "________________________Blue Front No WP");
+      Brain.Screen.printAt(8, 120, "________________________Blue Negative 6 Ring");
       break;
     case 8:
       Brain.Screen.printAt(8, 120, "________________________Skills Auton");
       break;
     case 9:
-      Brain.Screen.printAt(8, 120, "________________________Red Goal WP");
+      Brain.Screen.printAt(8, 120, "________________________Red Positive WP");
       break;
     case 10:
-      Brain.Screen.printAt(8, 120, "________________________Blue Goal WP");
+      Brain.Screen.printAt(8, 120, "________________________Blue Positive WP");
       break;
     }
     if (Brain.Screen.pressing()) {
@@ -832,7 +832,7 @@ void autonomous(void) {
     break;
   case 6:
     sortingColor = "blue";
-    redRightWP();
+    red6Ring();
     break;
   case 7:
     sortingColor = "red";
