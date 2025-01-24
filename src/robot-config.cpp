@@ -26,6 +26,7 @@ digital_out Doinker = digital_out(Brain.ThreeWirePort.B);
 digital_out IntakeLift = digital_out(Brain.ThreeWirePort.C);
 rotation Rotation2 = rotation(PORT2, true);
 motor RBackDrive = motor(PORT11, ratio6_1, false);
+rotation Sorting = rotation(PORT8, false);
 
 // VEXcode generated functions
 // define variable for remote controller enable/disable

@@ -1,245 +1,3 @@
-// ---- START VEXCODE CONFIGURED DEVICES ----
-// Robot Configuration:
-// [Name]               [Type]        [Port(s)]
-// LBackDrive           motor         15
-// LTopDrive            motor         14
-// LBottomDrive         motor         16
-// RTopDrive            motor         12
-// RBottomDrive         motor         13
-// IntakeFull           motor         4
-// IntakeHalf           motor         3
-// Arm                  motor         1
-// Inertial8            inertial      7
-// OdomForward          rotation      20
-// OdomSideways         rotation      21
-// Controller1          controller
-// Optical              optical       5
-// MogoMech             digital_out   A
-// Doinker              digital_out   B
-// IntakeLift           digital_out   C
-// Rotation2            rotation      2
-// RBackDrive           motor         11
-// ---- END VEXCODE CONFIGURED DEVICES ----
-// ---- START VEXCODE CONFIGURED DEVICES ----
-// Robot Configuration:
-// [Name]               [Type]        [Port(s)]
-// LBackDrive           motor         15
-// LTopDrive            motor         14
-// LBottomDrive         motor         16
-// RTopDrive            motor         12
-// RBottomDrive         motor         13
-// IntakeFull           motor         4
-// IntakeHalf           motor         3
-// Arm                  motor         1
-// Inertial8            inertial      8
-// OdomForward          rotation      20
-// OdomSideways         rotation      21
-// Controller1          controller
-// Optical              optical       5
-// MogoMech             digital_out   A
-// Doinker              digital_out   B
-// IntakeLift           digital_out   C
-// Rotation2            rotation      2
-// RBackDrive           motor         11
-// ---- END VEXCODE CONFIGURED DEVICES ----
-// ---- START VEXCODE CONFIGURED DEVICES ----
-// Robot Configuration:
-// [Name]               [Type]        [Port(s)]
-// LBackDrive           motor         15
-// LTopDrive            motor         14
-// LBottomDrive         motor         16
-// RTopDrive            motor         12
-// RBottomDrive         motor         13
-// IntakeFull           motor         4
-// IntakeHalf           motor         3
-// Arm                  motor         1
-// Inertial8            inertial      9
-// OdomForward          rotation      20
-// OdomSideways         rotation      21
-// Controller1          controller
-// Optical              optical       5
-// MogoMech             digital_out   A
-// Doinker              digital_out   B
-// IntakeLift           digital_out   C
-// Rotation2            rotation      2
-// RBackDrive           motor         11
-// ---- END VEXCODE CONFIGURED DEVICES ----
-// ---- START VEXCODE CONFIGURED DEVICES ----
-// Robot Configuration:
-// [Name]               [Type]        [Port(s)]
-// LBackDrive           motor         15
-// LTopDrive            motor         14
-// LBottomDrive         motor         16
-// RTopDrive            motor         12
-// RBottomDrive         motor         13
-// IntakeFull           motor         4
-// IntakeHalf           motor         3
-// Arm                  motor         1
-// Inertial8            inertial      8
-// OdomForward          rotation      20
-// OdomSideways         rotation      21
-// Controller1          controller
-// Optical              optical       5
-// MogoMech             digital_out   A
-// Doinker              digital_out   B
-// IntakeLift           digital_out   C
-// Rotation2            rotation      2
-// RBackDrive           motor         11
-// ---- END VEXCODE CONFIGURED DEVICES ----
-// ---- START VEXCODE CONFIGURED DEVICES ----
-// Robot Configuration:
-// [Name]               [Type]        [Port(s)]
-// LBackDrive           motor         15
-// LTopDrive            motor         14
-// LBottomDrive         motor         16
-// RTopDrive            motor         12
-// RBottomDrive         motor         13
-// IntakeFull           motor         4
-// IntakeHalf           motor         3
-// Arm                  motor         1
-// Inertial8            inertial      8
-// OdomForward          rotation      20
-// OdomSideways         rotation      21
-// Controller1          controller
-// Optical              optical       5
-// MogoMech             digital_out   A
-// Doinker              digital_out   B
-// IntakeLift           digital_out   C
-// Rotation2            rotation      2
-// RBackDrive           motor         11
-// ---- END VEXCODE CONFIGURED DEVICES ----
-// ---- START VEXCODE CONFIGURED DEVICES ----
-// Robot Configuration:
-// [Name]               [Type]        [Port(s)]
-// LBackDrive           motor         15
-// LTopDrive            motor         14
-// LBottomDrive         motor         16
-// RTopDrive            motor         12
-// RBottomDrive         motor         13
-// IntakeFull           motor         4
-// IntakeHalf           motor         3
-// Arm                  motor         1
-// Inertial8            inertial      9
-// OdomForward          rotation      20
-// OdomSideways         rotation      21
-// Controller1          controller
-// Optical              optical       5
-// MogoMech             digital_out   A
-// Doinker              digital_out   B
-// IntakeLift           digital_out   C
-// Rotation2            rotation      2
-// RBackDrive           motor         11
-// ---- END VEXCODE CONFIGURED DEVICES ----
-// ---- START VEXCODE CONFIGURED DEVICES ----
-// Robot Configuration:
-// [Name]               [Type]        [Port(s)]
-// LBackDrive           motor         15
-// LTopDrive            motor         14
-// LBottomDrive         motor         16
-// RTopDrive            motor         12
-// RBottomDrive         motor         13
-// IntakeFull           motor         4
-// IntakeHalf           motor         3
-// Arm                  motor         1
-// Inertial8            inertial      8
-// OdomForward          rotation      20
-// OdomSideways         rotation      21
-// Controller1          controller
-// Optical              optical       5
-// MogoMech             digital_out   A
-// Doinker              digital_out   B
-// IntakeLift           digital_out   C
-// Rotation2            rotation      2
-// RBackDrive           motor         11
-// ---- END VEXCODE CONFIGURED DEVICES ----
-// ---- START VEXCODE CONFIGURED DEVICES ----
-// Robot Configuration:
-// [Name]               [Type]        [Port(s)]
-// LBackDrive           motor         15
-// LTopDrive            motor         14
-// LBottomDrive         motor         16
-// RTopDrive            motor         12
-// RBottomDrive         motor         13
-// IntakeFull           motor         4
-// IntakeHalf           motor         3
-// Arm                  motor         1
-// Inertial8            inertial      9
-// OdomForward          rotation      20
-// OdomSideways         rotation      21
-// Controller1          controller
-// Optical              optical       5
-// MogoMech             digital_out   A
-// Doinker              digital_out   B
-// IntakeLift           digital_out   C
-// Rotation2            rotation      2
-// RBackDrive           motor         11
-// ---- END VEXCODE CONFIGURED DEVICES ----
-// ---- START VEXCODE CONFIGURED DEVICES ----
-// Robot Configuration:
-// [Name]               [Type]        [Port(s)]
-// LBackDrive           motor         15
-// LTopDrive            motor         14
-// LBottomDrive         motor         16
-// RTopDrive            motor         12
-// RBottomDrive         motor         13
-// IntakeFull           motor         4
-// IntakeHalf           motor         3
-// Arm                  motor         1
-// Inertial9            inertial      9
-// OdomForward          rotation      20
-// OdomSideways         rotation      21
-// Controller1          controller
-// Optical              optical       5
-// MogoMech             digital_out   A
-// Doinker              digital_out   B
-// IntakeLift           digital_out   C
-// Rotation2            rotation      2
-// RBackDrive           motor         11
-// ---- END VEXCODE CONFIGURED DEVICES ----
-// ---- START VEXCODE CONFIGURED DEVICES ----
-// Robot Configuration:
-// [Name]               [Type]        [Port(s)]
-// LBackDrive           motor         15
-// LTopDrive            motor         14
-// LBottomDrive         motor         16
-// RTopDrive            motor         12
-// RBottomDrive         motor         13
-// IntakeFull           motor         4
-// IntakeHalf           motor         3
-// Arm                  motor         1
-// Inertial8            inertial      8
-// OdomForward          rotation      20
-// OdomSideways         rotation      21
-// Controller1          controller
-// Optical              optical       5
-// MogoMech             digital_out   A
-// Doinker              digital_out   B
-// IntakeLift           digital_out   C
-// Rotation2            rotation      2
-// RBackDrive           motor         11
-// ---- END VEXCODE CONFIGURED DEVICES ----
-// ---- START VEXCODE CONFIGURED DEVICES ----
-// Robot Configuration:
-// [Name]               [Type]        [Port(s)]
-// LBackDrive           motor         15
-// LTopDrive            motor         14
-// LBottomDrive         motor         16
-// RTopDrive            motor         12
-// RBottomDrive         motor         13
-// IntakeFull           motor         4
-// IntakeHalf           motor         3
-// Arm                  motor         1
-// Inertial8            inertial      8
-// OdomForward          rotation      20
-// OdomSideways         rotation      21
-// Controller1          controller
-// Optical              optical       5
-// MogoMech             digital_out   A
-// Doinker              digital_out   B
-// IntakeLift           digital_out   C
-// Rotation2            rotation      2
-// RBackDrive           motor         11
-// ---- END VEXCODE CONFIGURED DEVICES ----
 #include "vex.h"
 #include <iostream>
 #include <string>
@@ -364,7 +122,7 @@ Drive chassis(
 
 );
 bool ispreauto;
-int current_auton_selection = 10;
+int current_auton_selection = 7;
 bool auto_started = false;
 
 float armGoal = 1;
@@ -424,10 +182,10 @@ void pre_auton() {
     Brain.Screen.printAt(5, 100, "Selected Auton:");
     switch (current_auton_selection) {
     case 0:
-      Brain.Screen.printAt(8, 120, "________________________Red Goal 4");
+      Brain.Screen.printAt(8, 120, "________________________Red Positive 4");
       break;
     case 1:
-      Brain.Screen.printAt(8, 120, "________________________Blue Goal 4");
+      Brain.Screen.printAt(8, 120, "________________________Blue Positive 4");
       break;
     case 2:
       Brain.Screen.printAt(8, 120, "________________________Red Goal Rush");
@@ -436,25 +194,27 @@ void pre_auton() {
       Brain.Screen.printAt(8, 120, "________________________Blue Goal Rush");
       break;
     case 4:
-      Brain.Screen.printAt(8, 120, "________________________Red Back WP");
+      Brain.Screen.printAt(8, 120, "________________________Red Negative WP");
       break;
     case 5:
-      Brain.Screen.printAt(8, 120, "________________________Blue Back WP");
+      Brain.Screen.printAt(8, 120, "________________________Blue Negative WP");
       break;
     case 6:
-      Brain.Screen.printAt(8, 120, "________________________Red Front No WP");
+      Brain.Screen.printAt(8, 120,
+                           "________________________Blue Negative 6 Ring");
       break;
     case 7:
-      Brain.Screen.printAt(8, 120, "________________________Blue Front No WP");
+      Brain.Screen.printAt(8, 120,
+                           "________________________Red Negative 6 Ring");
       break;
     case 8:
       Brain.Screen.printAt(8, 120, "________________________Skills Auton");
       break;
     case 9:
-      Brain.Screen.printAt(8, 120, "________________________Red Goal WP");
+      Brain.Screen.printAt(8, 120, "________________________Red Positive WP");
       break;
     case 10:
-      Brain.Screen.printAt(8, 120, "________________________Blue Goal WP");
+      Brain.Screen.printAt(8, 120, "________________________Blue Positive WP");
       break;
     }
     if (Brain.Screen.pressing()) {
@@ -627,45 +387,54 @@ int intakeControlTask() {
 }
 
 int sortingTask() {
-  // bool pausedForRed = false;
-  // bool pausedForBlue = false;
+  bool pausedForRed = false;
+  bool pausedForBlue = false;
 
   while (1) {
     sleep(5);
-    // while(auto_started) {
-    //   if (sortingColor == "red" && redDetected && intakeRunning &&
-    //       !pausedForRed) {
-    //     pausedForRed = true;
-    //     if (func.conveyorSpeed != 0) {
-    //       originalIntakeSpeed = func.conveyorSpeed;
-    //     } else {
-    //       func.conveyorSpeed = 100;
-    //     }
-    //     sleep(145);
-    //     func.conveyorSpeed = 0;
-    //     sleep(200);
-    //     func.conveyorSpeed = originalIntakeSpeed;
-    //   } else if (sortingColor == "blue" && blueDetected && intakeRunning &&
-    //              !pausedForBlue) {
-    //     pausedForBlue = true;
-    //     if (func.conveyorSpeed != 0) {
-    //       originalIntakeSpeed = func.conveyorSpeed;
-    //     } else {
-    //       func.conveyorSpeed = 100;
-    //     }
-    //     sleep(145);
-    //     func.conveyorSpeed = 0;
-    //     sleep(200);
-    //     func.conveyorSpeed = originalIntakeSpeed;
-    //   }
+    if (auto_started) {
+      if (sortingColor == "red" && redDetected && intakeRunning &&
+          !pausedForRed) {
+        pausedForRed = true;
+        if (func.conveyorSpeed != 0) {
+          originalIntakeSpeed = func.conveyorSpeed;
+        } else {
+          func.conveyorSpeed = 100;
+        }
+        Sorting.setPosition(0, deg);
+        while (fabs(Sorting.position(deg)) < 270) {
+          sleep(1);
+        }
+        // sleep(145);
+        func.conveyorSpeed = -100;
+        sleep(200);
+        func.conveyorSpeed = originalIntakeSpeed;
+        Sorting.setPosition(0, deg);
+      } else if (sortingColor == "blue" && blueDetected && intakeRunning &&
+                 !pausedForBlue) {
+        pausedForBlue = true;
+        if (func.conveyorSpeed != 0) {
+          originalIntakeSpeed = func.conveyorSpeed;
+        } else {
+          func.conveyorSpeed = 100;
+        }
+        Sorting.setPosition(0, deg);
+        while (fabs(Sorting.position(deg)) < 270) {
+          sleep(1);
+        }
+        func.conveyorSpeed = -100;
+        sleep(200);
+        Sorting.setPosition(0, deg);
+        func.conveyorSpeed = originalIntakeSpeed;
+      }
 
-    //   if (!redDetected) {
-    //     pausedForRed = false;
-    //   }
-    //   if (!blueDetected) {
-    //     pausedForBlue = false;
-    //   }
-    // }
+      if (!redDetected) {
+        pausedForRed = false;
+      }
+      if (!blueDetected) {
+        pausedForBlue = false;
+      }
+    }
   }
 }
 
@@ -673,17 +442,30 @@ int armStatesTask() {
   Arm.setStopping(hold);
   bool outakeHappened = false;
 
+  double previousPosition = 0;
+  double derivative;
+  double kp = 2.5;
+  double kd = 0.07;
+
   while (1) {
-    sleep(20);
+    sleep(5);
+
     if (!ispreauto) {
-      Arm.setVelocity((armGoal - Rotation2.position(deg)) * 1.75, pct);
+      double currentPosition = Rotation2.position(deg);
+      double error = armGoal - currentPosition;
+      derivative = (currentPosition - previousPosition) / 0.005; // 0.005s
+
+      double arm_velocity = (kp * error) - (kd * derivative);
+      Arm.setVelocity(arm_velocity, pct);
+
+      previousPosition = currentPosition;
 
       if (func.armState == 0) {
         armGoal = 1;
         outakeHappened = false;
       }
       if (func.armState == 1) {
-        armGoal = 24;
+        armGoal = 23;
         outakeHappened = false;
       }
       if (func.armState == 2 && !outakeHappened) {
@@ -757,7 +539,13 @@ void buttonRdown_released() {
   func.rollerSpeed = 0;
 }
 
-void buttonUP_pressed() {}
+void buttonUP_pressed() {
+  if (sortingColor == "red") {
+    sortingColor = "blue";
+  } else if (sortingColor == "blue") {
+    sortingColor = "red";
+  }
+}
 
 void buttonDOWN_pressed() {
   Arm.setVelocity(-70, pct);
@@ -831,19 +619,19 @@ void autonomous(void) {
     blueRightWP2();
     break;
   case 6:
-    sortingColor = "blue";
-    redRightWP();
+    sortingColor = "red";
+    blue6Ring();
     break;
   case 7:
-    sortingColor = "red";
-    blueLeftWP();
+    sortingColor = "blue";
+    red6Ring();
     break;
   case 8:
     sortingColor = "blue";
     skillsAuton();
     break;
   case 9:
-  sortingColor = "blue";
+    sortingColor = "blue";
     redGoalWP3();
     break;
   case 10:
