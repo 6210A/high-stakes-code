@@ -170,7 +170,7 @@ void pre_auton() {
   Arm.setVelocity(0, pct);
   Arm.setPosition(0, deg);
   Rotation2.setPosition(0, deg);
-  MogoMech = false;
+  MogoMech = true;
   ispreauto = false;
 
   while (!auto_started) {
@@ -392,7 +392,7 @@ int sortingTask() {
 
   while (1) {
     sleep(5);
-    if (auto_started) {
+    // if (auto_started) {
       if (sortingColor == "red" && redDetected && intakeRunning &&
           !pausedForRed) {
         pausedForRed = true;
@@ -402,14 +402,13 @@ int sortingTask() {
           func.conveyorSpeed = 100;
         }
         Sorting.setPosition(0, deg);
-        while (fabs(Sorting.position(deg)) < 270) {
+        while (fabs(Sorting.position(deg)) < 200) {
           sleep(1);
         }
         // sleep(145);
         func.conveyorSpeed = -100;
         sleep(200);
         func.conveyorSpeed = originalIntakeSpeed;
-        Sorting.setPosition(0, deg);
       } else if (sortingColor == "blue" && blueDetected && intakeRunning &&
                  !pausedForBlue) {
         pausedForBlue = true;
@@ -419,12 +418,11 @@ int sortingTask() {
           func.conveyorSpeed = 100;
         }
         Sorting.setPosition(0, deg);
-        while (fabs(Sorting.position(deg)) < 270) {
+        while (fabs(Sorting.position(deg)) < 200) {
           sleep(1);
         }
         func.conveyorSpeed = -100;
         sleep(200);
-        Sorting.setPosition(0, deg);
         func.conveyorSpeed = originalIntakeSpeed;
       }
 
@@ -435,7 +433,7 @@ int sortingTask() {
         pausedForBlue = false;
       }
     }
-  }
+  // }
 }
 
 int armStatesTask() {
@@ -592,6 +590,7 @@ void buttonRup_released2() {}
 
 void autonomous(void) {
   auto_started = true;
+  MogoMech = false;
   switch (current_auton_selection) {
   case 0:
     sortingColor = "blue";
@@ -624,7 +623,8 @@ void autonomous(void) {
     break;
   case 7:
     sortingColor = "blue";
-    red6Ring();
+    // red6Ring();
+    drive_test();
     break;
   case 8:
     sortingColor = "blue";
