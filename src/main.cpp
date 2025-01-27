@@ -122,7 +122,7 @@ Drive chassis(
 
 );
 bool ispreauto;
-int current_auton_selection = 7;
+int current_auton_selection = 8;
 bool auto_started = false;
 
 float armGoal = 1;
