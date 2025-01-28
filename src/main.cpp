@@ -467,9 +467,10 @@ int armStatesTask() {
         outakeHappened = false;
       }
       if (func.armState == 2 && !outakeHappened) {
-        func.conveyorSpeed = -100;
-        task::sleep(100);
-        func.conveyorSpeed = 0;
+        // func.conveyorSpeed = -100;
+        // task::sleep(150);
+        // func.conveyorSpeed = 0;
+        // task::sleep(100);
         armGoal = 138;
         outakeHappened = true;
       }
