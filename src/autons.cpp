@@ -16,7 +16,7 @@ void default_constants() {
   chassis.set_swing_constants(10, .5, .001, 4, 15);
   // Each exit condition set is in the form of (settle_error, settle_time,
   // timeout).
-  chassis.set_drive_exit_conditions(1.5, 300, 5000);
+  chassis.set_drive_exit_conditions(1.5, 300, 3000);
   chassis.set_turn_exit_conditions(1, 300, 3000);
   chassis.set_swing_exit_conditions(1, 300, 3000);
 }
@@ -769,8 +769,8 @@ void blueLeftWP() {
 void skillsAuton() {
   MogoMech = false;
   /*chassis.set_coordinates(0, 0, 120.5);
-  chassis.heading_max_voltage = 8;
   default_constants();
+  chassis.turn_max_voltage = 8;
   chassis.set_drive_constants(11, 3.2, 0, 30, 0);
   // chassis.set_drive_exit_conditions(1.5, 300, 700);
   func.conveyorSpeed = -100;
@@ -782,7 +782,7 @@ void skillsAuton() {
   chassis.drive_distance(-20);
   MogoMech = true;
   chassis.drive_distance(-1);
-  chassis.drive_max_voltage = 11;
+  chassis.drive_max_voltage = 12;
   chassis.turn_to_angle(0);
   func.rollerSpeed = 100;
   func.conveyorSpeed = 100;
@@ -804,7 +804,7 @@ void skillsAuton() {
   chassis.drive_distance(-6);
   MogoMech = true;
   chassis.drive_distance(-2);
-  chassis.drive_max_voltage = 11;
+  chassis.drive_max_voltage = 12;
   chassis.turn_to_angle(0);
   func.conveyorSpeed = 100;
   chassis.drive_distance(22);
@@ -814,7 +814,7 @@ void skillsAuton() {
   chassis.drive_max_voltage = 8;
   chassis.drive_distance(34);
   chassis.turn_to_angle(-70);
-  chassis.drive_max_voltage = 11;
+  chassis.drive_max_voltage = 12;
   chassis.drive_distance(-10);
   MogoMech = false;
   task::sleep(400);
@@ -825,21 +825,21 @@ void skillsAuton() {
   chassis.turn_to_angle(90);*/
   chassis.set_coordinates(0, 0, 90);
   default_constants();
-  chassis.heading_max_voltage = 8;
-  chassis.set_drive_constants(11, 3.2, 0, 30, 0);
+  chassis.set_drive_constants(12, 3.5, 0, 30, 0);
+  chassis.set_turn_constants(8, .7, .03, 6.5, 15);
   func.conveyorSpeed = 100;
   func.rollerSpeed = 100;
   func.armState = 1;
   //
-  chassis.drive_with_voltage(5,5);
-  task::sleep(550);
-  chassis.drive_with_voltage(1, 1);
-  task::sleep(900);
+  chassis.drive_with_voltage(7,7);
+  task::sleep(400);
+  chassis.drive_with_voltage(3, 3);
+  task::sleep(650);
   func.conveyorSpeed = 0;
   func.armState = 2;
-  task::sleep(650);
+  task::sleep(700);
   chassis.drive_with_voltage(7,7);
-  chassis.drive_distance(-14);
+  chassis.drive_distance(-15);
   func.conveyorSpeed = 0;
   func.armState = 0;
   chassis.turn_to_angle(0);
@@ -849,27 +849,49 @@ void skillsAuton() {
   chassis.drive_distance(22);
   func.conveyorSpeed = 0;
   chassis.turn_to_angle(135);
-  chassis.drive_distance(-25);
+  chassis.drive_distance(-23);
   chassis.drive_max_voltage = 8;
-  chassis.drive_distance(-7);
+  chassis.drive_distance(-9);
   MogoMech = true;
-  chassis.drive_max_voltage = 11;
+  chassis.drive_max_voltage = 12;
   chassis.drive_distance(-3);
   func.conveyorSpeed = 100;
   chassis.turn_to_angle(225);
-  chassis.drive_distance(55);
+  chassis.drive_distance(60);
+  chassis.turn_to_angle(-90);
   func.armState = 1;
-  chassis.drive_with_voltage(5,5);
-  task::sleep(550);
-  chassis.drive_with_voltage(1, 1);
-  task::sleep(900);
+  chassis.drive_with_voltage(8,8);
+  task::sleep(300);
+  chassis.drive_with_voltage(3,3);
+  task::sleep(950);
   func.conveyorSpeed = 0;
   func.armState = 2;
-  task::sleep(650);
-  chassis.drive_with_voltage(7,7);
+  task::sleep(600);
+  chassis.drive_with_voltage(9,9);
   chassis.drive_distance(-14);
-  func.conveyorSpeed = 0;
+  func.conveyorSpeed = -100;
   func.armState = 0;
+  chassis.turn_to_angle(0);
+  func.rollerSpeed = 100;
+  func.conveyorSpeed = 100;
+  chassis.drive_distance(55);
+  task::sleep(400);
+  chassis.turn_to_angle(120);
+  func.rollerSpeed = 0;
+  func.conveyorSpeed = 0;
+  MogoMech = false;
+  task::sleep(200);
+  chassis.drive_distance(3);
+  MogoMech = true;
+  chassis.drive_backwards_with_voltage(11, 11);
+  task::sleep(700);
+  chassis.turn_to_angle(135);
+  chassis.drive_distance(16);
+  chassis.turn_to_angle(80);
+  chassis.drive_with_voltage(11, 11);
+  task::sleep(3000);
+  chassis.left_swing_to_angle(55);
+  chassis.drive_distance(30);
 }
 
 void red2On1() {

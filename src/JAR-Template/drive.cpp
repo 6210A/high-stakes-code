@@ -75,6 +75,11 @@ void Drive::drive_with_voltage(float leftVoltage, float rightVoltage){
   DriveR.spin(fwd, rightVoltage,volt);
 }
 
+void Drive::drive_backwards_with_voltage(float leftVoltage, float rightVoltage){
+  DriveL.spin(reverse, leftVoltage, volt);
+  DriveR.spin(reverse, rightVoltage,volt);
+}
+
 /**
  * Resets default turn constants.
  * Turning includes turn_to_angle() and turn_to_point().
