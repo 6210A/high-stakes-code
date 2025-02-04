@@ -5,7 +5,6 @@
 using namespace vex;
 competition Competition;
 Func func;
-
 /*---------------------------------------------------------------------------*/
 /*                             VEXcode Config                                */
 /*                                                                           */
@@ -497,9 +496,12 @@ void buttonLdown_pressed() {
   if (Controller1.ButtonL1.pressing()) {
     func.rollerSpeed = -100;
     func.conveyorSpeed = 0;
-  }
-  else {
-    func.armState = 0;
+  } else {
+    if (func.armState > 0) {
+      func.armState -= 1;
+    } else {
+      func.armState = 0;
+    }
   }
 }
 
