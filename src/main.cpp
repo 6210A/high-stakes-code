@@ -5,6 +5,7 @@
 using namespace vex;
 competition Competition;
 Func func;
+
 /*---------------------------------------------------------------------------*/
 /*                             VEXcode Config                                */
 /*                                                                           */
@@ -122,7 +123,7 @@ Drive chassis(
 
 );
 bool ispreauto;
-int current_auton_selection = 8;
+int current_auton_selection = 9;
 bool auto_started = false;
 
 float armGoal = 1;
@@ -234,7 +235,7 @@ int controllerScreenTask() {
     sleep(50);
 
     Controller1.Screen.setCursor(1, 1);
-    Controller1.Screen.print("G: %3.2f", Inertial8.rotation());
+    Controller1.Screen.print("G: %3.2f", Inertial8.heading());
     Controller1.Screen.setCursor(1, 13);
     Controller1.Screen.print("A: %1.0f", func.armState);
     if (sortingColor == "red") {
@@ -301,7 +302,7 @@ int sensorsTask() {
     task::sleep(5);
 
     // GET gyro1 VALUE
-    gyro1 = Inertial8.rotation(deg);
+    // gyro1 = Inertial8.rotation(deg);
 
     // Get optical value
     ringDetected = Optical.isNearObject();
@@ -392,7 +393,7 @@ int sortingTask() {
 
   while (1) {
     sleep(5);
-    // if (auto_started) {
+    if (auto_started) {
       if (sortingColor == "red" && redDetected && intakeRunning &&
           !pausedForRed) {
         pausedForRed = true;
@@ -433,7 +434,7 @@ int sortingTask() {
         pausedForBlue = false;
       }
     }
-  // }
+  }
 }
 
 int armStatesTask() {
@@ -463,7 +464,7 @@ int armStatesTask() {
         outakeHappened = false;
       }
       if (func.armState == 1) {
-        armGoal = 23;
+        armGoal = 19;
         outakeHappened = false;
       }
       if (func.armState == 2 && !outakeHappened) {
@@ -471,6 +472,7 @@ int armStatesTask() {
         // task::sleep(150);
         // func.conveyorSpeed = 0;
         // task::sleep(100);
+        func.conveyorSpeed = 0;
         armGoal = 138;
         outakeHappened = true;
       }
@@ -495,12 +497,9 @@ void buttonLdown_pressed() {
   if (Controller1.ButtonL1.pressing()) {
     func.rollerSpeed = -100;
     func.conveyorSpeed = 0;
-  } else {
-    if (func.armState > 0) {
-      func.armState -= 1;
-    } else {
-      func.armState = 0;
-    }
+  }
+  else {
+    func.armState = 0;
   }
 }
 
