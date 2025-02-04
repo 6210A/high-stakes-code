@@ -21,6 +21,7 @@ extern digital_out Doinker;
 extern digital_out IntakeLift;
 extern rotation Rotation2;
 extern motor RBackDrive;
+extern rotation Sorting;
 
 /**
  * Used to initialize code/tasks/devices added using tools in VEXcode Pro.

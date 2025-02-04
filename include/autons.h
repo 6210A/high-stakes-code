@@ -29,4 +29,5 @@ void redGoal4();
 void redGoalWP3();
 void blueGoal4();
 void blueGoalWP3();
+void blue6Ring();
 void red6Ring();
